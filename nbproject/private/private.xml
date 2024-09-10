@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>src/DAO/ThongKeDAO.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/D:/DoAn-Java/DoAnJAVA/src/GUI/TKhoan/SuaTaiKhoan.java</file>
+            <file>file:/D:/DoAn-Java/DoAnJAVA/src/GUI/Login.java</file>
+            <file>file:/D:/DoAn-Java/DoAnJAVA/src/config/MySQLConnection.java</file>
+            <file>file:/D:/DoAn-Java/DoAnJAVA/src/GUI/TKhoan/ChonNhanVien.java</file>
+            <file>file:/D:/DoAn-Java/DoAnJAVA/src/DAO/TaiKhoanDAO.java</file>
+            <file>file:/D:/DoAn-Java/DoAnJAVA/src/GUI/TKhoan/ThemTaiKhoan.java</file>
+            <file>file:/D:/DoAn-Java/DoAnJAVA/src/GUI/TaiKhoan.java</file>
+            <file>file:/D:/DoAn-Java/DoAnJAVA/src/BUS/TaiKhoanBUS.java</file>
+            <file>file:/D:/DoAn-Java/DoAnJAVA/src/GUI/NhanVien.java</file>
+            <file>file:/D:/DoAn-Java/DoAnJAVA/src/GUI/Main.java</file>
+        </group>
+    </open-files>
+</project-private>
