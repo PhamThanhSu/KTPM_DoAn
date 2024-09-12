@@ -1,1 +1,1 @@
-projectJava_src.DTO.XuatXuDTO
+DTO.ThuocTinhSanPham.XuatXuDTO

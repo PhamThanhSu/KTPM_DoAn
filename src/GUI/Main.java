@@ -53,6 +53,7 @@ public final class Main extends javax.swing.JFrame {
     PhieuXuat phieuXuat;
     TaiKhoan taiKhoan;
     ThongKe thongKe;
+    PhanQuyen phanQuyen;
     Login login;
     NhanVienBUS nhanVienBUS;
     TaiKhoanDTO taiKhoanDTO;
@@ -216,6 +217,7 @@ public final class Main extends javax.swing.JFrame {
         btnThongKe.setText("<html>&nbsp;&nbsp;&nbsp;Thống kê</html>");
         btnThuocTinh.setText("<html>&nbsp;&nbsp;&nbsp;Thuộc tính</html>");
         btnTrangChu.setText("<html>&nbsp;&nbsp;&nbsp;Trang chủ</html>");
+        btnPhanquyen.setText("<html>&nbsp;&nbsp;&nbsp;Phân Quyền</html>");
 
         // Đặt icon và căn chỉnh biểu tượng sang trái cho mỗi button
         btnTrangChu.setIcon(new FlatSVGIcon("./icon/home.svg"));
@@ -253,6 +255,9 @@ public final class Main extends javax.swing.JFrame {
 
         btnDangXuat.setIcon(new FlatSVGIcon("./icon/log_out.svg"));
         btnDangXuat.setHorizontalAlignment(SwingConstants.LEFT);
+    
+        btnPhanquyen.setIcon(new FlatSVGIcon("./icon/home.svg"));
+        btnPhanquyen.setHorizontalAlignment(SwingConstants.LEFT);
     }
 
     private void addHoverEffect(JToggleButton button) {
@@ -304,6 +309,7 @@ public final class Main extends javax.swing.JFrame {
         addHoverEffect(btnTaiKhoan);
         addHoverEffect(btnThongKe);
         addHoverEffect(btnThuocTinh);
+        addHoverEffect(btnPhanquyen);
         // Thêm hiệu ứng hover cho từng button
     }
 // Gọi phương thức này trong constructor hoặc bất kỳ nơi nào khác mà bạn muốn thêm hiệu ứng hover cho tất cả các button
@@ -329,6 +335,7 @@ public final class Main extends javax.swing.JFrame {
         btnNhanVien = new javax.swing.JToggleButton();
         btnTaiKhoan = new javax.swing.JToggleButton();
         btnThongKe = new javax.swing.JToggleButton();
+        btnPhanquyen = new javax.swing.JToggleButton();
         jPanel1 = new javax.swing.JPanel();
         btnDangXuat = new javax.swing.JButton();
         mainContent = new javax.swing.JPanel();
@@ -491,6 +498,16 @@ public final class Main extends javax.swing.JFrame {
             }
         });
 
+        buttonGroup1.add(btnPhanquyen);
+        btnPhanquyen.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnPhanquyen.setText("Phân Quyền");
+        btnPhanquyen.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPhanquyen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPhanquyenActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout taskBarLayout = new javax.swing.GroupLayout(taskBar);
         taskBar.setLayout(taskBarLayout);
         taskBarLayout.setHorizontalGroup(
@@ -501,11 +518,12 @@ public final class Main extends javax.swing.JFrame {
             .addComponent(btnPhieuXuat, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnKhachHang, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnNhanVien, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnTaiKhoan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnTrangChu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnThongKe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnThuocTinh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(btnNhaCungCap, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnNhaCungCap, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+            .addComponent(btnTaiKhoan, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(btnPhanquyen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         taskBarLayout.setVerticalGroup(
             taskBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -532,7 +550,9 @@ public final class Main extends javax.swing.JFrame {
                 .addComponent(btnTaiKhoan)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnThongKe)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnPhanquyen)
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         menuTaskbar.add(taskBar, java.awt.BorderLayout.CENTER);
@@ -558,9 +578,9 @@ public final class Main extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
+                .addGap(18, 18, 18)
                 .addComponent(btnDangXuat)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         menuTaskbar.add(jPanel1, java.awt.BorderLayout.SOUTH);
@@ -581,7 +601,7 @@ public final class Main extends javax.swing.JFrame {
         );
         mainContent2Layout.setVerticalGroup(
             mainContent2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 800, Short.MAX_VALUE)
+            .addGap(0, 622, Short.MAX_VALUE)
         );
 
         mainContent.add(mainContent2, java.awt.BorderLayout.CENTER);
@@ -667,6 +687,11 @@ public final class Main extends javax.swing.JFrame {
         addTaskBar(mainContent2, trangChu);
     }//GEN-LAST:event_btnTrangChuActionPerformed
 
+    private void btnPhanquyenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPhanquyenActionPerformed
+        phanQuyen = new PhanQuyen();
+        addTaskBar(mainContent2, phanQuyen);
+    }//GEN-LAST:event_btnPhanquyenActionPerformed
+
 // hàm taskbar
     public void addTaskBar(Container mainContent, JPanel panel) {
         mainContent.setLayout(new BorderLayout());
@@ -721,6 +746,7 @@ public final class Main extends javax.swing.JFrame {
     private javax.swing.JToggleButton btnKhuVucKho;
     private javax.swing.JToggleButton btnNhaCungCap;
     private javax.swing.JToggleButton btnNhanVien;
+    private javax.swing.JToggleButton btnPhanquyen;
     private javax.swing.JToggleButton btnPhieuNhap;
     private javax.swing.JToggleButton btnPhieuXuat;
     private javax.swing.JToggleButton btnSanPham;
