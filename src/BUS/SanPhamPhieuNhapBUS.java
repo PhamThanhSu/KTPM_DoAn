@@ -24,4 +24,8 @@ public class SanPhamPhieuNhapBUS {
     public ChiTietPhieuNhapDTO selectByID(int mapn){
         return chiTietPhieuNhapDAO.selectByID(mapn);
     }
+    
+//    public static ArrayList<ChiTietPhieuNhapDTO> getListSanPhamANDGiaNhapXuat(int masp) {
+//        return SanPhamPhieuNhapDAO.getListSanPhamANDGiaNhapXuat(masp);
+//    }
 }

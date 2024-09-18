@@ -43,8 +43,6 @@ public class SanPhamDAO {
                 sanPhamDTO.setThuonghieu(rs.getInt("thuonghieu"));
                 sanPhamDTO.setKhuvuckho(rs.getInt("khuvuckho"));
                 sanPhamDTO.setSoluongton(rs.getInt("soluongton"));
-                sanPhamDTO.setGianhap(rs.getInt("gianhap"));
-                sanPhamDTO.setGiaxuat(rs.getInt("giaxuat"));
                 listSanPham.add(sanPhamDTO);
             }
         } catch (SQLException e) {
@@ -55,7 +53,7 @@ public class SanPhamDAO {
 
     public boolean themSanPham(SanPhamDTO sanPhamDTO) {
         boolean thanhCong = false;
-        String query = "INSERT INTO sanpham (tensp, size, hinhanh, xuatxu, loai, thuonghieu, khuvuckho, gianhap, giaxuat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO sanpham (tensp, size, hinhanh, xuatxu, loai, thuonghieu, khuvuckho) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             connection = MySQLConnection.getConnection();
             pst = connection.prepareStatement(query);
@@ -66,8 +64,6 @@ public class SanPhamDAO {
             pst.setInt(5, sanPhamDTO.getLoai());
             pst.setInt(6, sanPhamDTO.getThuonghieu());
             pst.setInt(7, sanPhamDTO.getKhuvuckho());
-            pst.setInt(8, sanPhamDTO.getGianhap());
-            pst.setInt(9, sanPhamDTO.getGiaxuat());
             int rowAff = pst.executeUpdate();
             if (rowAff > 0) {
                 thanhCong = true;
@@ -130,7 +126,7 @@ public class SanPhamDAO {
         boolean thanhCong = false;
         try {
             connection = MySQLConnection.getConnection();
-            String query = "UPDATE sanpham SET tensp=?, size=?, hinhanh=?, xuatxu=?, loai=?, thuonghieu=?, khuvuckho=?, gianhap=?, giaxuat=? WHERE masp=?";
+            String query = "UPDATE sanpham SET tensp=?, size=?, hinhanh=?, xuatxu=?, loai=?, thuonghieu=?, khuvuckho=? WHERE masp=?";
             pst = connection.prepareStatement(query);
             pst.setString(1, sanPhamDTO.getTensp());
             pst.setInt(2, sanPhamDTO.getSize());
@@ -139,9 +135,7 @@ public class SanPhamDAO {
             pst.setInt(5, sanPhamDTO.getLoai());
             pst.setInt(6, sanPhamDTO.getThuonghieu());
             pst.setInt(7, sanPhamDTO.getKhuvuckho());
-            pst.setInt(8, sanPhamDTO.getGianhap());
-            pst.setInt(9, sanPhamDTO.getGiaxuat());
-            pst.setInt(10, sanPhamDTO.getMasp());
+            pst.setInt(8, sanPhamDTO.getMasp());
 
             int rowAff = pst.executeUpdate();
             if (rowAff > 0) {
@@ -183,9 +177,7 @@ public class SanPhamDAO {
                 int thuonghieu = rs.getInt("thuonghieu");
                 int khuvuckho = rs.getInt("khuvuckho");
                 int soluongton = rs.getInt("soluongton");
-                int gianhap = rs.getInt("gianhap");
-                int giaxuat = rs.getInt("giaxuat");
-                result = new SanPhamDTO(maSP, tenSP, size, hinhanh, xuatxu, loai, thuonghieu, khuvuckho, gianhap, giaxuat, soluongton);
+                result = new SanPhamDTO(maSP, tenSP, size, hinhanh, xuatxu, loai, thuonghieu, khuvuckho, soluongton);
             }
             MySQLConnection.closeConnection(connection);
         } catch (SQLException e) {

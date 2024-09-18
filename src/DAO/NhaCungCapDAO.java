@@ -144,7 +144,8 @@ public class NhaCungCapDAO {
                 String diachi = rs.getString("diachi");
                 String email = rs.getString("email");
                 String sdt = rs.getString("sdt");
-                result = new NhaCungCapDTO(ma, ten, diachi, email, sdt);
+                int loinhuan = rs.getInt("phantramloinhuan");
+                result = new NhaCungCapDTO(ma, ten, diachi, email, sdt, loinhuan);
             }
             MySQLConnection.closeConnection(connection);
         } catch (SQLException e) {

@@ -4,7 +4,9 @@
  */
 package BUS;
 
+import DAO.ChiTietPhieuNhapDAO;
 import DAO.SanPhamDAO;
+import DTO.ChiTietPhieuNhapDTO;
 import DTO.SanPhamDTO;
 import java.util.ArrayList;
 
@@ -57,11 +59,25 @@ public class SanPhamBUS {
         return sanPhamDAO.checkSize(tensp, size);
     }
 
-    public ArrayList<SanPhamDTO> search(String text) {
+    public ArrayList<SanPhamDTO> searchPN(String text) {
         text = text.toLowerCase();
         ArrayList<SanPhamDTO> result = new ArrayList<>();
         for (SanPhamDTO i : getAllSanPham()) {
+            String tensp = selectByID(i.getMasp()).getTensp();
             if (Integer.toString(i.getMasp()).toLowerCase().contains(text) || i.getTensp().toLowerCase().contains(text)) {
+                result.add(i);
+            }
+        }
+        return result;
+    }
+    
+    public ArrayList<ChiTietPhieuNhapDTO> searchPX(String text) {
+        text = text.toLowerCase();
+        ArrayList<ChiTietPhieuNhapDTO> result = new ArrayList<>();
+        ChiTietPhieuNhapDAO chiTietPhieuNhapDAO = new ChiTietPhieuNhapDAO();
+        for (ChiTietPhieuNhapDTO i : chiTietPhieuNhapDAO.getAllChiTietPhieuNhap()) {
+            String tensp = selectByID(i.getMasp()).getTensp();
+            if (Integer.toString(i.getMasp()).toLowerCase().contains(text) || tensp.toLowerCase().contains(text)) {
                 result.add(i);
             }
         }

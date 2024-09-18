@@ -10,6 +10,7 @@ import DTO.PhieuNhapDTO;
 import DTO.SanPhamDTO;
 import DTO.TaiKhoanDTO;
 import GUI.Component.BuildTable;
+import GUI.Component.CheckAction;
 import GUI.Component.Export.JTableExporter;
 import GUI.Component.ShowCBB;
 import GUI.Main;
@@ -27,9 +28,13 @@ import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -106,7 +111,7 @@ public class PhieuNhap extends javax.swing.JPanel implements ActionListener, Pro
     }
     TaiKhoanDTO taiKhoanDTO;
 
-    public PhieuNhap(TaiKhoanDTO taiKhoanDTO) {
+    public PhieuNhap(TaiKhoanDTO taiKhoanDTO) throws SQLException {
         initComponents();
         addIcon();
 
@@ -130,6 +135,19 @@ public class PhieuNhap extends javax.swing.JPanel implements ActionListener, Pro
         showCBB.CBBNhaCungCap(comboboxNCC);
         showCBB.CBBNhanVienNhap(cbxNhanVien);
 
+        String[] action = {"create", "update", "delete", "view"};
+        Map<String, JButton> buttonMap = new HashMap<>();
+        buttonMap.put("create", btnThemPN);       // Nút thêm
+        buttonMap.put("delete", btnHuyPhieu);        // Nút xóa
+//        buttonMap.put("update", btnSuaSP);        // Nút sửa
+        buttonMap.put("detail", btnChiTietPN);    // Nút chi tiết
+        buttonMap.put("export", btnXuatExcelPN);  // Nút xuất Excel
+//        buttonMap.put("import",btnNhapExcel);  // Nút nhập Excel
+
+// Tạo đối tượng CheckAction
+        CheckAction checkAction = new CheckAction(taiKhoanDTO.getManhomquyen(), "nhaphang", action, buttonMap);
+
+        
         // Khởi tạo tblModel
         tblModel = (DefaultTableModel) tblPhieuNhap.getModel();
         this.selectedPNproducts = phieuNhapBUS.getAllPhieuNhap();

@@ -26,6 +26,10 @@ import javax.swing.border.EmptyBorder;
 import GUI.Component.ButtonCustom;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 public class PhanQuyenDialog extends JDialog implements ActionListener {
 
@@ -40,12 +44,13 @@ public class PhanQuyenDialog extends JDialog implements ActionListener {
     String[] mahanhdong = {"view", "create", "update", "delete"};
     private NhomQuyenDTO nhomquyenDTO;
     private NhomQuyenBUS nhomquyenBUS;
+    private JButton btnAddNhomQuyen, btnHuybo;
     int index;
 
-    public PhanQuyenDialog(NhomQuyenDTO nhomQuyenDTO, ArrayList<ChiTietQuyenDTO> dsChiTietQuyen) throws SQLException {
+    public PhanQuyenDialog(NhomQuyenDTO nhomQuyenDTO, ArrayList<ChiTietQuyenDTO> dsChiTietQuyen, String tenchucnang) throws SQLException {
         this.nhomquyenDTO = nhomQuyenDTO;
         this.dsChiTietQuyen = dsChiTietQuyen;
-        initComponents(); // Khởi tạo giao diện
+        initComponents(tenchucnang); // Khởi tạo giao diện
         initUpdate(); // Cập nhật giao diện với dữ liệu chi tiết quyền
     }
 
@@ -66,7 +71,7 @@ public class PhanQuyenDialog extends JDialog implements ActionListener {
         }
     }
 
-    public void initComponents() throws SQLException {
+    public void initComponents(String tenchucnang) throws SQLException {
         quyencn = QuyenChucNangDAO.getInstance().getAllQuyenChucNang();
         ctQuyen = ChiTietQuyenDAO.getInstance().getChiTietQuyen(Integer.toString(nhomquyenDTO.getManhomquyen()));
 
@@ -125,12 +130,12 @@ public class PhanQuyenDialog extends JDialog implements ActionListener {
         jpBottom.setBorder(new EmptyBorder(20, 0, 20, 0));
 
         // Nút "Thêm nhóm quyền"
-        ButtonCustom btnAddNhomQuyen = new ButtonCustom("Thêm nhóm quyền", "success", 14);
+        btnAddNhomQuyen = new ButtonCustom(tenchucnang, "success", 14);
         btnAddNhomQuyen.addActionListener(this);
         jpBottom.add(btnAddNhomQuyen);
 
         // Nút "Huỷ bỏ"
-        ButtonCustom btnHuybo = new ButtonCustom("Huỷ bỏ", "danger", 14);
+        btnHuybo = new ButtonCustom("Huỷ bỏ", "danger", 14);
         btnHuybo.addActionListener(this);
         jpBottom.add(btnHuybo);
 
@@ -144,7 +149,55 @@ public class PhanQuyenDialog extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Xử lý sự kiện cho các nút
+
+        if (e.getSource() == btnAddNhomQuyen) {
+            try {
+                updatePermissionsToDatabase();
+                JOptionPane.showMessageDialog(rootPane, "Cập nhật thành công!");
+                this.dispose();
+            } catch (SQLException ex) {
+                Logger.getLogger(PhanQuyenDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                
+        } else if (e.getSource() == btnHuybo) {
+            this.dispose(); // Đóng dialog nếu bấm "Huỷ bỏ"
+        }
+    }
+
+    private void updatePermissionsToDatabase() throws SQLException {
+        // Tạo danh sách quyền chi tiết để lưu
+        ArrayList<ChiTietQuyenDTO> updatedChiTietQuyen = new ArrayList<>();
+
+        // Duyệt qua tất cả checkbox
+        for (int i = 0; i < sizeQuyencn; i++) {
+            for (int j = 0; j < sizeHanhdong; j++) {
+                boolean isSelected = listCheckBox[i][j].isSelected(); // Kiểm tra trạng thái của checkbox
+                String maChucNang = quyencn.get(i).getMaChucNang();   // Mã chức năng tương ứng
+                String hanhDong = mahanhdong[j];                      // Hành động tương ứng (view, create, update, delete)
+
+                // Nếu checkbox được chọn, thêm vào danh sách quyền chi tiết
+                if (isSelected) {
+                    ChiTietQuyenDTO chiTietQuyenDTO = new ChiTietQuyenDTO();
+                    chiTietQuyenDTO.setMaNhomQuyen(nhomquyenDTO.getManhomquyen());  // Gán mã nhóm quyền
+                    chiTietQuyenDTO.setMaChucNang(maChucNang);                      // Gán mã chức năng
+                    chiTietQuyenDTO.setHanhDong(hanhDong);                          // Gán hành động
+
+                    updatedChiTietQuyen.add(chiTietQuyenDTO);                       // Thêm quyền chi tiết vào danh sách
+                }
+            }
+        }
+
+        // Cập nhật vào database thông qua DAO
+        ChiTietQuyenDAO chiTietQuyenDAO = new ChiTietQuyenDAO();
+
+        // Xóa các quyền cũ trước khi thêm mới
+        chiTietQuyenDAO.deleteAllChiTietQuyen(String.valueOf(nhomquyenDTO.getManhomquyen()));
+
+        // Thêm danh sách quyền chi tiết mới vào database
+        for (ChiTietQuyenDTO quyen : updatedChiTietQuyen) {
+            chiTietQuyenDAO.addChiTietQuyen(quyen); // Gọi phương thức thêm quyền
+        }
+
     }
 
     public void initUpdate() {

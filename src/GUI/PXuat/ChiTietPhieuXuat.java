@@ -97,11 +97,12 @@ public class ChiTietPhieuXuat extends javax.swing.JFrame {
         ArrayList<ChiTietPhieuXuatDTO> listChiTiet = phieuXuatBUS.getAllChiTietPhieuXuat(phieuXuatDTO.getMaphieuxuat());
         if (listChiTiet != null && !listChiTiet.isEmpty()) {
             // Lặp qua từng chi tiết phiếu nhập để lấy thông tin sản phẩm và thêm vào bảng
-            for (ChiTietPhieuXuatDTO chiTietPhieuNhapDTO : listChiTiet) {
-                int masp = chiTietPhieuNhapDTO.getMasp();
-                int soluong = chiTietPhieuNhapDTO.getSoluong();
+            for (ChiTietPhieuXuatDTO chiTietPhieuXuatDTO : listChiTiet) {
+                int masp = chiTietPhieuXuatDTO.getMaSp();
+                int soluong = chiTietPhieuXuatDTO.getSoluong();
+                int giaxuat = chiTietPhieuXuatDTO.getGiaxuat();
                 SanPhamDTO sanPhamPhieuXuat = sanPhamBUS.selectByID(masp);
-                updatetableaddedproducts(sanPhamPhieuXuat, tblsanphamchitiet, soluong);
+                updatetableaddedproducts(sanPhamPhieuXuat, tblsanphamchitiet, soluong, giaxuat);
             }
         } else {
             // Hiển thị thông báo nếu không có chi tiết phiếu nhập nào được tìm thấy
@@ -109,7 +110,7 @@ public class ChiTietPhieuXuat extends javax.swing.JFrame {
         }
     }
 
-    public void updatetableaddedproducts(SanPhamDTO product, JTable table, int soluong) {
+    public void updatetableaddedproducts(SanPhamDTO product, JTable table, int soluong, int giaxuat) {
         thuongHieuDAO = new ThuongHieuDAO();
         loaiDAO = new LoaiDAO();
         xuatXuDAO = new XuatXuDAO();
@@ -129,7 +130,7 @@ public class ChiTietPhieuXuat extends javax.swing.JFrame {
                 XuatXu,
                 TenLoai,
                 TenThuongHieu,
-                decimalFormat.format(product.getGiaxuat()), // Định dạng giá nhập
+                decimalFormat.format(giaxuat), // Định dạng giá nhập
                 soluong
             });
         // Tạo renderer để hiển thị nội dung ở giữa ô

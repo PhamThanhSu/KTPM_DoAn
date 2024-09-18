@@ -37,10 +37,10 @@ public class ThongKeDAO {
             String sql = "SELECT\n"
                     + "  DATE(phieuxuat.thoigian) AS ngay,\n"
                     + "  COALESCE(SUM(phieuxuat.tongtien), 0) AS doanhthu,\n"
-                    + "  COALESCE(SUM(ctphieuxuat.soluong * sanpham.gianhap), 0) AS chiphi\n"
+                    + "  COALESCE(SUM(ctphieuxuat.soluong * ctphieunhap.gianhap), 0) AS chiphi\n"
                     + "FROM phieuxuat\n"
                     + "LEFT JOIN ctphieuxuat ON phieuxuat.maphieuxuat = ctphieuxuat.maphieuxuat\n"
-                    + "LEFT JOIN sanpham ON ctphieuxuat.masp = sanpham.masp\n"
+                    + "LEFT JOIN ctphieunhap ON ctphieuxuat.masp = ctphieunhap.masp\n"
                     + "WHERE phieuxuat.thoigian BETWEEN ? AND ?\n"
                     + "GROUP BY ngay\n"
                     + "ORDER BY ngay;";
@@ -233,8 +233,7 @@ public class ThongKeDAO {
                      FROM years 
                      LEFT JOIN phieuxuat ON YEAR(phieuxuat.thoigian) = years.year
                      LEFT JOIN ctphieuxuat ON phieuxuat.maphieuxuat = ctphieuxuat.maphieuxuat
-                     LEFT JOIN sanpham ON sanpham.masp = ctphieuxuat.masp
-                     LEFT JOIN ctphieunhap ON sanpham.masp = ctphieunhap.masp
+                     LEFT JOIN ctphieunhap ON ctphieunhap.masp = ctphieuxuat.masp
                      GROUP BY years.year
                      ORDER BY years.year;""";
             PreparedStatement pstStartYear = con.prepareStatement(sqlSetStartYear);

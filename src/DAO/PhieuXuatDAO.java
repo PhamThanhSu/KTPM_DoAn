@@ -156,9 +156,9 @@ public class PhieuXuatDAO {
 
             if (rowsDeletedPhieuXuat > 0 && rowsDeletedChiTiet > 0) {
 
-                for (ChiTietPhieuXuatDTO chiTiet : listPn) {
-                    ChiTietPhieuXuatDAO.getInstance().updateSoluongton(chiTiet.getMasp(), -chiTiet.getSoluong());
-                }
+//                for (ChiTietPhieuXuatDTO chiTiet : listPn) {
+//                    ChiTietPhieuXuatDAO.getInstance().updateSoluongton(chiTiet.getMaSp(), -chiTiet.getSoluong());
+//                }
                 thanhCong = true;
             }
         } catch (SQLException ex) {

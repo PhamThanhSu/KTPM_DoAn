@@ -106,8 +106,9 @@ public class ChiTietPhieuNhap extends javax.swing.JFrame {
             for (ChiTietPhieuNhapDTO chiTietPhieuNhapDTO : listChiTiet) {
                 int masp = chiTietPhieuNhapDTO.getMasp();
                 int soluong = chiTietPhieuNhapDTO.getSoluong();
+                int gianhap = chiTietPhieuNhapDTO.getGianhap();
                 ArrayList<SanPhamDTO> ListSanPhamPhieuNhap = sanPhamPhieuNhapBUS.getListSanPham(masp);
-                updatetableaddedproducts(ListSanPhamPhieuNhap, tblsanphamchitiet, soluong);
+                updatetableaddedproducts(ListSanPhamPhieuNhap, tblsanphamchitiet, soluong, gianhap);
             }
         } else {
             // Hiển thị thông báo nếu không có chi tiết phiếu nhập nào được tìm thấy
@@ -115,7 +116,7 @@ public class ChiTietPhieuNhap extends javax.swing.JFrame {
         }
     }
 
-    public void updatetableaddedproducts(ArrayList<SanPhamDTO> productList, JTable table, int soluong) {
+    public void updatetableaddedproducts(ArrayList<SanPhamDTO> productList, JTable table, int soluong, int gianhap) {
         thuongHieuDAO = new ThuongHieuDAO();
         loaiDAO = new LoaiDAO();
         xuatXuDAO = new XuatXuDAO();
@@ -137,7 +138,7 @@ public class ChiTietPhieuNhap extends javax.swing.JFrame {
                 XuatXu,
                 TenLoai,
                 TenThuongHieu,
-                decimalFormat.format(product.getGianhap()), // Định dạng giá nhập
+                decimalFormat.format(gianhap), // Định dạng giá nhập
                 soluong
             });
         }

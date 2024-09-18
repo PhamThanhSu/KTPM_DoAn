@@ -3,6 +3,8 @@ package GUI;
 import BUS.NhanVienBUS;
 import DAO.NhanVienDAO;
 import DTO.NhanVienDTO;
+import DTO.TaiKhoanDTO;
+import GUI.Component.CheckAction;
 import GUI.NVien.ChiTietNhanVien;
 import GUI.NVien.SuaNhanVien;
 import GUI.NVien.ThemNhanVien;
@@ -15,8 +17,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.border.EmptyBorder;
@@ -36,7 +41,7 @@ public class NhanVien extends javax.swing.JPanel implements ActionListener {
     ChiTietNhanVien chiTietNhanVien;
     public ArrayList<NhanVienDTO> listNhanVien = nhanVienBus.getAllNhanVien();
 
-    public NhanVien() {
+    public NhanVien(TaiKhoanDTO taiKhoanDTO) throws SQLException {
         initComponents();
         addIcon();
         Color BackgroundColor = new Color(240, 247, 250);
@@ -65,6 +70,20 @@ public class NhanVien extends javax.swing.JPanel implements ActionListener {
         this.add(pnlCenter, BorderLayout.CENTER);
 
         btnLamMoi.setIcon(new FlatSVGIcon("./icon/refresh.svg"));
+        
+        String[] action = {"create", "update", "delete", "view"};
+        Map<String, JButton> buttonMap = new HashMap<>();
+        buttonMap.put("create", btnThemNV);       // Nút thêm
+        buttonMap.put("delete", btnXoaNV);        // Nút xóa
+        buttonMap.put("update", btnSuaNV);        // Nút sửa
+        buttonMap.put("detail", btnChiTietNV);    // Nút chi tiết
+        buttonMap.put("export", btnXuatExcelNV);  // Nút xuất Excel
+//        buttonMap.put("import",btnNhapExcel);  // Nút nhập Excel
+
+// Tạo đối tượng CheckAction
+        CheckAction checkAction = new CheckAction(taiKhoanDTO.getManhomquyen(), "nhanvien", action, buttonMap);
+
+        
         hienThiListNhanVien(listNhanVien);
     }
 

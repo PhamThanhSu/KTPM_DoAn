@@ -7,6 +7,8 @@ import DAO.SanPhamDAO;
 import DAO.ThuongHieuDAO;
 import DAO.XuatXuDAO;
 import DTO.SanPhamDTO;
+import DTO.TaiKhoanDTO;
+import GUI.Component.CheckAction;
 import GUI.SPham.ChiTietSanPham;
 import GUI.SPham.SuaSanPham;
 import GUI.SPham.ThemSanPham;
@@ -21,8 +23,11 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -66,7 +71,7 @@ public class SanPham extends javax.swing.JPanel implements ActionListener {
     private final Color hoverColor = new Color(187, 222, 251);
     Color BackgroundColor = new Color(240, 247, 250);
 
-    public SanPham() throws IOException {
+    public SanPham(TaiKhoanDTO taikhoan) throws IOException, SQLException {
         initComponents();
 
         this.setOpaque(false);
@@ -91,6 +96,18 @@ public class SanPham extends javax.swing.JPanel implements ActionListener {
         btnXuatExcelSP.addActionListener(this);
 
         addHoverBtn();
+
+        String[] action = {"create", "update", "delete", "view"};
+        Map<String, JButton> buttonMap = new HashMap<>();
+        buttonMap.put("create", btnThemSP);       // Nút thêm
+        buttonMap.put("delete", btnXoaSP);        // Nút xóa
+        buttonMap.put("update", btnSuaSP);        // Nút sửa
+        buttonMap.put("detail", btnChiTietSP);    // Nút chi tiết
+        buttonMap.put("export", btnXuatExcelSP);  // Nút xuất Excel
+        buttonMap.put("import", btnNhapExcel);  // Nút nhập Excel
+
+// Tạo đối tượng CheckAction
+        CheckAction checkAction = new CheckAction(taikhoan.getManhomquyen(), "sanpham", action, buttonMap);
 
         hienThiListSanPham();
 
@@ -134,9 +151,7 @@ public class SanPham extends javax.swing.JPanel implements ActionListener {
                 loaiDAO.selectById(sanPham.getLoai()).getTenloai(),
                 thuongHieuDAO.selectById(sanPham.getThuonghieu()).getTenthuonghieu(),
                 xuatXuDAO.selectById(sanPham.getXuatxu()).getTenxuatxu(), // Giá trị ở giữa thứ 7
-                khuVucKhoDAO.selectById(sanPham.getKhuvuckho()).getTenkhuvuc(),
-                formatTien(sanPham.getGianhap()),
-                formatTien(sanPham.getGiaxuat())};
+                khuVucKhoDAO.selectById(sanPham.getKhuvuckho()).getTenkhuvuc()};
             model.addRow(row);
         }
 
@@ -168,9 +183,7 @@ public class SanPham extends javax.swing.JPanel implements ActionListener {
                 loaiDAO.selectById(sanPham.getLoai()).getTenloai(),
                 thuongHieuDAO.selectById(sanPham.getThuonghieu()).getTenthuonghieu(),
                 xuatXuDAO.selectById(sanPham.getXuatxu()).getTenxuatxu(), // Giá trị ở giữa thứ 7
-                khuVucKhoDAO.selectById(sanPham.getKhuvuckho()).getTenkhuvuc(),
-                formatTien(sanPham.getGianhap()),
-                formatTien(sanPham.getGiaxuat())};
+                khuVucKhoDAO.selectById(sanPham.getKhuvuckho()).getTenkhuvuc()};
             model.addRow(row);
         }
 
@@ -480,8 +493,6 @@ public class SanPham extends javax.swing.JPanel implements ActionListener {
                 sanPham.setThuonghieu((int) row.getCell(3).getNumericCellValue());
                 sanPham.setXuatxu((int) row.getCell(4).getNumericCellValue());
                 sanPham.setKhuvuckho((int) row.getCell(5).getNumericCellValue());
-                sanPham.setGianhap((int) row.getCell(6).getNumericCellValue());
-                sanPham.setGiaxuat((int) row.getCell(7).getNumericCellValue());
                 // Thêm đối tượng SanPhamDTO vào cơ sở dữ liệu
                 boolean thanhCong = sanPhamDAO.themSanPham(sanPham);
                 if (thanhCong) {

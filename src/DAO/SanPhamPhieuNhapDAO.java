@@ -1,5 +1,6 @@
 package DAO;
 
+import DTO.ChiTietPhieuNhapDTO;
 import DTO.SanPhamDTO;
 import config.MySQLConnection;
 import java.sql.Connection;
@@ -56,7 +57,6 @@ public class SanPhamPhieuNhapDAO {
                 sp.setXuatxu(rs.getInt("xuatxu"));
                 sp.setLoai(rs.getInt("loai"));
                 sp.setThuonghieu(rs.getInt("thuonghieu"));
-                sp.setGianhap(rs.getInt("gianhap"));
                 //sp.set
                 list.add(sp);
             }
@@ -67,4 +67,37 @@ public class SanPhamPhieuNhapDAO {
         }
         return list;
     }
+
+//    public static ArrayList<ChiTietPhieuNhapDTO> getListSanPhamANDGiaNhapXuat(int masp) {
+//        ArrayList<ChiTietPhieuNhapDTO> list = new ArrayList<>();
+//        Connection conn = MySQLConnection.getConnection(); // Lấy kết nối từ lớp MySQLConnection
+//        String sql = "SELECT sp.masp, sp.tensp, sp.size, sp.xuatxu, sp.loai, sp.thuonghieu, "
+//                + "ctpn.dongia, ctpn.giaxuat "
+//                + "FROM sanpham sp "
+//                + "LEFT JOIN ctphieunhap ctpn ON sp.masp = ctpn.masp "
+//                + "WHERE sp.masp = ?";
+//        try {
+//            PreparedStatement ps = conn.prepareStatement(sql);
+//            ps.setInt(1, masp);
+//            ResultSet rs = ps.executeQuery();
+//            while (rs.next()) {
+//                ChiTietPhieuNhapDTO ctphieu = new ChiTietPhieuNhapDTO();
+//                ctphieu.setMasp(rs.getInt("masp"));
+//                ctphieu.setTensp(rs.getString("tensp"));
+//                ctphieu.setSize(rs.getInt("size"));
+//                ctphieu.setXuatxu(rs.getInt("xuatxu"));
+//                ctphieu.setLoai(rs.getInt("loai"));
+//                ctphieu.setThuonghieu(rs.getInt("thuonghieu"));
+//                ctphieu.setGianhap(rs.getInt("dongia"));
+//                ctphieu.setGiaxuat(rs.getInt("giaxuat"));
+//                list.add(ctphieu);
+//            }
+//            rs.close();
+//            ps.close();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return list;
+//    }
+
 }

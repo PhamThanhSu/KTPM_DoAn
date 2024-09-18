@@ -16,6 +16,7 @@ import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -613,58 +614,92 @@ public final class Main extends javax.swing.JFrame {
 
     private void btnSanPhamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSanPhamActionPerformed
         try {
-            sanPham = new SanPham();
+            sanPham = new SanPham(taiKhoanDTO);
+            addTaskBar(mainContent2, sanPham);
         } catch (IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-        addTaskBar(mainContent2, sanPham);
     }//GEN-LAST:event_btnSanPhamActionPerformed
 
     private void btnThuocTinhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThuocTinhActionPerformed
-        // TODO add your handling code here:
-        thuocTinh = new ThuocTinh();
-        addTaskBar(mainContent2, thuocTinh);
+        try {
+            // TODO add your handling code here:
+            thuocTinh = new ThuocTinh(taiKhoanDTO);
+            addTaskBar(mainContent2, thuocTinh);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnThuocTinhActionPerformed
 
     private void btnKhuVucKhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKhuVucKhoActionPerformed
-        // TODO add your handling code here:
-        khuVucKho = new KhuVucKho();
-        addTaskBar(mainContent2, khuVucKho);
+        try {
+            // TODO add your handling code here:
+            khuVucKho = new KhuVucKho(taiKhoanDTO);
+            addTaskBar(mainContent2, khuVucKho);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnKhuVucKhoActionPerformed
 
     private void btnPhieuNhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPhieuNhapActionPerformed
-        // TODO add your handling code here:
-        phieuNhap = new PhieuNhap(taiKhoanDTO);
-        addTaskBar(mainContent2, phieuNhap);
+        try {
+            // TODO add your handling code here:
+            phieuNhap = new PhieuNhap(taiKhoanDTO);
+            addTaskBar(mainContent2, phieuNhap);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnPhieuNhapActionPerformed
 
     private void btnPhieuXuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPhieuXuatActionPerformed
-        // TODO add your handling code here:
-        phieuXuat = new PhieuXuat(taiKhoanDTO);
-        addTaskBar(mainContent2, phieuXuat);
+        try {
+            // TODO add your handling code here:
+            phieuXuat = new PhieuXuat(taiKhoanDTO);
+            addTaskBar(mainContent2, phieuXuat);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnPhieuXuatActionPerformed
 
     private void btnKhachHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKhachHangActionPerformed
-        // TODO add your handling code here:
-        khachHang = new KhachHang();
-        addTaskBar(mainContent2, khachHang);
+        try {
+            // TODO add your handling code here:
+            khachHang = new KhachHang(taiKhoanDTO);
+            addTaskBar(mainContent2, khachHang);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnKhachHangActionPerformed
 
     private void btnNhaCungCapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhaCungCapActionPerformed
-        // TODO add your handling code here:
-        nhaCungCap = new NhaCungCap();
-        addTaskBar(mainContent2, nhaCungCap);
+        try {
+            // TODO add your handling code here:
+            nhaCungCap = new NhaCungCap(taiKhoanDTO);
+            addTaskBar(mainContent2, nhaCungCap);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnNhaCungCapActionPerformed
 
     private void btnNhanVienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNhanVienActionPerformed
-        // TODO add your handling code here:
-        nhanVien = new NhanVien();
-        addTaskBar(mainContent2, nhanVien);
+        try {
+            // TODO add your handling code here:
+            nhanVien = new NhanVien(taiKhoanDTO);
+            addTaskBar(mainContent2, nhanVien);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnNhanVienActionPerformed
 
     private void btnTaiKhoanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTaiKhoanActionPerformed
-        // TODO add your handling code here:
-        taiKhoan = new TaiKhoan();
+        try {
+            // TODO add your handling code here:
+            taiKhoan = new TaiKhoan(taiKhoanDTO);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         addTaskBar(mainContent2, taiKhoan);
     }//GEN-LAST:event_btnTaiKhoanActionPerformed
 
@@ -688,8 +723,12 @@ public final class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTrangChuActionPerformed
 
     private void btnPhanquyenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPhanquyenActionPerformed
-        phanQuyen = new PhanQuyen();
-        addTaskBar(mainContent2, phanQuyen);
+        try {
+            phanQuyen = new PhanQuyen(taiKhoanDTO);
+            addTaskBar(mainContent2, phanQuyen);
+        } catch (SQLException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnPhanquyenActionPerformed
 
 // hàm taskbar

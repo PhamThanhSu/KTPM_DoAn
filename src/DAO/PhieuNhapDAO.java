@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class PhieuNhapDAO {
 
@@ -153,6 +154,14 @@ public class PhieuNhapDAO {
             // Lấy danh sách các sản phẩm trong phiếu nhập
             ArrayList<ChiTietPhieuNhapDTO> listPn = ChiTietPhieuNhapDAO.getInstance().selectAll(Integer.toString(mapn));
 
+            // Kiểm tra xem có sản phẩm nào đã bán hay không
+            for (ChiTietPhieuNhapDTO chiTiet : listPn) {
+                if (chiTiet.getSoluongconlai() < chiTiet.getSoluong()) {
+                    JOptionPane.showMessageDialog(null, "Phiếu này có sản phẩm đã bán, không thể hủy!");
+                    return false; // Dừng quá trình xóa ngay lập tức
+                }
+            }
+
             // Xóa chi tiết phiếu nhập
             String sqlDeleteChiTietPhieuNhap = "DELETE FROM ctphieunhap WHERE maphieunhap = ?";
             psDeleteChiTietPhieuNhap = connection.prepareStatement(sqlDeleteChiTietPhieuNhap);
@@ -169,6 +178,7 @@ public class PhieuNhapDAO {
                 // Cập nhật số lượng tồn của các sản phẩm
                 for (ChiTietPhieuNhapDTO chiTiet : listPn) {
                     ChiTietPhieuNhapDAO.getInstance().updateSoluongton(chiTiet.getMasp(), -chiTiet.getSoluong());
+                    ChiTietPhieuNhapDAO.getInstance().updateSoluongCTPN(chiTiet.getMasp(), mapn, mapn);
                 }
                 thanhCong = true;
             }

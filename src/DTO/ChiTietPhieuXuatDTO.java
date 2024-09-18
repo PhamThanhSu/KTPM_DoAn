@@ -9,52 +9,59 @@ package DTO;
  * @author ADMIN
  */
 public class ChiTietPhieuXuatDTO {
-
     private int maphieuxuat;
     private int masp;
     private int soluong;
-    private int dongia;
+    private int giaxuat;
 
-    public ChiTietPhieuXuatDTO(int maphieuxuat, int masp, int soluong, int dongia) {
+    public ChiTietPhieuXuatDTO() {}
+
+    public ChiTietPhieuXuatDTO(int maphieuxuat, int masp, int soluong, int giaxuat) {
         this.maphieuxuat = maphieuxuat;
         this.masp = masp;
         this.soluong = soluong;
-        this.dongia = dongia;
-    }
-
-    public ChiTietPhieuXuatDTO() {
+        this.giaxuat = giaxuat;
     }
 
     public int getMaphieuxuat() {
         return maphieuxuat;
     }
 
-    public int getMasp() {
+    public void setMaphieuxuat(int maphieuxuat) {
+        this.maphieuxuat = maphieuxuat;
+    }
+
+    public int getMaSp() {
         return masp;
+    }
+
+    public void setMaSp(int masp) {
+        this.masp = masp;
     }
 
     public int getSoluong() {
         return soluong;
     }
 
-    public int getDongia() {
-        return dongia;
-    }
-
-    public void setMaphieuxuat(int maphieuxuat) {
-        this.maphieuxuat = maphieuxuat;
-    }
-
-    public void setMasp(int masp) {
-        this.masp = masp;
-    }
-
     public void setSoluong(int soluong) {
         this.soluong = soluong;
     }
 
-    public void setDongia(int dongia) {
-        this.dongia = dongia;
+    public int getGiaxuat() {
+        return giaxuat;
     }
 
+    public void setGiaxuat(int giaxuat) {
+        this.giaxuat = giaxuat;
+    }
+
+    @Override
+    public String toString() {
+        return "ChiTietPhieuXuatDTO{" +
+                "maphieuxuat=" + maphieuxuat +
+                ", masp=" + masp +
+                ", soluong=" + soluong +
+                ", giaxuat=" + giaxuat +
+                '}';
+    }
 }

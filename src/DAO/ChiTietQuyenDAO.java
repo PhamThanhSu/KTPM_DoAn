@@ -7,63 +7,60 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ChiTietQuyenDAO {
     private Connection connection;
-    private PreparedStatement ps;
 
     public static ChiTietQuyenDAO getInstance() {
         return new ChiTietQuyenDAO();
     }
 
     public void addChiTietQuyen(ChiTietQuyenDTO chiTietQuyen) throws SQLException {
-        String sql = "INSERT INTO ctquyen (manhomquyen, machucnang, quyen) VALUES (?, ?, ?)";
-        try {
-            connection = MySQLConnection.getConnection();
-            ps = connection.prepareStatement(sql);
-            ps.setString(1, chiTietQuyen.getMaNhomQuyen());
+        String sql = "INSERT INTO ctquyen (manhomquyen, machucnang, hanhdong) VALUES (?, ?, ?)";
+        try (Connection connection = MySQLConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, chiTietQuyen.getMaNhomQuyen());
             ps.setString(2, chiTietQuyen.getMaChucNang());
             ps.setString(3, chiTietQuyen.getHanhDong());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace(); // Xử lý lỗi SQL
-        } finally {
-            if (ps != null) ps.close();
-            if (connection != null) connection.close();
         }
     }
 
     public void updateChiTietQuyen(ChiTietQuyenDTO chiTietQuyen) throws SQLException {
-        String sql = "UPDATE ctquyen SET quyen = ? WHERE manhomquyen = ? AND machucnang = ?";
-        try {
-            connection = MySQLConnection.getConnection();
-            ps = connection.prepareStatement(sql);
+        String sql = "UPDATE ctquyen SET hanhdong = ? WHERE manhomquyen = ? AND machucnang = ?";
+        try (Connection connection = MySQLConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, chiTietQuyen.getHanhDong());
-            ps.setString(2, chiTietQuyen.getMaNhomQuyen());
+            ps.setInt(2, chiTietQuyen.getMaNhomQuyen());
             ps.setString(3, chiTietQuyen.getMaChucNang());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace(); // Xử lý lỗi SQL
-        } finally {
-            if (ps != null) ps.close();
-            if (connection != null) connection.close();
         }
     }
 
     public void deleteChiTietQuyen(String maNhomQuyen, String maChucNang) throws SQLException {
         String sql = "DELETE FROM ctquyen WHERE manhomquyen = ? AND machucnang = ?";
-        try {
-            connection = MySQLConnection.getConnection();
-            ps = connection.prepareStatement(sql);
+        try (Connection connection = MySQLConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, maNhomQuyen);
             ps.setString(2, maChucNang);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace(); // Xử lý lỗi SQL
-        } finally {
-            if (ps != null) ps.close();
-            if (connection != null) connection.close();
+        }
+    }
+    
+    public void deleteAllChiTietQuyen(String maNhomQuyen) throws SQLException {
+        String sql = "DELETE FROM ctquyen WHERE manhomquyen = ?";
+        try (Connection connection = MySQLConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, maNhomQuyen);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace(); // Xử lý lỗi SQL
         }
     }
 
@@ -77,7 +74,7 @@ public class ChiTietQuyenDAO {
             
             while (rs.next()) {
                 ChiTietQuyenDTO quyen = new ChiTietQuyenDTO(
-                    rs.getString("manhomquyen"),
+                    rs.getInt("manhomquyen"),
                     rs.getString("machucnang"),
                     rs.getString("hanhdong")
                 );
@@ -89,26 +86,41 @@ public class ChiTietQuyenDAO {
         return dsQuyen;
     }
 
-    public List<ChiTietQuyenDTO> getAllChiTietQuyen() throws SQLException {
-        List<ChiTietQuyenDTO> list = new ArrayList<>();
+    public ArrayList<ChiTietQuyenDTO> getAllChiTietQuyen() throws SQLException {
+        ArrayList<ChiTietQuyenDTO> list = new ArrayList<>();
         String sql = "SELECT * FROM ctquyen";
-        try {
-            connection = MySQLConnection.getConnection();
-            ps = connection.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
+        try (Connection connection = MySQLConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 list.add(new ChiTietQuyenDTO(
-                        rs.getString("manhomquyen"),
+                        rs.getInt("manhomquyen"),
                         rs.getString("machucnang"),
                         rs.getString("hanhdong")
                 ));
             }
         } catch (SQLException e) {
             e.printStackTrace(); // Xử lý lỗi SQL
-        } finally {
-            if (ps != null) ps.close();
-            if (connection != null) connection.close();
         }
         return list;
+    }
+
+    // Phương thức kiểm tra quyền tồn tại
+    public boolean isChiTietQuyenExist(int maNhomQuyen, String maChucNang, String hanhDong) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM ctquyen WHERE manhomquyen = ? AND machucnang = ? AND hanhdong = ?";
+        try (Connection connection = MySQLConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, maNhomQuyen);
+            ps.setString(2, maChucNang);
+            ps.setString(3, hanhDong);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0; // Nếu quyền tồn tại
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Nếu quyền không tồn tại
     }
 }

@@ -29,6 +29,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -39,6 +40,8 @@ import java.text.DecimalFormat;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -87,7 +90,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
         txtmaphieunhap.setEditable(false);
         txtmasanpham.setEditable(false);
         txttensanpham.setEditable(false);
-        txtgianhap.setEditable(false);
+        txtloinhuan.setEditable(false);
         txtnhanviennhap.setEditable(false);
         CBBNhaCungCap(cbbnhacc);
 
@@ -100,7 +103,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
         SanPhamPhieuNhapBUS sanPhamPhieuNhapBUS = new SanPhamPhieuNhapBUS();
         ArrayList<SanPhamDTO> list = sanPhamPhieuNhapBUS.getListSanPham();
         // Cập nhật dữ liệu vào bảng
-        buildTable.updateTableProducts(tblsoluongsanpham, list);
+        buildTable.updateTableProductsPN(tblsoluongsanpham, list);
 
         tblsoluongsanpham.addMouseListener(this);
         tblthongtinspdathem.addMouseListener(this);
@@ -112,13 +115,14 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 sanPhamBUS = new SanPhamBUS();
-                ArrayList<SanPhamDTO> rs = sanPhamBUS.search(txtsearch.getText());
-                buildTable.updateTableProducts(tblsoluongsanpham, rs);
+                ArrayList<SanPhamDTO> rs = sanPhamBUS.searchPN(txtsearch.getText());
+                buildTable.updateTableProductsPN(tblsoluongsanpham, rs);
             }
         });
     }
     NhanVienBUS nhanVienBUS = new NhanVienBUS();
     TaiKhoanDTO taiKhoanDTO;
+
     public TaoPhieuNhap(TaiKhoanDTO taiKhoanDTO) {
         nhaCungCapBUS = new NhaCungCapBUS();
         this.taiKhoanDTO = taiKhoanDTO;
@@ -138,7 +142,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
         txtmaphieunhap.setEditable(false);
         txtmasanpham.setEditable(false);
         txttensanpham.setEditable(false);
-        txtgianhap.setEditable(false);
+        txtloinhuan.setEditable(false);
         txtnhanviennhap.setEditable(false);
         CBBNhaCungCap(cbbnhacc);
 
@@ -151,7 +155,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
         SanPhamPhieuNhapBUS sanPhamPhieuNhapBUS = new SanPhamPhieuNhapBUS();
         ArrayList<SanPhamDTO> list = sanPhamPhieuNhapBUS.getListSanPham();
         // Cập nhật dữ liệu vào bảng
-        buildTable.updateTableProducts(tblsoluongsanpham, list);
+        buildTable.updateTableProductsPN(tblsoluongsanpham, list);
 
         tblsoluongsanpham.addMouseListener(this);
         tblthongtinspdathem.addMouseListener(this);
@@ -163,13 +167,13 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 sanPhamBUS = new SanPhamBUS();
-                ArrayList<SanPhamDTO> rs = sanPhamBUS.search(txtsearch.getText());
-                buildTable.updateTableProducts(tblsoluongsanpham, rs);
+                ArrayList<SanPhamDTO> rs = sanPhamBUS.searchPN(txtsearch.getText());
+                buildTable.updateTableProductsPN(tblsoluongsanpham, rs);
             }
         });
         txtnhanviennhap.setText(nhanVienBUS.selectByID(taiKhoanDTO.getManv()).getHoten());
     }
-    
+
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == tblsoluongsanpham) {
@@ -181,10 +185,11 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
 
                 boolean found = false;
                 int soluongcheck = 0;
-
+                String gianhapcheck = null;
                 for (int i = 0; i < tblthongtinspdathem.getRowCount(); i++) {
                     int maspcheck = (int) tblthongtinspdathem.getValueAt(i, 1);
                     soluongcheck = (int) tblthongtinspdathem.getValueAt(i, 8);
+                    gianhapcheck = (String) tblthongtinspdathem.getValueAt(i, 7);
                     if (result.getMasp() == maspcheck) {
                         found = true;
                         break;
@@ -195,18 +200,20 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
                     btnsuasanpham.setVisible(true);
                     btnxoasanpham.setVisible(true);
                     txtsoluong.setText(String.valueOf(soluongcheck));
+                    txtgianhap.setText(gianhapcheck.replaceAll("[.,đ]", "").trim());
                     btnthem.setVisible(false);
                 } else {
                     btnsuasanpham.setVisible(false);
                     btnxoasanpham.setVisible(false);
                     txtsoluong.setText("");
+                    txtgianhap.setText("");
                     btnthem.setVisible(true);
                 }
 
                 if (result != null) {
                     txtmasanpham.setText(String.valueOf(result.getMasp()));
                     txttensanpham.setText(result.getTensp());
-                    txtgianhap.setText(String.valueOf(result.getGianhap()));
+//                    txtgianhap.setText("");
                 } else {
                     JOptionPane.showMessageDialog(null, "Không tìm thấy thông tin sản phẩm");
                 }
@@ -216,14 +223,16 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
             if (selectedRow != -1) {
                 int maspColumnIndex = getColumnIndexByName("Mã SP", tblthongtinspdathem);
                 int soluongColumnIndex = getColumnIndexByName("Số lượng", tblthongtinspdathem);
+                int gianhapColumnIndex = getColumnIndexByName("Giá nhập", tblthongtinspdathem);
                 int masp = (int) tblthongtinspdathem.getValueAt(selectedRow, maspColumnIndex);
+                String gianhapstr = (String) tblthongtinspdathem.getValueAt(selectedRow, gianhapColumnIndex);
                 int soluongcheck = (int) tblthongtinspdathem.getValueAt(selectedRow, soluongColumnIndex);
                 SanPhamDTO result = selectSanPham(masp); // Gọi hàm selectSanPham và truyền masp vào
 
                 txtmasanpham.setText(String.valueOf(result.getMasp()));
                 txtsoluong.setText(String.valueOf(soluongcheck));
                 txttensanpham.setText(result.getTensp());
-                txtgianhap.setText(String.valueOf(result.getGianhap()).replaceAll("[.,đ]", "").trim());
+                txtgianhap.setText(String.valueOf(gianhapstr).replaceAll("[.,đ]", "").trim());
                 btnthem.setVisible(false);
                 btnsuasanpham.setVisible(true);
                 btnxoasanpham.setVisible(true);
@@ -291,6 +300,9 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
 
         DefaultTableModel model = (DefaultTableModel) table.getModel();
 //        model.setRowCount(0); // Xóa hết dữ liệu trong bảng
+
+        String gianhapstr = txtgianhap.getText();
+        int gianhap = Integer.parseInt(gianhapstr);
         for (SanPhamDTO product : productList) {
             String TenLoai = loaiDAO.selectById(product.getLoai()).getTenloai();
             String TenThuongHieu = thuongHieuDAO.selectById(product.getThuonghieu()).getTenthuonghieu();
@@ -306,10 +318,10 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
                 XuatXu,
                 TenLoai,
                 TenThuongHieu,
-                decimalFormat.format(product.getGianhap()), // Định dạng giá nhập
+                decimalFormat.format(gianhap), // Định dạng giá nhập
                 soluong
             });
-            totalPrice += product.getGianhap() * soluong;
+            totalPrice += gianhap * soluong;
         }
         DecimalFormat decimalFormat = new DecimalFormat("#,### đ");
         txttongtien.setText(decimalFormat.format(totalPrice));
@@ -323,7 +335,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
         txtmasanpham.setText("");
         txtsoluong.setText("");
         txttensanpham.setText("");
-        txtgianhap.setText("");
+        txtloinhuan.setText("");
 
     }
 
@@ -363,13 +375,15 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtmasanpham = new javax.swing.JTextField();
-        txtgianhap = new javax.swing.JTextField();
+        txtloinhuan = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         txttensanpham = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         txtsoluong = new javax.swing.JTextField();
         btnxoasanpham = new javax.swing.JButton();
         btnsuasanpham = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        txtgianhap = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblthongtinspdathem = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
@@ -422,13 +436,13 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
             }
         });
 
-        txtgianhap.addActionListener(new java.awt.event.ActionListener() {
+        txtloinhuan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtgianhapActionPerformed(evt);
+                txtloinhuanActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("Giá nhập");
+        jLabel4.setText("Lợi nhuận (%)");
 
         jLabel7.setText("Số lượng");
 
@@ -450,41 +464,57 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
             }
         });
 
+        jLabel5.setText("Giá nhập");
+
+        txtgianhap.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtgianhapActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout containernhapLayout = new javax.swing.GroupLayout(containernhap);
         containernhap.setLayout(containernhapLayout);
         containernhapLayout.setHorizontalGroup(
             containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(containernhapLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(containernhapLayout.createSequentialGroup()
-                        .addComponent(btnsuasanpham, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnxoasanpham, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(containernhapLayout.createSequentialGroup()
-                        .addGroup(containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtmasanpham, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtgianhap, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addContainerGap()
                         .addGroup(containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(containernhapLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtmasanpham, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtgianhap, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txttensanpham)
                                     .addGroup(containernhapLayout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(txttensanpham)
                                             .addGroup(containernhapLayout.createSequentialGroup()
-                                                .addGap(6, 6, 6)
-                                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, Short.MAX_VALUE))))
+                                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(0, 0, Short.MAX_VALUE))))
+                                    .addGroup(containernhapLayout.createSequentialGroup()
+                                        .addGap(161, 161, 161)
+                                        .addComponent(txtloinhuan, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, containernhapLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                                .addComponent(txtsoluong, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(198, 198, 198)))))
+                                .addComponent(btnsuasanpham, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnxoasanpham, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(containernhapLayout.createSequentialGroup()
+                        .addGap(164, 164, 164)
+                        .addGroup(containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
+                            .addComponent(txtsoluong, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
+                        .addGap(49, 49, 49)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(containernhapLayout.createSequentialGroup()
+                    .addGap(16, 16, 16)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGap(336, 336, 336)))
         );
         containernhapLayout.setVerticalGroup(
             containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -497,18 +527,24 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
                 .addGroup(containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txttensanpham, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
                     .addComponent(txtmasanpham))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtgianhap, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtsoluong, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(178, 178, 178)
+                    .addComponent(txtsoluong, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtloinhuan, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(172, 172, 172)
                 .addGroup(containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnxoasanpham, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnsuasanpham, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(containernhapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(containernhapLayout.createSequentialGroup()
+                    .addGap(98, 98, 98)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(247, Short.MAX_VALUE)))
         );
 
         tblthongtinspdathem.setModel(new javax.swing.table.DefaultTableModel(
@@ -652,16 +688,20 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
             } else {
                 String ncc = "Chọn nhà cung cấp";
                 if (cbbnhacc.getSelectedItem().equals(ncc)) {
-                    JOptionPane.showMessageDialog(null, "Vui lòng chọn nhà cung cấp");
+                    JOptionPane.showMessageDialog(leftcontent, "Vui lòng chọn nhà cung cấp!");
                 } else if (createPhieuNhap()) {
-                    // Tạo đối tượng mới của panel PhieuNhap
-                    PhieuNhap phieunhap = new PhieuNhap(taiKhoanDTO);
-                    main = new Main();
-                    // Kiểm tra và hiển thị panel PhieuNhap
-                    if (main != null) {
-                        main.setPanel(containerpanel, phieunhap);
-                    } else {
-                        System.out.println("Biến main chưa được khởi tạo!");
+                    try {
+                        // Tạo đối tượng mới của panel PhieuNhap
+                        PhieuNhap phieunhap = new PhieuNhap(taiKhoanDTO);
+                        main = new Main();
+                        // Kiểm tra và hiển thị panel PhieuNhap
+                        if (main != null) {
+                            main.setPanel(containerpanel, phieunhap);
+                        } else {
+                            System.out.println("Biến main chưa được khởi tạo!");
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(TaoPhieuNhap.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
@@ -672,40 +712,16 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
         try {
             String tenncc = (String) cbbnhacc.getSelectedItem();
             int mancc = SelectedMaNCC(tenncc);
+            NhaCungCapDTO nhaCungCapDTO = new NhaCungCapDTO();
+            nhaCungCapDTO = nhaCungCapBUS.selectByID(mancc);
+            int phantramloinhuan = nhaCungCapDTO.getPhantramloinhuan();
+            txtloinhuan.setText(String.valueOf(phantramloinhuan));
             String maphieunhapstr = txtmaphieunhap.getText().replaceAll("[PN.,đ]", "").trim();
             int maphieunhap = Integer.parseInt(maphieunhapstr);
             int manv = taiKhoanDTO.getManv();
             long tongtien = 0;
             String tongtienStr = txttongtien.getText().replaceAll("[.,đ]", "").trim();
             tongtien = Long.parseLong(tongtienStr);
-
-            //long now = System.currentTimeMillis();
-////        Timestamp currentTime = new Timestamp(now);
-//        Date currentTime = new Date(now);
-//        
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-//        String formattedDateTime = dateFormat.format(currentTime);
-//        Date parsedDate = dateFormat.parse(formattedDateTime);
-//        java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
-//        String formattedDateTime = dateFormat.format(currentTime);
-//        System.out.println("Ngày giờ hiện tại: " + formattedDateTime);
-//        // Chuyển đổi chuỗi đã định dạng thành đối tượng Date
-//        Date parsedDate = null;
-//        try {
-//            parsedDate = (Date) dateFormat.parse(formattedDateTime);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        // Tạo đối tượng java.sql.Date từ chuỗi đã định dạng
-//        java.util.Date parsedDate = dateFormat.parse(formattedDateTime);
-//        System.out.println("Ngày giờ hiện tại: " + parsedDate);
-//        //java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
-//        //System.out.println("Ngày giờ hiện tại: " + sqlDate);
-            // Chuyển đổi chuỗi đã định dạng thành Timestamp
-            //java.util.Date parsedDate = dateFormat.parse(formattedDateTime);
-//        System.out.println("Ngày giờ hiện tại: " + parsedDate);
-//        Timestamp timestamp = new Timestamp(parsedDate.getTime());
-//        System.out.println("Ngày giờ hiện tại: " + timestamp);
             long now = System.currentTimeMillis();
             Timestamp timestamp = new Timestamp(now);
 
@@ -722,67 +738,24 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
         }
     }
 
-//    public boolean ShowTableProducts_AfterClickNhapHang() {
-//        String tenncc = (String) cbbnhacc.getSelectedItem();
-//        int mancc = SelectedMaNCC(tenncc);
-//        String maphieunhapstr = txtmaphieunhap.getText().replaceAll("[PN.,đ]", "").trim();
-//        int maphieunhap = Integer.parseInt(maphieunhapstr);
-//        int manv = 1;
-//        long tongtien = 0;
-//        String tongtienStr = txttongtien.getText().replaceAll("[.,đ]", "").trim();
-//        tongtien = Long.parseLong(tongtienStr);
-//        long now = System.currentTimeMillis();
-//        Timestamp currenTime = new Timestamp(now);
-//
-//        PhieuNhapDTO pn = new PhieuNhapDTO(maphieunhap, currenTime, mancc, manv, tongtien, 1);
-//        phieuNhapDAO = new PhieuNhapDAO();
-//        phieuNhapDAO.insertPhieuNhap(pn, now);
-//
-//        DefaultTableModel model = (DefaultTableModel) tblthongtinspdathem.getModel();
-//        ArrayList<ChiTietPhieuNhapDTO> chiTietPhieuNhapList = new ArrayList<>();
-//        boolean hasProductsToImport = false;
-//        for (int i = 0; i < model.getRowCount(); i++) {
-//            int masp = (int) (model.getValueAt(i, 1));
-//            int soluong = (int) (model.getValueAt(i, 8));
-//            String dongiastr = (String) (model.getValueAt(i, 7).toString());
-//            int dongia = Integer.parseInt(dongiastr.replaceAll("[.,đ]", "").trim());
-//            try {
-//
-//                chiTiet.updateSoluongton(masp, soluong);
-//                chiTietPhieuNhapDTO = new ChiTietPhieuNhapDTO(maphieunhap, masp, soluong, dongia);
-//                chiTietPhieuNhapList.add(chiTietPhieuNhapDTO);
-//                hasProductsToImport = true;
-//
-//            } catch (NumberFormatException ex) {
-//                JOptionPane.showMessageDialog(null, "Số lượng sản phẩm phải là một số nguyên dương");
-//                hasProductsToImport = false;
-//                break;
-//            }
-//        }
-//
-//        if (hasProductsToImport) {
-//            chiTietPhieuNhapDAO = new ChiTietPhieuNhapDAO();
-//            chiTietPhieuNhapDAO.insert(chiTietPhieuNhapList);
-//        }
-//
-//        return hasProductsToImport; // Trả về giá trị boolean
-//    }
-// Phương thức thêm chi tiết phiếu nhập vào cơ sở dữ liệu
     private void addChiTietPhieuNhapToDatabase() {
         DefaultTableModel model = (DefaultTableModel) tblthongtinspdathem.getModel();
         ArrayList<ChiTietPhieuNhapDTO> chiTietPhieuNhapList = new ArrayList<>();
+        chiTietPhieuNhapDAO = new ChiTietPhieuNhapDAO();
         boolean hasProductsToImport = false;
         String maphieunhapstr = txtmaphieunhap.getText().replaceAll("[PN.,đ]", "").trim();
         int maphieunhap = Integer.parseInt(maphieunhapstr);
-
+        int loinhuan = Integer.parseInt(txtloinhuan.getText());
         for (int i = 0; i < model.getRowCount(); i++) {
             int masp = (int) model.getValueAt(i, 1);
             int soluong = (int) model.getValueAt(i, 8);
-            String dongiastr = model.getValueAt(i, 7).toString();
-            int dongia = Integer.parseInt(dongiastr.replaceAll("[.,đ]", "").trim());
+            String gianhapsrt = model.getValueAt(i, 7).toString();
+            int gianhap = Integer.parseInt(gianhapsrt.replaceAll("[.,đ]", "").trim());
+            int giaxuat = gianhap + (gianhap * loinhuan/100);
             try {
                 chiTiet.updateSoluongton(masp, soluong);
-                ChiTietPhieuNhapDTO chiTietPhieuNhapDTO = new ChiTietPhieuNhapDTO(maphieunhap, masp, soluong, dongia);
+                ChiTietPhieuNhapDTO chiTietPhieuNhapDTO = new ChiTietPhieuNhapDTO(maphieunhap, masp, soluong, gianhap, giaxuat);
+                chiTietPhieuNhapDAO.updateSoluongCTPN(masp, soluong, maphieunhap);
                 chiTietPhieuNhapList.add(chiTietPhieuNhapDTO);
                 hasProductsToImport = true;
             } catch (NumberFormatException ex) {
@@ -831,9 +804,9 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
         }
     }//GEN-LAST:event_btnthemActionPerformed
 
-    private void txtgianhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtgianhapActionPerformed
+    private void txtloinhuanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtloinhuanActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtgianhapActionPerformed
+    }//GEN-LAST:event_txtloinhuanActionPerformed
 
     private void txtmasanphamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtmasanphamActionPerformed
         // TODO add your handling code here:
@@ -852,7 +825,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
             txtmasanpham.setText("");
             txtsoluong.setText("");
             txttensanpham.setText("");
-            txtgianhap.setText("");
+            txtloinhuan.setText("");
         }
     }//GEN-LAST:event_btnxoasanphamActionPerformed
 
@@ -883,6 +856,10 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm để cập nhật số lượng.");
         }
     }//GEN-LAST:event_btnsuasanphamActionPerformed
+
+    private void txtgianhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtgianhapActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtgianhapActionPerformed
 
     // Phương thức để cập nhật tổng tiền sau khi sửa số lượng
     private void updateTotalPrice() {
@@ -970,6 +947,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -978,6 +956,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
     private javax.swing.JTable tblsoluongsanpham;
     private javax.swing.JTable tblthongtinspdathem;
     private javax.swing.JTextField txtgianhap;
+    private javax.swing.JTextField txtloinhuan;
     private javax.swing.JTextField txtmaphieunhap;
     public javax.swing.JTextField txtmasanpham;
     private javax.swing.JTextField txtnhanviennhap;

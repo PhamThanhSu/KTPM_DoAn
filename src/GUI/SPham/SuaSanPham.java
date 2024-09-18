@@ -90,8 +90,6 @@ public class SuaSanPham extends javax.swing.JFrame {
     private void LoadDuLieu(SanPhamDTO sanPhamDTO) {
         txtTenSP.setText(sanPhamDTO.getTensp());
         txtSizeSP.setText(String.valueOf(sanPhamDTO.getSize()));
-        txtGiaNhap.setText(FormatVND(sanPhamDTO.getGianhap()));
-        txtGiaXuat.setText(FormatVND(sanPhamDTO.getGiaxuat()));
         ImageIcon icon = new ImageIcon("./src/img_product/" + sanPhamDTO.getHinhanh());
         Image img = icon.getImage();
         Image scaledImg = img.getScaledInstance(lblAnhSanPham.getWidth(), lblAnhSanPham.getHeight(), Image.SCALE_SMOOTH);
@@ -200,9 +198,7 @@ public class SuaSanPham extends javax.swing.JFrame {
         int maThuongHieuSanPham = thuongHieuBUS.getAllThuongHieu().get(this.cbxThuongHieu.getSelectedIndex()).getMathuonghieu();
         int maXuatXuSanPham = xuatXuBUS.getAllXuatXu().get(this.cbxXuatXu.getSelectedIndex()).getMaxuatxu();
         int maKhuVucKhoSanPham = khuVucKhoBUS.getAllKho().get(this.cbxKho.getSelectedIndex()).getMakhuvuc();
-        int giaNhapSanPham = parseVND(txtGiaNhap.getText());
-        int giaXuatSanPham = parseVND(txtGiaXuat.getText());
-        sanPhamDTO = new SanPhamDTO(tenSanPham, sizeSanPham, hinhanh, maXuatXuSanPham, maLoaiSanPham, maThuongHieuSanPham, maKhuVucKhoSanPham, giaNhapSanPham, giaXuatSanPham);
+        sanPhamDTO = new SanPhamDTO(tenSanPham, sizeSanPham, hinhanh, maXuatXuSanPham, maLoaiSanPham, maThuongHieuSanPham, maKhuVucKhoSanPham);
         return sanPhamDTO;
     }
 

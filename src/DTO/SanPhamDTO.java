@@ -20,14 +20,12 @@ public class SanPhamDTO {
     private int loai;
     private int thuonghieu;
     private int khuvuckho;
-    private int gianhap;
-    private int giaxuat;
     private int soluongton;
 
     public SanPhamDTO() {
     }
 
-    public SanPhamDTO(String tensp, int size, String hinhanh, int xuatxu, int loai, int thuonghieu, int khuvuckho, int gianhap, int giaxuat) {
+    public SanPhamDTO(String tensp, int size, String hinhanh, int xuatxu, int loai, int thuonghieu, int khuvuckho) {
         this.tensp = tensp;
         this.size = size;
         this.hinhanh = hinhanh;
@@ -35,25 +33,7 @@ public class SanPhamDTO {
         this.loai = loai;
         this.thuonghieu = thuonghieu;
         this.khuvuckho = khuvuckho;
-        this.gianhap = gianhap;
-        this.giaxuat = giaxuat;
     }
-
-    public SanPhamDTO(int masp, String tensp, int size, String hinhanh, int xuatxu, int loai, int thuonghieu, int khuvuckho, int gianhap, int giaxuat, int soluongton) {
-        this.masp = masp;
-        this.tensp = tensp;
-        this.size = size;
-        this.hinhanh = hinhanh;
-        this.xuatxu = xuatxu;
-        this.loai = loai;
-        this.thuonghieu = thuonghieu;
-        this.khuvuckho = khuvuckho;
-        this.gianhap = gianhap;
-        this.giaxuat = giaxuat;
-        this.soluongton = soluongton;
-    }
-
-
 
     public SanPhamDTO(int masp, String tensp, int size, String hinhanh, int xuatxu, int loai, int thuonghieu, int khuvuckho, int soluongton) {
         this.masp = masp;
@@ -76,8 +56,6 @@ public class SanPhamDTO {
         this.loai = loai;
         this.thuonghieu = thuonghieu;
         this.khuvuckho = khuvuckho;
-        this.gianhap = gianhap;
-        this.giaxuat = giaxuat;
     }
 
     public int getMasp() {
@@ -115,15 +93,6 @@ public class SanPhamDTO {
     public int getSoluongton() {
         return soluongton;
     }
-
-    public int getGianhap() {
-        return gianhap;
-    }
-
-    public int getGiaxuat() {
-        return giaxuat;
-    }
-
     
     public void setMasp(int masp) {
         this.masp = masp;
@@ -139,14 +108,6 @@ public class SanPhamDTO {
 
     public void setHinhanh(String hinhanh) {
         this.hinhanh = hinhanh;
-    }
-
-    public void setGianhap(int gianhap) {
-        this.gianhap = gianhap;
-    }
-
-    public void setGiaxuat(int giaxuat) {
-        this.giaxuat = giaxuat;
     }
 
     public void setXuatxu(int xuatxu) {

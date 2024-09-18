@@ -3,6 +3,8 @@ package GUI;
 import BUS.KhachHangBUS;
 import DAO.KhachHangDAO;
 import DTO.KhachHangDTO;
+import DTO.TaiKhoanDTO;
+import GUI.Component.CheckAction;
 import GUI.KHang.ThemKHang;
 import GUI.KHang.ChiTietKHang;
 import GUI.KHang.SuaKHang;
@@ -14,9 +16,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -32,7 +38,7 @@ public class KhachHang extends javax.swing.JPanel implements ActionListener {
     ChiTietKHang chiTietKH;
     ArrayList<KhachHangDTO> listKhachHang = khachHangBUS.getAllKhachHang();
 
-    public KhachHang() {
+    public KhachHang(TaiKhoanDTO taiKhoanDTO) throws SQLException {
         initComponents();
         addIcon();
         Color BackgroundColor = new Color(240, 247, 250);
@@ -61,6 +67,20 @@ public class KhachHang extends javax.swing.JPanel implements ActionListener {
         this.add(pnlTop, BorderLayout.NORTH);
         this.add(pnlCenter, BorderLayout.CENTER);
         btnLamMoi.setIcon(new FlatSVGIcon("./icon/refresh.svg"));
+        
+        String[] action = {"create", "update", "delete", "view"};
+        Map<String, JButton> buttonMap = new HashMap<>();
+        buttonMap.put("create", btnThemKH);       // Nút thêm
+        buttonMap.put("delete", btnXoaKH);        // Nút xóa
+        buttonMap.put("update", btnSuaKH);        // Nút sửa
+        buttonMap.put("detail", btnChiTietKH);    // Nút chi tiết
+        buttonMap.put("export", btnXuatExcel1KH);  // Nút xuất Excel
+//        buttonMap.put("import",btnNhapExcel);  // Nút nhập Excel
+
+// Tạo đối tượng CheckAction
+        CheckAction checkAction = new CheckAction(taiKhoanDTO.getManhomquyen(), "khachhang", action, buttonMap);
+
+        
         hienThiListKhachHang(listKhachHang);
     }
 

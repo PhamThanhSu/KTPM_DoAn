@@ -12,16 +12,51 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/DoAn-Java/DoAnJAVA/src/GUI/TKhoan/SuaTaiKhoan.java</file>
-            <file>file:/D:/DoAn-Java/DoAnJAVA/src/GUI/Login.java</file>
-            <file>file:/D:/DoAn-Java/DoAnJAVA/src/config/MySQLConnection.java</file>
-            <file>file:/D:/DoAn-Java/DoAnJAVA/src/GUI/TKhoan/ChonNhanVien.java</file>
-            <file>file:/D:/DoAn-Java/DoAnJAVA/src/DAO/TaiKhoanDAO.java</file>
-            <file>file:/D:/DoAn-Java/DoAnJAVA/src/GUI/TKhoan/ThemTaiKhoan.java</file>
-            <file>file:/D:/DoAn-Java/DoAnJAVA/src/GUI/TaiKhoan.java</file>
-            <file>file:/D:/DoAn-Java/DoAnJAVA/src/BUS/TaiKhoanBUS.java</file>
-            <file>file:/D:/DoAn-Java/DoAnJAVA/src/GUI/NhanVien.java</file>
-            <file>file:/D:/DoAn-Java/DoAnJAVA/src/GUI/Main.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/ChiTietPhieuNhapDAO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/BUS/NhaCungCapBUS.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DTO/ChiTietQuyenDTO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/SPham/ChiTietSanPham.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/Login.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/NhomQuyenDAO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/ThuocTinh.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/PhanQuyen.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/Panel/TaoPhieuXuatt.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/PhieuXuat.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/PNhap/ChiTietPhieuNhap.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/Main.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/NhanVien.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/Component/BuildTable.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/KhachHang.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DTO/NhaCungCapDTO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DTO/SanPhamDTO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/Component/ButtonToolBar.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/KhuVucKho.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/TrangChu.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/PhieuNhapDAO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DTO/ChiTietPhieuNhapDTO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/TaiKhoan.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/ThongKe.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/config/MySQLConnection.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/Panel/TaoPhieuNhap.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/SPham/SuaSanPham.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/ChiTietQuyenDAO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/SanPhamDAO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DTO/PhieuNhapDTO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/Component/CheckAction.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/NhaCungCap.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/BUS/NhomQuyenBUS.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/SanPhamPhieuNhapDAO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/BUS/SanPhamBUS.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/PhieuNhap.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/XuatExcel.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/PXuat/ChiTietPhieuXuat.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/SanPham.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DTO/ChiTietPhieuXuatDTO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/NhapExcel.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/ChiTietPhieuXuatDAO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/NhaCungCapDAO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/PhieuXuatDAO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DTO/TaiKhoanDTO.java</file>
         </group>
     </open-files>
 </project-private>

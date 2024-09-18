@@ -28,14 +28,14 @@ public class ChiTietPhieuXuatDAO {
     }
 
     public void insert(ArrayList<ChiTietPhieuXuatDTO> chiTietPhieuXuatList) {
-        String sql = "INSERT INTO `ctphieuxuat`(`maphieuxuat`, `masp`, `soluong`, `dongia`) VALUES (?,?,?,?)";
+        String sql = "INSERT INTO `ctphieuxuat`(`maphieuxuat`, `masp`, `soluong`, `giaxuat`) VALUES (?,?,?,?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             for (ChiTietPhieuXuatDTO chiTiet : chiTietPhieuXuatList) {
                 if (chiTiet != null) {
                     ps.setInt(1, chiTiet.getMaphieuxuat());
-                    ps.setInt(2, chiTiet.getMasp());
+                    ps.setInt(2, chiTiet.getMaSp());
                     ps.setInt(3, chiTiet.getSoluong());
-                    ps.setInt(4, chiTiet.getDongia());
+                    ps.setInt(4, chiTiet.getGiaxuat());
                     ps.executeUpdate();
                 }
             }
@@ -74,9 +74,9 @@ public class ChiTietPhieuXuatDAO {
                 while (rs.next()) {
                     int maphieu = rs.getInt("maphieuxuat");
                     int masp = rs.getInt("masp");
-                    int dongia = rs.getInt("dongia");
+                    int giaxuat = rs.getInt("giaxuat");
                     int soluong = rs.getInt("soluong");
-                    ChiTietPhieuXuatDTO ctphieu = new ChiTietPhieuXuatDTO(maphieu, masp, soluong, dongia);
+                    ChiTietPhieuXuatDTO ctphieu = new ChiTietPhieuXuatDTO(maphieu, masp, soluong, giaxuat);
                     result.add(ctphieu);
                 }
             } catch (SQLException ex) {
@@ -100,10 +100,30 @@ public class ChiTietPhieuXuatDAO {
                 int maphieuxuat = rs.getInt("maphieuxuat");
                 int masp = rs.getInt("masp");
                 int soluong = rs.getInt("soluong");
-                int dongia = rs.getInt("dongia");
-                result = new ChiTietPhieuXuatDTO(maphieuxuat, masp, soluong, dongia);
+                int giaxuat = rs.getInt("giaxuat");
+                result = new ChiTietPhieuXuatDTO(maphieuxuat, masp, soluong, giaxuat);
             }
             MySQLConnection.closeConnection(connection);
+        } catch (SQLException e) {
+        }
+        return result;
+    }
+
+    public ChiTietPhieuXuatDTO selectByMASP(int masp) {
+        ChiTietPhieuXuatDTO result = null;
+        try {
+            connection = MySQLConnection.getConnection();
+            String sql = "SELECT * FROM ctphieuxuat WHERE masp=?";
+            ps = connection.prepareStatement(sql);
+            ps.setInt(1, masp);
+            ResultSet rs = (ResultSet) ps.executeQuery();
+            while (rs.next()) {
+                int maphieunhap = rs.getInt("maphieuxuat");
+                int masanpham = rs.getInt("masp");
+                int soluong = rs.getInt("soluong");
+                int giaxuat = rs.getInt("giaxuat");
+                result = new ChiTietPhieuXuatDTO(maphieunhap, masanpham, soluong, giaxuat);
+            }
         } catch (SQLException e) {
         }
         return result;
@@ -120,9 +140,9 @@ public class ChiTietPhieuXuatDAO {
             while (rs.next()) {
                 int maphieu = rs.getInt("maphieuxuat");
                 int masp = rs.getInt("masp");
-                int dongia = rs.getInt("dongia");
+                int giaxuat = rs.getInt("giaxuat");
                 int soluong = rs.getInt("soluong");
-                ChiTietPhieuXuatDTO ctphieu = new ChiTietPhieuXuatDTO(maphieu, masp, soluong, dongia);
+                ChiTietPhieuXuatDTO ctphieu = new ChiTietPhieuXuatDTO(maphieu, masp, soluong, giaxuat);
                 result.add(ctphieu);
                 System.out.println(result);
             }

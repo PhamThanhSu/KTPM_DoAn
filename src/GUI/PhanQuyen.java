@@ -9,6 +9,8 @@ import DAO.ChiTietQuyenDAO;
 import DTO.ChiTietQuyenDTO;
 import DTO.NhomQuyenDTO;
 import DTO.PhieuNhapDTO;
+import DTO.TaiKhoanDTO;
+import GUI.Component.CheckAction;
 import GUI.PQuyen.PhanQuyenDialog;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.BorderLayout;
@@ -19,8 +21,12 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -42,7 +48,7 @@ public class PhanQuyen extends javax.swing.JPanel implements ActionListener {
     /**
      * Creates new form PhanQuyen
      */
-    public PhanQuyen() {
+    public PhanQuyen(TaiKhoanDTO taiKhoanDTO) throws SQLException {
         initComponents();
         addIcon();
 
@@ -63,16 +69,29 @@ public class PhanQuyen extends javax.swing.JPanel implements ActionListener {
         tblquyen.setFocusable(false);
         tblquyen.setAutoCreateRowSorter(true);
 
-//        btnThem.addActionListener(this);
+        btnThem.addActionListener(this);
         btnSua.addActionListener(this);
-//        btnXoa.addActionListener(this);
-//        btnXuatExcel.addActionListener(this);
+        btnXoa.addActionListener(this);
+        btnXuatExcel.addActionListener(this);
 
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(1200, 800));
         this.add(pnlTop, BorderLayout.NORTH);
         this.add(pnlCenter, BorderLayout.CENTER);
 
+        String[] action = {"create", "update", "delete", "view"};
+        Map<String, JButton> buttonMap = new HashMap<>();
+        buttonMap.put("create", btnThem);       // Nút thêm
+        buttonMap.put("delete", btnXoa);        // Nút xóa
+        buttonMap.put("update", btnSua);        // Nút sửa
+//        buttonMap.put("detail", btnChiTietPX);    // Nút chi tiết
+        buttonMap.put("export", btnXuatExcel);  // Nút xuất Excel
+//        buttonMap.put("import",btnNhapExcel);  // Nút nhập Excel
+
+// Tạo đối tượng CheckAction
+        CheckAction checkAction = new CheckAction(taiKhoanDTO.getManhomquyen(), "nhomquyen", action, buttonMap);
+
+        
         // Tải dữ liệu vào bảng
         loadData();
     }
@@ -138,6 +157,11 @@ public class PhanQuyen extends javax.swing.JPanel implements ActionListener {
         pnlTop.setPreferredSize(new java.awt.Dimension(1200, 70));
 
         btnThem.setText("Thêm");
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemActionPerformed(evt);
+            }
+        });
         pnlTop.add(btnThem);
 
         btnSua.setText("Sửa");
@@ -243,6 +267,10 @@ public class PhanQuyen extends javax.swing.JPanel implements ActionListener {
 
     }//GEN-LAST:event_btnLamMoiActionPerformed
 
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnThemActionPerformed
+
     private void addIcon() {
         btnThem.setIcon(new FlatSVGIcon("./icon/add.svg"));
         btnSua.setIcon(new FlatSVGIcon("./icon/edit.svg"));
@@ -270,9 +298,9 @@ public class PhanQuyen extends javax.swing.JPanel implements ActionListener {
                     // Lấy chi tiết quyền của nhóm quyền từ cơ sở dữ liệu
                     ChiTietQuyenDAO chiTietQuyenDAO = new ChiTietQuyenDAO();
                     ArrayList<ChiTietQuyenDTO> dsChiTietQuyen = chiTietQuyenDAO.getChiTietQuyen(maNhomQuyen);
-
+                    String tenchucnang = "Cập nhật nhóm quyền";
                     // Khởi tạo dialog và truyền dữ liệu quyền vào dialog
-                    phanQuyenDialog = new PhanQuyenDialog(nhomQuyenDTO, dsChiTietQuyen);
+                    phanQuyenDialog = new PhanQuyenDialog(nhomQuyenDTO, dsChiTietQuyen, tenchucnang);
 
                     // Hiển thị dialog
                     phanQuyenDialog.setVisible(true);

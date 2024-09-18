@@ -4,6 +4,7 @@ import BUS.TaiKhoanBUS;
 //import DAO.NhomQuyenDAO;
 import DAO.TaiKhoanDAO;
 import DTO.TaiKhoanDTO;
+import GUI.Component.CheckAction;
 import GUI.TKhoan.ChonNhanVien;
 import GUI.TKhoan.ThemTaiKhoan;
 import GUI.TKhoan.SuaTaiKhoan;
@@ -15,9 +16,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -37,8 +42,8 @@ public class TaiKhoan extends javax.swing.JPanel implements ActionListener {
     SuaTaiKhoan suaTaiKhoan;
     ChonNhanVien chonNhanVien;
     ArrayList<TaiKhoanDTO> listTaiKhoan = taiKhoanBus.getAllTaiKhoan();
-
-    public TaiKhoan() {
+    
+    public TaiKhoan(TaiKhoanDTO taikhoan) throws SQLException {
         initComponents();
         addIcon();
         Color BackgroundColor = new Color(240, 247, 250);
@@ -65,6 +70,22 @@ public class TaiKhoan extends javax.swing.JPanel implements ActionListener {
         this.add(pnlTop, BorderLayout.NORTH);
         this.add(pnlCenter, BorderLayout.CENTER);
 
+        String[] action = {"create", "update", "delete", "view"};
+        Map<String, JButton> buttonMap = new HashMap<>();
+        buttonMap.put("create", btnThemTK);       // Nút thêm
+        buttonMap.put("delete", btnXoaTK);        // Nút xóa
+        buttonMap.put("update", btnSuaTK);        // Nút sửa
+//        buttonMap.put("detail", btnChiTietTK);    // Nút chi tiết
+        buttonMap.put("export", btnXuatExcelTK);  // Nút xuất Excel
+//        buttonMap.put("import", btnNhapExcelTK);  // Nút nhập Excel
+
+// Tạo đối tượng CheckAction
+        CheckAction checkAction = new CheckAction(taikhoan.getManhomquyen(), "taikhoan", action, buttonMap);
+
+//        for (String ac : action) {
+//            checkAction.btn.get(ac).addActionListener(this);
+//        }
+        
         hienThiListTaiKhoan(listTaiKhoan);
     }
 
@@ -146,6 +167,11 @@ public class TaiKhoan extends javax.swing.JPanel implements ActionListener {
         pnlTop.setPreferredSize(new java.awt.Dimension(1200, 70));
 
         btnThemTK.setText("Thêm");
+        btnThemTK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemTKActionPerformed(evt);
+            }
+        });
         pnlTop.add(btnThemTK);
 
         btnSuaTK.setText("Sửa");
@@ -291,6 +317,10 @@ public class TaiKhoan extends javax.swing.JPanel implements ActionListener {
         hienThiListTaiKhoan(listTaiKhoan);
         txtTimKiem.setText("");
     }//GEN-LAST:event_btnLamMoiActionPerformed
+
+    private void btnThemTKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemTKActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnThemTKActionPerformed
 
     private void xoaTaiKhoan() {
         int selectedRow = tblTaiKhoan.getSelectedRow();

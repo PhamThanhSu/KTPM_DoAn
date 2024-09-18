@@ -8,6 +8,7 @@ import DTO.ChiTietPhieuXuatDTO;
 import DTO.PhieuNhapDTO;
 import DTO.PhieuXuatDTO;
 import DTO.TaiKhoanDTO;
+import GUI.Component.CheckAction;
 import GUI.Component.Export.JTableExporter;
 import GUI.Component.ShowCBB;
 import GUI.PXuat.ChiTietPhieuXuat;
@@ -24,9 +25,13 @@ import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -101,7 +106,7 @@ public class PhieuXuat extends javax.swing.JPanel implements ActionListener, Pro
     }
     TaiKhoanDTO taiKhoanDTO;
 
-    public PhieuXuat(TaiKhoanDTO taiKhoanDTO) {
+    public PhieuXuat(TaiKhoanDTO taiKhoanDTO) throws SQLException {
         initComponents();
         addIcon();
         this.taiKhoanDTO = taiKhoanDTO;
@@ -110,6 +115,19 @@ public class PhieuXuat extends javax.swing.JPanel implements ActionListener, Pro
         tblPhieuxuat.setFocusable(false);
         tblPhieuxuat.setAutoCreateRowSorter(true);
 
+        String[] action = {"create", "update", "delete", "view"};
+        Map<String, JButton> buttonMap = new HashMap<>();
+        buttonMap.put("create", btnThemPX);       // Nút thêm
+        buttonMap.put("delete", btnHuyPX);        // Nút xóa
+//        buttonMap.put("update", btnSuaSP);        // Nút sửa
+        buttonMap.put("detail", btnChiTietPX);    // Nút chi tiết
+        buttonMap.put("export", btnXuatExcelPX);  // Nút xuất Excel
+//        buttonMap.put("import",btnNhapExcel);  // Nút nhập Excel
+
+// Tạo đối tượng CheckAction
+        CheckAction checkAction = new CheckAction(taiKhoanDTO.getManhomquyen(), "xuathang", action, buttonMap);
+
+        
         tblModel = (DefaultTableModel) tblPhieuxuat.getModel();
         this.selectedPXproducts = phieuXuatBUS.getAllPhieuXuat();
         loadDataTable(this.selectedPXproducts);

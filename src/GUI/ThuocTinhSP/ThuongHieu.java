@@ -5,11 +5,17 @@
 package GUI.ThuocTinhSP;
 
 import BUS.ThuongHieuBUS;
+import DTO.TaiKhoanDTO;
 import DTO.ThuongHieuDTO;
+import GUI.Component.CheckAction;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Color;
 import java.awt.Font;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -30,7 +36,7 @@ public class ThuongHieu extends javax.swing.JPanel {
     ThuongHieuDTO thuongHieuDTO;
     Color BackgroundColor = new Color(240, 247, 250);
 
-    public ThuongHieu() {
+    public ThuongHieu(TaiKhoanDTO taiKhoanDTO) throws SQLException {
         initComponents();
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
         this.setBackground(BackgroundColor);
@@ -52,6 +58,17 @@ public class ThuongHieu extends javax.swing.JPanel {
         btnSuaThuongHieu.setIcon(new FlatSVGIcon("./icon/edit.svg"));
         btnXoaThuongHieu.setIcon(new FlatSVGIcon("./icon/delete.svg"));
         
+        String[] action = {"create", "update", "delete", "view"};
+        Map<String, JButton> buttonMap = new HashMap<>();
+        buttonMap.put("create", btnThemThuongHieu);       // Nút thêm
+        buttonMap.put("delete", btnXoaThuongHieu);        // Nút xóa
+        buttonMap.put("update", btnSuaThuongHieu);        // Nút sửa
+//        buttonMap.put("detail", btnChiTietPN);    // Nút chi tiết
+//        buttonMap.put("export", btnXuatExcelPN);  // Nút xuất Excel
+//        buttonMap.put("import",btnNhapExcel);  // Nút nhập Excel
+
+// Tạo đối tượng CheckAction
+        CheckAction checkAction = new CheckAction(taiKhoanDTO.getManhomquyen(), "thuoctinh", action, buttonMap);
 
     }
 

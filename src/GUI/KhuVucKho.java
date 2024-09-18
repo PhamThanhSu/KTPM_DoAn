@@ -3,6 +3,8 @@ package GUI;
 import BUS.KhuVucKhoBUS;
 import DAO.KhuVucKhoDAO;
 import DTO.KhuVucKhoDTO;
+import DTO.TaiKhoanDTO;
+import GUI.Component.CheckAction;
 import GUI.KhuVucKhoOpTions.SuaKhuVucKho;
 import GUI.KhuVucKhoOpTions.ThemKhuVucKho;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
@@ -10,9 +12,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -38,7 +44,7 @@ public class KhuVucKho extends javax.swing.JPanel {
     SuaKhuVucKho suaKhuVucKho;
     Color BackgroundColor = new Color(240, 247, 250);
 
-    public KhuVucKho() {
+    public KhuVucKho(TaiKhoanDTO taiKhoanDTO) throws SQLException {
         initComponents();
 //        setSize(1200, 800);
         addIcon();
@@ -47,6 +53,20 @@ public class KhuVucKho extends javax.swing.JPanel {
         tblKho.getColumnModel().getColumn(1).setPreferredWidth(180);
         tblKho.setFocusable(false);
         tblKho.setAutoCreateRowSorter(true);
+        
+        String[] action = {"create", "update", "delete", "view"};
+        Map<String, JButton> buttonMap = new HashMap<>();
+        buttonMap.put("create", btnThemKho);       // Nút thêm
+        buttonMap.put("delete", btnXoaKho);        // Nút xóa
+        buttonMap.put("update", btnSuaKho);        // Nút sửa
+//        buttonMap.put("detail", btnChiTietNV);    // Nút chi tiết
+        buttonMap.put("export", btnXuatExcelKho);  // Nút xuất Excel
+//        buttonMap.put("import",btnNhapExcel);  // Nút nhập Excel
+
+// Tạo đối tượng CheckAction
+        CheckAction checkAction = new CheckAction(taiKhoanDTO.getManhomquyen(), "khuvuckho", action, buttonMap);
+
+        
         hienThiListKhuVucKho();
 
         this.setOpaque(false);

@@ -78,8 +78,6 @@ public class ChiTietSanPham extends javax.swing.JFrame {
     private void LoadDuLieu(SanPhamDTO sanPhamDTO) {
         txtTenSP.setText(sanPhamDTO.getTensp());
         txtSizeSP.setText(String.valueOf(sanPhamDTO.getSize()));
-        txtGiaNhap.setText(FormatVND(sanPhamDTO.getGianhap()));
-        txtGiaXuat.setText(FormatVND(sanPhamDTO.getGiaxuat()));
         ImageIcon icon = new ImageIcon("./src/img_product/" + sanPhamDTO.getHinhanh());
         Image img = icon.getImage();
         Image scaledImg = img.getScaledInstance(lblAnhSanPham.getWidth(), lblAnhSanPham.getHeight(), Image.SCALE_SMOOTH);

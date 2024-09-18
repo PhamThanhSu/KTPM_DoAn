@@ -1,11 +1,13 @@
 package GUI;
 
+import DTO.TaiKhoanDTO;
 import GUI.ThuocTinhSP.Loai;
 import GUI.ThuocTinhSP.ThuongHieu;
 import GUI.ThuocTinhSP.XuatXu;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.sql.SQLException;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -27,7 +29,7 @@ public class ThuocTinh extends javax.swing.JPanel {
     XuatXu xuatXu;
     Color BackgroundColor = new Color(240, 247, 250);
    
-    public ThuocTinh() {
+    public ThuocTinh(TaiKhoanDTO taiKhoanDTO) throws SQLException {
         initComponents();
         this.setLayout(new BorderLayout());
         
@@ -36,9 +38,9 @@ public class ThuocTinh extends javax.swing.JPanel {
         tabPaneThuocTinh.setOpaque(false);
         tabPaneThuocTinh.setOpaque(false);
         
-        thuongHieu = new ThuongHieu();
-        loai = new Loai();
-        xuatXu = new XuatXu();
+        thuongHieu = new ThuongHieu(taiKhoanDTO);
+        loai = new Loai(taiKhoanDTO);
+        xuatXu = new XuatXu(taiKhoanDTO);
         tabPaneThuocTinh.addTab("Thương hiệu", thuongHieu);
         tabPaneThuocTinh.addTab("Loại", loai);
         tabPaneThuocTinh.addTab("Xuất xứ", xuatXu);

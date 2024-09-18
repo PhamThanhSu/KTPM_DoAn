@@ -1,23 +1,25 @@
 package DTO;
 
 public class ChiTietQuyenDTO {
-    private String maNhomQuyen;
+    private int maNhomQuyen;
     private String maChucNang;
     private String hanhDong;
-
+    
+    public ChiTietQuyenDTO() {
+    }
     // Constructor
-    public ChiTietQuyenDTO(String maNhomQuyen, String maChucNang, String hanhDong) {
+    public ChiTietQuyenDTO(int maNhomQuyen, String maChucNang, String hanhDong) {
         this.maNhomQuyen = maNhomQuyen;
         this.maChucNang = maChucNang;
         this.hanhDong = hanhDong;
     }
 
     // Getters and Setters
-    public String getMaNhomQuyen() {
+    public int getMaNhomQuyen() {
         return maNhomQuyen;
     }
 
-    public void setMaNhomQuyen(String maNhomQuyen) {
+    public void setMaNhomQuyen(int maNhomQuyen) {
         this.maNhomQuyen = maNhomQuyen;
     }
 
