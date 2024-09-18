@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th9 12, 2024 lúc 03:01 AM
+-- Thời gian đã tạo: Th9 18, 2024 lúc 12:49 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -31,29 +31,20 @@ CREATE TABLE `ctphieunhap` (
   `maphieunhap` int(11) NOT NULL,
   `masp` int(11) NOT NULL DEFAULT 0,
   `soluong` int(11) NOT NULL DEFAULT 0,
-  `dongia` int(11) NOT NULL DEFAULT 0
+  `gianhap` int(11) NOT NULL DEFAULT 0,
+  `giaxuat` int(11) DEFAULT NULL,
+  `soluongconlai` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `ctphieunhap`
 --
 
-INSERT INTO `ctphieunhap` (`maphieunhap`, `masp`, `soluong`, `dongia`) VALUES
-(4, 6, 3, 1700000),
-(4, 7, 3, 2100000),
-(4, 8, 6, 3300000),
-(4, 9, 9, 3500000),
-(5, 5, 4, 1700000),
-(5, 10, 7, 1600000),
-(5, 11, 8, 1800000),
-(6, 1, 3, 2500000),
-(6, 2, 3, 2600000),
-(7, 15, 5, 3600000),
-(8, 2, 2, 2600000),
-(9, 1, 6, 2500000),
-(10, 1, 10, 2500000),
-(11, 1, 5, 2500000),
-(12, 1, 1, 2500000);
+INSERT INTO `ctphieunhap` (`maphieunhap`, `masp`, `soluong`, `gianhap`, `giaxuat`, `soluongconlai`) VALUES
+(1, 1, 10, 1000000, 1150000, 0),
+(1, 2, 5, 2000000, 2300000, 5),
+(2, 1, 10, 2000000, 2300000, 10),
+(2, 3, 20, 1500000, 1725000, 10);
 
 -- --------------------------------------------------------
 
@@ -65,40 +56,17 @@ CREATE TABLE `ctphieuxuat` (
   `maphieuxuat` int(11) NOT NULL,
   `masp` int(11) NOT NULL DEFAULT 0,
   `soluong` int(11) NOT NULL DEFAULT 0,
-  `dongia` int(11) NOT NULL DEFAULT 0
+  `giaxuat` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `ctphieuxuat`
 --
 
-INSERT INTO `ctphieuxuat` (`maphieuxuat`, `masp`, `soluong`, `dongia`) VALUES
-(2, 15, 1, 3800000),
-(3, 14, 1, 2500000),
-(3, 15, 1, 3800000),
-(4, 3, 1, 1500000),
-(4, 4, 1, 4000000),
-(5, 5, 1, 2100000),
-(5, 14, 1, 2500000),
-(6, 4, 1, 4000000),
-(6, 14, 1, 2500000),
-(7, 1, 1, 3000000),
-(7, 3, 1, 1500000),
-(8, 1, 4, 3000000),
-(8, 4, 2, 4000000),
-(9, 13, 2, 5000000),
-(9, 14, 1, 2500000),
-(10, 12, 2, 1900000),
-(10, 13, 1, 5000000),
-(11, 4, 2, 4000000),
-(11, 12, 1, 1900000),
-(12, 15, 2, 3800000),
-(13, 3, 2, 1500000),
-(13, 5, 2, 2100000),
-(14, 1, 3, 3000000),
-(14, 2, 2, 3100000),
-(15, 1, 2, 3000000),
-(16, 1, 5, 3000000);
+INSERT INTO `ctphieuxuat` (`maphieuxuat`, `masp`, `soluong`, `giaxuat`) VALUES
+(1, 1, 5, 1150000),
+(2, 1, 5, 1150000),
+(3, 3, 10, 1725000);
 
 -- --------------------------------------------------------
 
@@ -117,20 +85,34 @@ CREATE TABLE `ctquyen` (
 --
 
 INSERT INTO `ctquyen` (`manhomquyen`, `machucnang`, `hanhdong`) VALUES
+(1, 'nhanvien', 'view'),
 (1, 'nhomquyen', 'create'),
+(1, 'nhomquyen', 'delete'),
 (1, 'nhomquyen', 'view'),
 (1, 'taikhoan', 'create'),
-(1, 'taikhoan', 'delete'),
 (1, 'taikhoan', 'update'),
 (1, 'taikhoan', 'view'),
 (2, 'thongke', 'view'),
+(3, 'khachhang', 'view'),
 (3, 'khuvuckho', 'view'),
-(3, 'nhaphang', 'create'),
-(3, 'nhaphang', 'update'),
+(3, 'nhacungcap', 'view'),
 (3, 'nhaphang', 'view'),
+(3, 'sanpham', 'view'),
+(3, 'thongke', 'view'),
+(3, 'thuoctinh', 'view'),
+(3, 'xuathang', 'create'),
+(3, 'xuathang', 'update'),
+(3, 'xuathang', 'view'),
+(4, 'khachhang', 'view'),
 (4, 'khuvuckho', 'view'),
-(4, 'xuathang', 'create'),
-(4, 'xuathang', 'update'),
+(4, 'nhacungcap', 'view'),
+(4, 'nhanvien', 'view'),
+(4, 'nhaphang', 'create'),
+(4, 'nhaphang', 'update'),
+(4, 'nhaphang', 'view'),
+(4, 'sanpham', 'view'),
+(4, 'thongke', 'view'),
+(4, 'thuoctinh', 'view'),
 (4, 'xuathang', 'view'),
 (5, 'khachhang', 'create'),
 (5, 'khachhang', 'delete'),
@@ -271,21 +253,22 @@ CREATE TABLE `nhacungcap` (
   `diachi` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `sdt` varchar(255) NOT NULL,
-  `trangthai` int(11) NOT NULL DEFAULT 1
+  `trangthai` int(11) NOT NULL DEFAULT 1,
+  `phantramloinhuan` int(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `nhacungcap`
 --
 
-INSERT INTO `nhacungcap` (`manhacungcap`, `tennhacungcap`, `diachi`, `email`, `sdt`, `trangthai`) VALUES
-(1, 'Công Ty Nike', ' Phòng 6.5, Tầng6, Tòa Nhà E. Town 2, 364 Cộng Hòa, P. 13, Q. Tân Bình, Tp. Hồ Chí Minh', 'lienhe@gmail.com', '02835100100', 1),
-(2, 'Công ty Puma', 'Số 79 đường số 6, Hưng Phước 4, Phú Mỹ Hưng, quận 7, TPHCM', 'contact@paviet.vn', '19009477', 1),
-(3, 'Công Ty Adidas', '8/38 Đinh Bô Lĩnh, P.24, Q. Bình Thạnh, Tp. Hồ Chí Minh', 'contact@baola.vn', '02835119060', 1),
-(4, 'Công Ty Thượng Đình', 'Phòng 703, Tầng7, Tòa Nhà Metropolitan, 235 Đồng Khởi, P. Bến Nghé, Q. 1, Tp. Hồ Chí Minh (TPHCM)', 'chau.nguyen@nokia.com', '02838236894', 1),
-(5, 'Hệ Thống Phân Phối Giày USA', '261 Lê Lợi, P. Lê Lợi, Q. Ngô Quyền, Tp. Hải Phòng', 'info@mihome.vn', '0365888866', 1),
-(6, 'Công Ty Giày Trung', 'Tòa nhà tài chính Bitexco, 2 Hải Triều, Bến Nghé, Quận 1, Thành phố Hồ Chí Minh', 'contact@gmail.vn', '0988788456', 1),
-(7, 'Công ty GIAYVN', '27 Đ. Nguyễn Trung Trực, Phường Bến Thành, Quận 1, Thành phố Hồ Chí Minh', 'giayvn@oppo.vn', '0456345234', 1);
+INSERT INTO `nhacungcap` (`manhacungcap`, `tennhacungcap`, `diachi`, `email`, `sdt`, `trangthai`, `phantramloinhuan`) VALUES
+(1, 'Công Ty Nike', ' Phòng 6.5, Tầng6, Tòa Nhà E. Town 2, 364 Cộng Hòa, P. 13, Q. Tân Bình, Tp. Hồ Chí Minh', 'lienhe@gmail.com', '02835100100', 1, 20),
+(2, 'Công ty Puma', 'Số 79 đường số 6, Hưng Phước 4, Phú Mỹ Hưng, quận 7, TPHCM', 'contact@paviet.vn', '19009477', 1, 25),
+(3, 'Công Ty Adidas', '8/38 Đinh Bô Lĩnh, P.24, Q. Bình Thạnh, Tp. Hồ Chí Minh', 'contact@baola.vn', '02835119060', 1, 15),
+(4, 'Công Ty Thượng Đình', 'Phòng 703, Tầng7, Tòa Nhà Metropolitan, 235 Đồng Khởi, P. Bến Nghé, Q. 1, Tp. Hồ Chí Minh (TPHCM)', 'chau.nguyen@nokia.com', '02838236894', 1, 20),
+(5, 'Hệ Thống Phân Phối Giày USA', '261 Lê Lợi, P. Lê Lợi, Q. Ngô Quyền, Tp. Hải Phòng', 'info@mihome.vn', '0365888866', 1, 25),
+(6, 'Công Ty Giày Trung', 'Tòa nhà tài chính Bitexco, 2 Hải Triều, Bến Nghé, Quận 1, Thành phố Hồ Chí Minh', 'contact@gmail.vn', '0988788456', 1, 15),
+(7, 'Công ty GIAYVN', '27 Đ. Nguyễn Trung Trực, Phường Bến Thành, Quận 1, Thành phố Hồ Chí Minh', 'giayvn@oppo.vn', '0456345234', 1, 30);
 
 -- --------------------------------------------------------
 
@@ -357,15 +340,8 @@ CREATE TABLE `phieunhap` (
 --
 
 INSERT INTO `phieunhap` (`maphieunhap`, `thoigian`, `manhacungcap`, `manv`, `tongtien`, `trangthai`) VALUES
-(4, '2023-12-05 12:45:03', 5, 4, 62700000, 1),
-(5, '2023-12-05 12:46:03', 7, 4, 32400000, 1),
-(6, '2024-05-05 13:24:47', 7, 1, 15300000, 1),
-(7, '2024-05-05 13:24:58', 1, 1, 18000000, 1),
-(8, '2024-09-09 15:49:29', 3, 3, 5200000, 1),
-(9, '2024-09-09 16:12:28', 3, 3, 15000000, 1),
-(10, '2024-09-11 16:19:58', 3, 3, 25000000, 1),
-(11, '2024-09-11 16:21:28', 2, 3, 12500000, 1),
-(12, '2024-09-12 07:59:48', 2, 3, 2500000, 1);
+(1, '2024-09-18 16:19:05', 6, 3, 20000000, 1),
+(2, '2024-09-18 16:44:03', 6, 3, 50000000, 1);
 
 -- --------------------------------------------------------
 
@@ -387,21 +363,9 @@ CREATE TABLE `phieuxuat` (
 --
 
 INSERT INTO `phieuxuat` (`maphieuxuat`, `thoigian`, `tongtien`, `manv`, `makh`, `trangthai`) VALUES
-(2, '2023-12-02 12:47:35', 3800000, 1, 15, 1),
-(3, '2023-12-03 12:49:05', 6300000, 1, 2, 1),
-(4, '2023-12-04 12:49:17', 5500000, 3, 7, 1),
-(5, '2023-12-28 12:50:23', 4600000, 1, 18, 1),
-(6, '2023-12-29 12:50:38', 6500000, 1, 17, 1),
-(7, '2023-12-30 12:50:52', 4500000, 3, 16, 1),
-(8, '2024-04-28 13:25:29', 20000000, 3, 5, 1),
-(9, '2024-04-29 13:25:45', 12500000, 1, 1, 1),
-(10, '2024-04-30 13:26:00', 8800000, 3, 1, 1),
-(11, '2024-05-01 13:26:41', 9900000, 1, 5, 1),
-(12, '2024-05-02 13:26:53', 7600000, 3, 3, 1),
-(13, '2024-05-03 13:27:03', 7200000, 1, 14, 1),
-(14, '2024-05-04 13:27:17', 15200000, 1, 1, 1),
-(15, '2024-09-09 16:21:12', 6000000, 3, 10, 1),
-(16, '2024-09-11 16:21:42', 15000000, 3, 1, 1);
+(1, '2024-09-16 16:19:17', 5750000, 3, 17, 1),
+(2, '2024-09-17 16:19:49', 5750000, 3, 13, 1),
+(3, '2024-09-18 16:44:18', 17250000, 3, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -448,31 +412,29 @@ CREATE TABLE `sanpham` (
   `thuonghieu` int(11) DEFAULT NULL,
   `khuvuckho` int(11) DEFAULT NULL,
   `soluongton` int(11) DEFAULT 0,
-  `trangthai` tinyint(1) DEFAULT 1,
-  `gianhap` bigint(100) NOT NULL,
-  `giaxuat` bigint(100) NOT NULL
+  `trangthai` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `sanpham`
 --
 
-INSERT INTO `sanpham` (`masp`, `tensp`, `size`, `hinhanh`, `xuatxu`, `loai`, `thuonghieu`, `khuvuckho`, `soluongton`, `trangthai`, `gianhap`, `giaxuat`) VALUES
-(1, '1Nike Air Zoom Pegasus', 41, 'Nike-Air-Zoom-Pegasus.png', 3, 1, 2, 1, 17, 1, 2000000, 3000000),
-(2, 'Nike Pegasus 40', 43, 'Nike-Pegasus-40.png', 3, 1, 2, 2, 3, 1, 2600000, 3100000),
-(3, 'Puma Carina Street', 38, 'Puma-Carina-Street', 1, 2, 3, 3, 0, 1, 1200000, 1500000),
-(4, 'Adidas Supernova Solution', 44, 'Adidas-Supernova-Solution.png\r\n', 3, 1, 1, 4, 0, 1, 3400000, 4000000),
-(5, 'Nike Air Winflo', 40, 'Nike-Air-Winflo.png', 2, 1, 2, 1, 1, 1, 1700000, 2100000),
-(6, 'Puma Suede', 41, 'Puma-Suede.png', 1, 2, 3, 2, 3, 1, 1700000, 2000000),
-(7, 'Adidas SWITCH RUN', 42, 'adidas-SWITCH-RUN.png', 3, 1, 1, 4, 3, 1, 2100000, 2400000),
-(8, 'Nike Air zoom', 38, 'Nike-Air-zoom.png', 3, 1, 2, 3, 6, 1, 3300000, 3500000),
-(9, 'Nike Pegasus', 45, 'Nike-Pegasus.png', 1, 2, 2, 2, 9, 1, 3500000, 3800000),
-(10, 'Puma RS-Z AS', 41, 'Puma-RS-Z-AS.png', 1, 2, 3, 2, 7, 1, 1600000, 1800000),
-(11, 'Adidas ULTRABOOST LIGHT', 44, 'Adidas-ULTRABOOST-LIGHT.png', 3, 1, 1, 1, 8, 1, 1800000, 2000000),
-(12, 'Puma Caven', 38, 'Puma-Caven.png', 2, 2, 3, 2, 0, 1, 1800000, 1900000),
-(13, 'Adidas ADIZERO TAKUMI SEN 10', 45, 'adidas-ADIZERO-TAKUMI-SEN-10.png', 3, 1, 1, 4, 0, 1, 4700000, 5000000),
-(14, 'Puma White Black', 40, 'Puma-White-Black.png', 1, 2, 3, 3, 0, 1, 2300000, 2500000),
-(15, 'Air Max Pulse', 41, 'air-max-90-ltr-older-shoes-9xnt2B.png', 3, 2, 2, 2, 1, 1, 3600000, 3800000);
+INSERT INTO `sanpham` (`masp`, `tensp`, `size`, `hinhanh`, `xuatxu`, `loai`, `thuonghieu`, `khuvuckho`, `soluongton`, `trangthai`) VALUES
+(1, '1Nike Air Zoom Pegasus', 41, 'Nike-Air-Zoom-Pegasus.png', 3, 1, 2, 1, 10, 1),
+(2, 'Nike Pegasus 40', 43, 'Nike-Pegasus-40.png', 3, 1, 2, 2, 5, 1),
+(3, 'Puma Carina Street', 38, 'Puma-Carina-Street', 1, 2, 3, 3, 10, 1),
+(4, 'Adidas Supernova Solution', 44, 'Adidas-Supernova-Solution.png\r\n', 3, 1, 1, 4, 0, 1),
+(5, 'Nike Air Winflo', 40, 'Nike-Air-Winflo.png', 2, 1, 2, 1, 0, 1),
+(6, 'Puma Suede', 41, 'Puma-Suede.png', 1, 2, 3, 2, 0, 1),
+(7, 'Adidas SWITCH RUN', 42, 'adidas-SWITCH-RUN.png', 3, 1, 1, 4, 0, 1),
+(8, 'Nike Air zoom', 38, 'Nike-Air-zoom.png', 3, 1, 2, 3, 0, 1),
+(9, 'Nike Pegasus', 45, 'Nike-Pegasus.png', 1, 2, 2, 2, 0, 1),
+(10, 'Puma RS-Z AS', 41, 'Puma-RS-Z-AS.png', 1, 2, 3, 2, 0, 1),
+(11, 'Adidas ULTRABOOST LIGHT', 44, 'Adidas-ULTRABOOST-LIGHT.png', 3, 1, 1, 1, 0, 1),
+(12, 'Puma Caven', 38, 'Puma-Caven.png', 2, 2, 3, 2, 0, 1),
+(13, 'Adidas ADIZERO TAKUMI SEN 10', 45, 'adidas-ADIZERO-TAKUMI-SEN-10.png', 3, 1, 1, 4, 0, 1),
+(14, 'Puma White Black', 40, 'Puma-White-Black.png', 1, 2, 3, 3, 0, 1),
+(15, 'Air Max Pulse', 41, 'air-max-90-ltr-older-shoes-9xnt2B.png', 3, 2, 2, 2, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -493,7 +455,7 @@ CREATE TABLE `taikhoan` (
 --
 
 INSERT INTO `taikhoan` (`manv`, `matkhau`, `manhomquyen`, `tendangnhap`, `trangthai`) VALUES
-(1, '123123', 5, 'hoangphat', 1),
+(1, '123123', 3, 'hoangphat', 1),
 (2, '123123', 2, 'thienphuc', 1),
 (3, '123123', 5, 'thanhsu', 1),
 (4, '123123', 4, 'minhtri', 1),
@@ -563,7 +525,8 @@ ALTER TABLE `ctphieuxuat`
 -- Chỉ mục cho bảng `ctquyen`
 --
 ALTER TABLE `ctquyen`
-  ADD PRIMARY KEY (`manhomquyen`,`machucnang`,`hanhdong`);
+  ADD PRIMARY KEY (`manhomquyen`,`machucnang`,`hanhdong`),
+  ADD KEY `fk_quyenchucnang` (`machucnang`);
 
 --
 -- Chỉ mục cho bảng `khachhang`
@@ -661,7 +624,7 @@ ALTER TABLE `xuatxu`
 -- AUTO_INCREMENT cho bảng `ctphieunhap`
 --
 ALTER TABLE `ctphieunhap`
-  MODIFY `maphieunhap` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `maphieunhap` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT cho bảng `ctphieuxuat`
@@ -709,7 +672,7 @@ ALTER TABLE `nhomquyen`
 -- AUTO_INCREMENT cho bảng `phieunhap`
 --
 ALTER TABLE `phieunhap`
-  MODIFY `maphieunhap` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `maphieunhap` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT cho bảng `phieuxuat`
@@ -758,6 +721,13 @@ ALTER TABLE `ctphieunhap`
 ALTER TABLE `ctphieuxuat`
   ADD CONSTRAINT `FK_phieuxuat_ctphieuxuat` FOREIGN KEY (`maphieuxuat`) REFERENCES `phieuxuat` (`maphieuxuat`),
   ADD CONSTRAINT `FK_sanpham_ctphieuxuat` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`);
+
+--
+-- Các ràng buộc cho bảng `ctquyen`
+--
+ALTER TABLE `ctquyen`
+  ADD CONSTRAINT `fk_nhomquyen` FOREIGN KEY (`manhomquyen`) REFERENCES `nhomquyen` (`manhomquyen`),
+  ADD CONSTRAINT `fk_quyenchucnang` FOREIGN KEY (`machucnang`) REFERENCES `quyenchucnang` (`machucnang`);
 
 --
 -- Các ràng buộc cho bảng `phieunhap`
