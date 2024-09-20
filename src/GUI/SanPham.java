@@ -333,7 +333,7 @@ public class SanPham extends javax.swing.JPanel implements ActionListener {
 
             },
             new String [] {
-                "Mã sản phẩm", "Tên sản phẩm", "Số lượng tồn", "Size", "Loại", "Thương hiệu", "Xuất xứ", "Khu vực kho", "Giá nhập", "Giá xuất"
+                "Mã sản phẩm", "Tên sản phẩm", "Số lượng tồn", "Size", "Loại", "Thương hiệu", "Xuất xứ", "Khu vực kho"
             }
         ));
         tblSanPham.addMouseListener(new java.awt.event.MouseAdapter() {

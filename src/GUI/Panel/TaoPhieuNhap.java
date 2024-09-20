@@ -857,30 +857,74 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
     private void btnsuasanphamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsuasanphamActionPerformed
         // Lấy giá trị số lượng từ JTextField
         String updatesoluong = txtsoluong.getText();
+        String gianhapstr = txtgianhap.getText();
+        DecimalFormat decimalFormat = new DecimalFormat("#,### đ");
 
-        // Kiểm tra xem người dùng đã chọn hàng nào trong bảng chưa
-        int selectedRow = tblthongtinspdathem.getSelectedRow();
-        if (selectedRow != -1) {
-            try {
-                // Chuyển đổi giá trị số lượng thành số nguyên
-                int soluong = Integer.parseInt(updatesoluong);
-                if (soluong > 0) {
-                    // Cập nhật số lượng mới trong bảng
-                    tblthongtinspdathem.setValueAt(soluong, selectedRow, 8);
-                    // Cập nhật lại tổng tiền sau khi sửa số lượng
-                    updateTotalPrice();
-                } else {
-                    // Hiển thị thông báo khi số lượng nhập vào là một số âm
-                    JOptionPane.showMessageDialog(this, "Số lượng sản phẩm phải lớn hơn 0.");
-                }
-            } catch (NumberFormatException ex) {
-                // Xử lý nếu người dùng nhập không phải là một số
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng là một số nguyên.");
-            }
+        // Kiểm tra xem người dùng đã chọn hàng nào trong bảng tblthongtinspdathempx hoặc tblsoluongsanpham
+        int selectedRowSPDaChon = tblthongtinspdathem.getSelectedRow();
+        int selectedRowSPDangChon = tblsoluongsanpham.getSelectedRow();
+
+        if (selectedRowSPDaChon != -1) { // Kiểm tra bảng tblthongtinspdathempx
+            handleUpdateSelectedRow(updatesoluong, gianhapstr, selectedRowSPDaChon, tblthongtinspdathem);
+        } else if (selectedRowSPDangChon != -1) {
+            handleUpdateByMaSP(updatesoluong, gianhapstr, selectedRowSPDangChon);
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm để cập nhật số lượng.");
         }
+
     }//GEN-LAST:event_btnsuasanphamActionPerformed
+
+    private void handleUpdateSelectedRow(String updatesoluong, String gianhapstr, int selectedRow, JTable table) {
+        try {
+            DecimalFormat decimalFormat = new DecimalFormat("#,### đ");
+            // Chuyển đổi giá trị số lượng thành số nguyên
+            int soluong = Integer.parseInt(updatesoluong);
+            int gianhap = Integer.parseInt(gianhapstr);
+            if (soluong > 0) {
+                // Cập nhật số lượng mới trong bảng
+                table.setValueAt(soluong, selectedRow, 8);
+                table.setValueAt(decimalFormat.format(gianhap), selectedRow, 7);
+                updateTotalPrice();
+            } else {
+                    // Hiển thị thông báo khi số lượng nhập vào là một số âm
+                    JOptionPane.showMessageDialog(this, "Số lượng sản phẩm phải lớn hơn 0.");
+                }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng là một số nguyên.");
+        }
+    }
+    
+    private void handleUpdateByMaSP(String updatesoluong, String gianhapstr, int selectedRowSPDangChon) {
+        try {
+            int soluong = Integer.parseInt(updatesoluong);
+            int maspColumnIndex = getColumnIndexByName("Mã SP", tblsoluongsanpham);
+            int masp = (int) tblsoluongsanpham.getValueAt(selectedRowSPDangChon, maspColumnIndex);
+            int gianhap = Integer.parseInt(gianhapstr);
+            if (soluong > 0) {
+                if (updateSoluongVaGiaNhapByMaSP(masp, soluong, gianhap)) {
+                    updateTotalPrice();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy sản phẩm có Mã SP tương ứng để cập nhật.");
+                }
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng là một số nguyên.");
+        }
+    }
+    
+    private boolean updateSoluongVaGiaNhapByMaSP(int masp, int soluong, int gianhap) {
+        int rowCount = tblthongtinspdathem.getRowCount();
+        DecimalFormat decimalFormat = new DecimalFormat("#,### đ");
+        for (int i = 0; i < rowCount; i++) {
+            int maspInTable = (int) tblthongtinspdathem.getValueAt(i, getColumnIndexByName("Mã SP", tblthongtinspdathem));
+            if (maspInTable == masp) {
+                tblthongtinspdathem.setValueAt(decimalFormat.format(gianhap), i, 7);
+                tblthongtinspdathem.setValueAt(soluong, i, 8);
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void txtgianhapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtgianhapActionPerformed
         // TODO add your handling code here:

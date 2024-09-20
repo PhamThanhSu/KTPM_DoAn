@@ -257,7 +257,7 @@ public final class Main extends javax.swing.JFrame {
         btnDangXuat.setIcon(new FlatSVGIcon("./icon/log_out.svg"));
         btnDangXuat.setHorizontalAlignment(SwingConstants.LEFT);
     
-        btnPhanquyen.setIcon(new FlatSVGIcon("./icon/home.svg"));
+        btnPhanquyen.setIcon(new FlatSVGIcon("./icon/permission.svg"));
         btnPhanquyen.setHorizontalAlignment(SwingConstants.LEFT);
     }
 

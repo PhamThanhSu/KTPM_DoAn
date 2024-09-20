@@ -64,8 +64,9 @@ public class ThongKeDAO {
                 result.add(thongKeDTO);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Xử lý exception khi đóng kết nối
         }
+
         return result;
     }
 

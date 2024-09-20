@@ -242,14 +242,14 @@ public class TaoPhieuXuatt extends javax.swing.JPanel implements MouseListener, 
                 int soluongColumnIndex = taoPhieuNhap.getColumnIndexByName("Số lượng", tblthongtinspdathempx);
                 int giaxuatColumnIndex = taoPhieuNhap.getColumnIndexByName("Giá xuất", tblthongtinspdathempx);
                 int masp = (int) tblthongtinspdathempx.getValueAt(selectedRow, maspColumnIndex);
-                int giaxuat = (int) tblthongtinspdathempx.getValueAt(selectedRow, giaxuatColumnIndex);
+                String giaxuatstr = (String) tblthongtinspdathempx.getValueAt(selectedRow, giaxuatColumnIndex);
                 int soluongcheck = (int) tblthongtinspdathempx.getValueAt(selectedRow, soluongColumnIndex);
                 SanPhamDTO result = taoPhieuNhap.selectSanPham(masp); // Gọi hàm selectSanPham và truyền masp vào
 
                 txtmasanphampx.setText(String.valueOf(result.getMasp()));
                 txtsoluong.setText(String.valueOf(soluongcheck));
                 txttensanpham.setText(result.getTensp());
-                txtgiaxuat.setText(String.valueOf(giaxuat).replaceAll("[.,đ]", "").trim());
+                txtgiaxuat.setText(String.valueOf(giaxuatstr).replaceAll("[.,đ]", "").trim());
                 txtsoluongton.setText(String.valueOf(result.getSoluongton()));
                 btnthem.setVisible(false);
                 btnsuasanpham.setVisible(true);
@@ -664,14 +664,14 @@ public class TaoPhieuXuatt extends javax.swing.JPanel implements MouseListener, 
         nhaCungCapDAO = new NhaCungCapDAO();
         int gianhap = 0;
         int selectedRow = tblsoluongsanpham.getSelectedRow();
-            if (selectedRow != -1) {
-                int gianhapColumnIndex = taoPhieuNhap.getColumnIndexByName("Giá nhập", tblsoluongsanpham);
-                gianhap = (int) tblsoluongsanpham.getValueAt(selectedRow, gianhapColumnIndex);
-                System.err.println("giá nhập trong bảng chọn" + gianhap);
-            }
+        if (selectedRow != -1) {
+            int gianhapColumnIndex = taoPhieuNhap.getColumnIndexByName("Giá nhập", tblsoluongsanpham);
+            gianhap = (int) tblsoluongsanpham.getValueAt(selectedRow, gianhapColumnIndex);
+            System.err.println("giá nhập trong bảng chọn" + gianhap);
+        }
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         //String selectedSize = (String) cbbcauhinh.getSelectedItem(); // Ép kiểu sang String nếu cần
-        
+
         String TenLoai = loaiDAO.selectById(product.getLoai()).getTenloai();
         String TenThuongHieu = thuongHieuDAO.selectById(product.getThuonghieu()).getTenthuonghieu();
         String XuatXu = xuatXuDAO.selectById(product.getXuatxu()).getTenxuatxu();
@@ -736,44 +736,154 @@ public class TaoPhieuXuatt extends javax.swing.JPanel implements MouseListener, 
         // Lấy giá trị số lượng từ JTextField
         String updatesoluong = txtsoluong.getText();
 
-        // Kiểm tra xem người dùng đã chọn hàng nào trong bảng chưa
-        int selectedRow = tblthongtinspdathempx.getSelectedRow();
-        if (selectedRow != -1) {
-            try {
-                // Chuyển đổi giá trị số lượng thành số nguyên
-                int soluong = Integer.parseInt(updatesoluong);
-                if (soluong > 0 && soluong <= Integer.valueOf(txtsoluongton.getText())) {
-                    // Cập nhật số lượng mới trong bảng
-                    tblthongtinspdathempx.setValueAt(soluong, selectedRow, 8);
-                    // Cập nhật lại tổng tiền sau khi sửa số lượng
-                    updateTotalPrice();
-                } else if (soluong > Integer.valueOf(txtsoluongton.getText())) {
-                    JOptionPane.showMessageDialog(this, "Số lượng sản phẩm phải nhỏ hơn số lượng tồn");
-                } else {
-                    // Hiển thị thông báo khi số lượng nhập vào là một số âm
-                    JOptionPane.showMessageDialog(this, "Số lượng sản phẩm phải lớn hơn 0.");
-                }
-            } catch (NumberFormatException ex) {
-                // Xử lý nếu người dùng nhập không phải là một số
-                JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng là một số nguyên.");
-            }
+        // Kiểm tra xem người dùng đã chọn hàng nào trong bảng tblthongtinspdathempx hoặc tblsoluongsanpham
+        int selectedRowSPDaChon = tblthongtinspdathempx.getSelectedRow();
+        int selectedRowSPDangChon = tblsoluongsanpham.getSelectedRow();
+
+        if (selectedRowSPDaChon != -1) { // Kiểm tra bảng tblthongtinspdathempx
+            handleUpdateSelectedRow(updatesoluong, selectedRowSPDaChon, tblthongtinspdathempx);
+        } else if (selectedRowSPDangChon != -1) {
+            handleUpdateByMaSP(updatesoluong, selectedRowSPDangChon);
         } else {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm để cập nhật số lượng.");
         }
+//        } else if (selectedRowSPDangChon != -1) { // Kiểm tra bảng tblsoluongsanpham
+//            try {
+//                int soluong = Integer.parseInt(updatesoluong);
+//                int soluongTon = Integer.parseInt(txtsoluongton.getText());
+//
+//                // Lấy giá trị Mã SP từ bảng tblsoluongsanpham
+//                int maspColumnIndex = taoPhieuNhap.getColumnIndexByName("Mã SP", tblsoluongsanpham);
+//                int masp = (int) tblsoluongsanpham.getValueAt(selectedRowSPDangChon, maspColumnIndex);
+//
+//                // Kiểm tra điều kiện về số lượng
+//                if (soluong > 0 && soluong <= soluongTon) {
+//                    // Tìm dòng có Mã SP tương ứng trong bảng tblthongtinspdathempx
+//                    int rowCount = tblthongtinspdathempx.getRowCount();
+//                    boolean found = false;
+//                    for (int i = 0; i < rowCount; i++) {
+//                        int maspInTable = (int) tblthongtinspdathempx.getValueAt(i, taoPhieuNhap.getColumnIndexByName("Mã SP", tblthongtinspdathempx));
+//                        if (maspInTable == masp) {
+//                            // Cập nhật số lượng mới trong bảng tblthongtinspdathempx
+//                            tblthongtinspdathempx.setValueAt(soluong, i, 8); // Giả sử cột 8 là cột số lượng
+//                            found = true;
+//                            break;
+//                        }
+//                    }
+//
+//                    // Nếu không tìm thấy Mã SP trong bảng tblthongtinspdathempx
+//                    if (!found) {
+//                        JOptionPane.showMessageDialog(this, "Không tìm thấy sản phẩm có Mã SP tương ứng để cập nhật.");
+//                    } else {
+//                        updateTotalPrice(); // Cập nhật lại tổng tiền sau khi sửa số lượng
+//                    }
+//                } else if (soluong > soluongTon) {
+//                    JOptionPane.showMessageDialog(this, "Số lượng sản phẩm phải nhỏ hơn hoặc bằng số lượng tồn.");
+//                }
+//            } catch (NumberFormatException ex) {
+//                JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng là một số nguyên.");
+//            }
+//        } else {
+//            // Nếu không có hàng nào được chọn trong cả hai bảng
+//            JOptionPane.showMessageDialog(this, "Vui lòng chọn một sản phẩm để cập nhật số lượng.");
+//        }
     }//GEN-LAST:event_btnsuasanphamActionPerformed
 
-    private void btnxoasanphamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnxoasanphamActionPerformed
-        DefaultTableModel model = (DefaultTableModel) tblthongtinspdathempx.getModel();
-        int selectedRow = tblthongtinspdathempx.getSelectedRow();
-        if (selectedRow != -1) {
-            model.removeRow(selectedRow);
-            updateTotalPrice();
-            txtmasanphampx.setText("");
-            txtsoluong.setText("");
-            txttensanpham.setText("");
-            txtgiaxuat.setText("");
-            txtsoluongton.setText("");
+    private void handleUpdateSelectedRow(String updatesoluong, int selectedRow, JTable table) {
+        try {
+            int soluong = Integer.parseInt(updatesoluong);
+            int soluongTon = Integer.parseInt(txtsoluongton.getText());
+
+            if (soluong > 0 && soluong <= soluongTon) {
+                table.setValueAt(soluong, selectedRow, 8);
+                updateTotalPrice();
+            } else {
+                handleSoluongInvalid(soluong, soluongTon);
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng là một số nguyên.");
         }
+    }
+
+    private void handleUpdateByMaSP(String updatesoluong, int selectedRowSPDangChon) {
+        try {
+            int soluong = Integer.parseInt(updatesoluong);
+            int soluongTon = Integer.parseInt(txtsoluongton.getText());
+
+            int maspColumnIndex = taoPhieuNhap.getColumnIndexByName("Mã SP", tblsoluongsanpham);
+            int masp = (int) tblsoluongsanpham.getValueAt(selectedRowSPDangChon, maspColumnIndex);
+
+            if (soluong > 0 && soluong <= soluongTon) {
+                if (updateSoluongByMaSP(masp, soluong)) {
+                    updateTotalPrice();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Không tìm thấy sản phẩm có Mã SP tương ứng để cập nhật.");
+                }
+            } else {
+                handleSoluongInvalid(soluong, soluongTon);
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng là một số nguyên.");
+        }
+    }
+
+    private boolean updateSoluongByMaSP(int masp, int soluong) {
+        int rowCount = tblthongtinspdathempx.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            int maspInTable = (int) tblthongtinspdathempx.getValueAt(i, taoPhieuNhap.getColumnIndexByName("Mã SP", tblthongtinspdathempx));
+            if (maspInTable == masp) {
+                tblthongtinspdathempx.setValueAt(soluong, i, 8);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void handleSoluongInvalid(int soluong, int soluongTon) {
+        if (soluong > soluongTon) {
+            JOptionPane.showMessageDialog(this, "Số lượng sản phẩm phải nhỏ hơn hoặc bằng số lượng tồn.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Số lượng sản phẩm phải lớn hơn 0.");
+        }
+    }
+
+    private void btnxoasanphamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnxoasanphamActionPerformed
+        deleteRowByMaSP(tblsoluongsanpham, tblthongtinspdathempx);
+        deleteRowByMaSP(tblthongtinspdathempx, tblthongtinspdathempx);
+        clearProductDetails(); // Xóa thông tin chi tiết sản phẩm
+        updateTotalPrice();    // Cập nhật lại tổng tiền sau khi xóa
+    }
+
+// Phương thức tìm và xóa hàng dựa trên 'Mã SP' trong 'tableClick' và xóa khỏi 'tableDelete'
+    private boolean deleteRowByMaSP(JTable tableClick, JTable tableDelete) {
+        int selectedRow = tableClick.getSelectedRow();
+        if (selectedRow != -1) {
+            // Lấy Mã SP từ bảng 'tableClick'
+            int maSPColumnIndex = taoPhieuNhap.getColumnIndexByName("Mã SP", tableClick);
+            int maSP = (int) tableClick.getValueAt(selectedRow, maSPColumnIndex);
+
+            // Tìm Mã SP tương ứng trong bảng 'tableDelete' và xóa hàng đó
+            int rowCount = tableDelete.getRowCount();
+            for (int i = 0; i < rowCount; i++) {
+                int maSPInTable = (int) tableDelete.getValueAt(i, taoPhieuNhap.getColumnIndexByName("Mã SP", tableDelete));
+                if (maSP == maSPInTable) {
+                    ((DefaultTableModel) tableDelete.getModel()).removeRow(i);
+                    return true; // Trả về true nếu đã xóa hàng thành công
+                }
+            }
+            JOptionPane.showMessageDialog(this, "Không tìm thấy sản phẩm có Mã SP tương ứng.");
+        }
+        return false; // Trả về false nếu không có hàng nào được chọn
+    }
+
+    //set các Jlabel trên giao diện thành rộng
+    private void clearProductDetails() {
+        txtmasanphampx.setText("");
+        txtsoluong.setText("");
+        txttensanpham.setText("");
+        txtgiaxuat.setText("");
+        txtsoluongton.setText("");
+
     }//GEN-LAST:event_btnxoasanphamActionPerformed
 
     private void txtkhachhangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtkhachhangActionPerformed
@@ -814,7 +924,7 @@ public class TaoPhieuXuatt extends javax.swing.JPanel implements MouseListener, 
 
     public boolean CreatePhieuXuat() {
         try {
-            
+
             String maphieuxuatstr = txtmaphieuxuat.getText().replaceAll("[PXs.,đ]", "").trim();
             int maphieuxuat = Integer.parseInt(maphieuxuatstr);
             //String tenKhachHang = String.valueOf(txtkhachhang.getText());
@@ -831,7 +941,7 @@ public class TaoPhieuXuatt extends javax.swing.JPanel implements MouseListener, 
             phieuXuatDAO = new PhieuXuatDAO();
             phieuXuatDAO.insertPhieuXuat(px, now);
             addChiTietPhieuXuatToDatabase();
-            
+
             JOptionPane.showMessageDialog(null, "Tạo phiếu xuất thành công");
             return true;
         } catch (NumberFormatException ex) {
@@ -863,10 +973,11 @@ public class TaoPhieuXuatt extends javax.swing.JPanel implements MouseListener, 
                 chiTietPhieuXuatDTO = new ChiTietPhieuXuatDTO(maphieuxuat, masp, soluong, giaxuat, gianhap);
                 chiTietPhieuXuatList.add(chiTietPhieuXuatDTO);
                 listctpn = chiTietPhieuNhapDAO.getAllChiTietPhieuNhap();
-            for (ChiTietPhieuNhapDTO ctpn : listctpn) {
-                if(ctpn.getMasp() == masp)
-                    chiTietPhieuNhapDAO.updateSoluongCTPN(ctpn.getMasp(), - soluong, ctpn.getMaphieunhap());
-            }
+                for (ChiTietPhieuNhapDTO ctpn : listctpn) {
+                    if (ctpn.getMasp() == masp) {
+                        chiTietPhieuNhapDAO.updateSoluongCTPN(ctpn.getMasp(), -soluong, ctpn.getMaphieunhap());
+                    }
+                }
                 hasProductsToImport = true;
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "Số lượng sản phẩm phải là một số nguyên dương");
