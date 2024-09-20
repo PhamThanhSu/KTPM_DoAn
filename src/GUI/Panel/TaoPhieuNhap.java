@@ -25,6 +25,8 @@ import GUI.Component.BuildTable;
 import GUI.Main;
 import GUI.PhieuNhap;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -107,6 +109,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
 
         tblsoluongsanpham.addMouseListener(this);
         tblthongtinspdathem.addMouseListener(this);
+        cbbnhacc.addMouseListener(this);
 
         txtsearch.putClientProperty("JTextField.placeholderText", "Tên sản phẩm, mã sản phẩm...");
         txtsearch.putClientProperty("JTextField.showClearButton", true);
@@ -172,6 +175,28 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
             }
         });
         txtnhanviennhap.setText(nhanVienBUS.selectByID(taiKhoanDTO.getManv()).getHoten());
+        cbbnhacc.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    Object selectedNCC = cbbnhacc.getSelectedItem();
+
+                    // Kiểm tra xem selectedNCC có null không trước khi tiếp tục
+                    if (selectedNCC != null) {
+                        NhaCungCapDTO nhaCungCapDTO = nhaCungCapBUS.selectByTenNCC((String) selectedNCC);
+
+                        // Kiểm tra nhaCungCapDTO có null không trước khi truy cập thuộc tính
+                        if (nhaCungCapDTO != null) {
+                            txtloinhuan.setText(String.valueOf(nhaCungCapDTO.getPhantramloinhuan()));
+                        } else {
+                            txtloinhuan.setText("");  // Đặt giá trị mặc định nếu không tìm thấy nhà cung cấp
+                            JOptionPane.showMessageDialog(null, "Không tìm thấy nhà cung cấp này!");
+                        }
+                    }
+                }
+            }
+        });
+
     }
 
     @Override
@@ -715,7 +740,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
             NhaCungCapDTO nhaCungCapDTO = new NhaCungCapDTO();
             nhaCungCapDTO = nhaCungCapBUS.selectByID(mancc);
             int phantramloinhuan = nhaCungCapDTO.getPhantramloinhuan();
-            txtloinhuan.setText(String.valueOf(phantramloinhuan));
+//            txtloinhuan.setText(String.valueOf(phantramloinhuan));
             String maphieunhapstr = txtmaphieunhap.getText().replaceAll("[PN.,đ]", "").trim();
             int maphieunhap = Integer.parseInt(maphieunhapstr);
             int manv = taiKhoanDTO.getManv();
@@ -751,7 +776,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
             int soluong = (int) model.getValueAt(i, 8);
             String gianhapsrt = model.getValueAt(i, 7).toString();
             int gianhap = Integer.parseInt(gianhapsrt.replaceAll("[.,đ]", "").trim());
-            int giaxuat = gianhap + (gianhap * loinhuan/100);
+            int giaxuat = gianhap + (gianhap * loinhuan / 100);
             try {
                 chiTiet.updateSoluongton(masp, soluong);
                 ChiTietPhieuNhapDTO chiTietPhieuNhapDTO = new ChiTietPhieuNhapDTO(maphieunhap, masp, soluong, gianhap, giaxuat);

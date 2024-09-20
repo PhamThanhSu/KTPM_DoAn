@@ -19,7 +19,7 @@ public class SanPhamPhieuNhapDAO {
     public static ArrayList<SanPhamDTO> getListSanPham() {
         ArrayList<SanPhamDTO> list = new ArrayList<>();
         Connection conn = MySQLConnection.getConnection(); // Lấy kết nối từ lớp MySQLConnection
-        String sql = "SELECT masp, tensp, soluongton, size FROM sanpham";
+        String sql = "SELECT masp, tensp, soluongton, size FROM sanpham WHERE trangthai = 1";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -44,7 +44,7 @@ public class SanPhamPhieuNhapDAO {
     public static ArrayList<SanPhamDTO> getListSanPham(int masp) {
         ArrayList<SanPhamDTO> list = new ArrayList<>();
         Connection conn = MySQLConnection.getConnection(); // Lấy kết nối từ lớp MySQLConnection
-        String sql = "SELECT * FROM sanpham WHERE masp = ?";
+        String sql = "SELECT * FROM sanpham WHERE masp = ? AND trangthai = 1";
         try {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, masp);

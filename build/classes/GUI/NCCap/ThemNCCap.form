@@ -83,24 +83,25 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="txtEmail" max="32767" attributes="0"/>
-                          <Component id="txtTenNCC" alignment="0" max="32767" attributes="0"/>
-                          <Component id="lblEmail" alignment="0" max="32767" attributes="0"/>
-                          <Component id="lblTenNCC" alignment="0" pref="300" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="txtEmail" max="32767" attributes="0"/>
+                      <Component id="txtTenNCC" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lblEmail" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lblTenNCC" alignment="0" pref="300" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="jLabel1" min="-2" pref="78" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="txtloinhuan" min="-2" pref="89" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="btnThemNCC" min="-2" pref="133" max="-2" attributes="0"/>
+                      <Component id="btnThemNCC" alignment="1" min="-2" pref="133" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="lblSoDT" alignment="0" pref="300" max="32767" attributes="0"/>
-                          <Component id="txtDiaChi" alignment="0" max="32767" attributes="0"/>
-                          <Component id="lblDiaChi" max="32767" attributes="0"/>
-                          <Component id="txtSoDt" max="32767" attributes="0"/>
-                      </Group>
-                      <Component id="btnCancel" min="-2" pref="133" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="lblSoDT" alignment="0" pref="300" max="32767" attributes="0"/>
+                      <Component id="txtDiaChi" alignment="0" max="32767" attributes="0"/>
+                      <Component id="lblDiaChi" max="32767" attributes="0"/>
+                      <Component id="txtSoDt" max="32767" attributes="0"/>
+                      <Component id="btnCancel" alignment="0" min="-2" pref="133" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -129,12 +130,17 @@
                       <Component id="txtEmail" pref="36" max="32767" attributes="0"/>
                       <Component id="txtSoDt" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jLabel1" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                      <Component id="txtloinhuan" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="10" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnThemNCC" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
-                      <Component id="btnCancel" alignment="3" max="32767" attributes="0"/>
+                      <Component id="btnCancel" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="39" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -200,6 +206,16 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnThemNCCActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="L&#x1ee3;i nhu&#x1ead;n (%)"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtloinhuan">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtloinhuanActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

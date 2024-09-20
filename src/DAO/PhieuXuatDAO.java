@@ -97,7 +97,7 @@ public class PhieuXuatDAO {
         PhieuXuatDTO result = null;
         try {
             connection = MySQLConnection.getConnection();
-            String sql = "SELECT * FROM phieuxuat WHERE maphieuxuat=?";
+            String sql = "SELECT * FROM phieuxuat WHERE maphieuxuat=? AND trangthai = 1";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, mapx);
             ResultSet rs = (ResultSet) ps.executeQuery();
@@ -120,7 +120,7 @@ public class PhieuXuatDAO {
     //Lẫy mã phiếu nhập
     public int getLatestMaPhieuXuat() {
         // Truy vấn cơ sở dữ liệu để lấy mã phiếu nhập lớn nhất đã được tạo
-        String sql = "SELECT MAX(maphieuxuat) FROM phieuxuat";
+        String sql = "SELECT MAX(maphieuxuat) FROM phieuxuat WHERE trangthai = 1";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -133,34 +133,28 @@ public class PhieuXuatDAO {
 
     public boolean DeletePhieuXuat(int mapx) {
         boolean thanhCong = false;
-        PreparedStatement psDeletePhieuXuat = null;
-        PreparedStatement psDeleteChiTietPhieuXuat = null;
+        PreparedStatement psUpdatePhieuXuat = null;
+        PreparedStatement psUpdateChiTietPhieuXuat = null;
 
         try {
             connection = MySQLConnection.getConnection();
 
-            // Lấy danh sách các sản phẩm trong phiếu nhập
-            ArrayList<ChiTietPhieuXuatDTO> listPn = ChiTietPhieuXuatDAO.getInstance().selectAll(Integer.toString(mapx));
+            // Cập nhật trạng thái chi tiết phiếu xuất thành 0
+            String sqlUpdateChiTietPhieuXuat = "UPDATE ctphieuxuat SET trangthai = 0 WHERE maphieuxuat = ?";
+            psUpdateChiTietPhieuXuat = connection.prepareStatement(sqlUpdateChiTietPhieuXuat);
+            psUpdateChiTietPhieuXuat.setInt(1, mapx);
+            int rowsUpdatedChiTiet = psUpdateChiTietPhieuXuat.executeUpdate();
 
-            // Xóa chi tiết phiếu xuất
-            String sqlDeleteChiTietPhieuXuat = "DELETE FROM ctphieuxuat WHERE maphieuxuat = ?";
-            psDeleteChiTietPhieuXuat = connection.prepareStatement(sqlDeleteChiTietPhieuXuat);
-            psDeleteChiTietPhieuXuat.setInt(1, mapx);
-            int rowsDeletedChiTiet = psDeleteChiTietPhieuXuat.executeUpdate();
+            // Cập nhật trạng thái phiếu xuất thành 0
+            String sqlUpdatePhieuXuat = "UPDATE phieuxuat SET trangthai = 0 WHERE maphieuxuat = ?";
+            psUpdatePhieuXuat = connection.prepareStatement(sqlUpdatePhieuXuat);
+            psUpdatePhieuXuat.setInt(1, mapx);
+            int rowsUpdatedPhieuXuat = psUpdatePhieuXuat.executeUpdate();
 
-            // Xóa phiếu xuất
-            String sqlDeletePhieuXuat = "DELETE FROM phieuxuat WHERE maphieuxuat = ?";
-            psDeletePhieuXuat = connection.prepareStatement(sqlDeletePhieuXuat);
-            psDeletePhieuXuat.setInt(1, mapx);
-            int rowsDeletedPhieuXuat = psDeletePhieuXuat.executeUpdate();
-
-            if (rowsDeletedPhieuXuat > 0 && rowsDeletedChiTiet > 0) {
-
-//                for (ChiTietPhieuXuatDTO chiTiet : listPn) {
-//                    ChiTietPhieuXuatDAO.getInstance().updateSoluongton(chiTiet.getMaSp(), -chiTiet.getSoluong());
-//                }
+            if (rowsUpdatedPhieuXuat > 0 && rowsUpdatedChiTiet > 0) {
                 thanhCong = true;
             }
+            MySQLConnection.closeConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

@@ -16,6 +16,10 @@ public class NhomQuyenBUS {
         return nhomQuyenDAO.getAllNhomQuyen();
     }
     
+    public boolean xoaNhomQuyen(int manq) throws SQLException {
+        return nhomQuyenDAO.xoaNhomQuyen(manq);
+    }
+    
     public String[] getArrTenNhomQuyen() {
         int size = getAllNhomQuyen().size();
         String[] result = new String[size];

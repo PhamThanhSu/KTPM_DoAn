@@ -1,21 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DTO;
 
-/**
- *
- * @author ADMIN
- */
 public class ChiTietPhieuXuatDTO {
     private int maphieuxuat;
     private int masp;
     private int soluong;
     private int giaxuat;
+    private int gianhap;  // Thêm trường gianhap
 
     public ChiTietPhieuXuatDTO() {}
 
+    public ChiTietPhieuXuatDTO(int maphieuxuat, int masp, int soluong, int giaxuat, int gianhap) {
+        this.maphieuxuat = maphieuxuat;
+        this.masp = masp;
+        this.soluong = soluong;
+        this.giaxuat = giaxuat;
+        this.gianhap = gianhap;  // Khởi tạo giá trị gianhap
+    }
+    
     public ChiTietPhieuXuatDTO(int maphieuxuat, int masp, int soluong, int giaxuat) {
         this.maphieuxuat = maphieuxuat;
         this.masp = masp;
@@ -55,6 +56,14 @@ public class ChiTietPhieuXuatDTO {
         this.giaxuat = giaxuat;
     }
 
+    public int getGianhap() {  // Getter cho gianhap
+        return gianhap;
+    }
+
+    public void setGianhap(int gianhap) {  // Setter cho gianhap
+        this.gianhap = gianhap;
+    }
+
     @Override
     public String toString() {
         return "ChiTietPhieuXuatDTO{" +
@@ -62,6 +71,7 @@ public class ChiTietPhieuXuatDTO {
                 ", masp=" + masp +
                 ", soluong=" + soluong +
                 ", giaxuat=" + giaxuat +
+                ", gianhap=" + gianhap +  // Thêm gianhap vào toString
                 '}';
     }
 }

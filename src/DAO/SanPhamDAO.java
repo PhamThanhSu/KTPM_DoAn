@@ -163,7 +163,7 @@ public class SanPhamDAO {
         SanPhamDTO result = null;
         try {
             connection = MySQLConnection.getConnection();
-            String sql = "SELECT * FROM sanpham WHERE masp=?";
+            String sql = "SELECT * FROM sanpham WHERE masp=? AND trangthai = 1";
             pst = connection.prepareStatement(sql);
             pst.setInt(1, masp);
             ResultSet rs = (ResultSet) pst.executeQuery();

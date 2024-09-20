@@ -91,36 +91,16 @@
                                   <Component id="lblTenSP" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="txtTenSP" alignment="0" min="-2" pref="149" max="-2" attributes="0"/>
                               </Group>
+                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                          <Component id="lblGiaNhap" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="txtGiaNhap" alignment="0" min="-2" pref="149" max="-2" attributes="0"/>
-                                      </Group>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="cbxLoai" alignment="1" min="-2" pref="149" max="-2" attributes="0"/>
+                                      <Component id="cbxThuongHieu" alignment="1" min="-2" pref="149" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="cbxLoai" alignment="1" min="-2" pref="149" max="-2" attributes="0"/>
-                                              <Component id="cbxThuongHieu" alignment="1" min="-2" pref="149" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Component id="lblLoai" min="-2" max="-2" attributes="0"/>
-                                          <Component id="lblThuongHieu" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                              </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="txtSizeSP" alignment="0" min="-2" pref="149" max="-2" attributes="0"/>
-                                  <Component id="lblSize" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="lblGiaXuat" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="txtGiaXuat" alignment="0" min="-2" pref="149" max="-2" attributes="0"/>
+                                  <Component id="lblLoai" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblThuongHieu" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtSizeSP" min="-2" pref="149" max="-2" attributes="0"/>
+                                  <Component id="lblSize" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -134,32 +114,16 @@
                       <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Group type="103" groupAlignment="1" attributes="0">
-                                          <Group type="102" alignment="1" attributes="0">
-                                              <Component id="lblTenSP" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                                              <Component id="txtTenSP" min="-2" pref="33" max="-2" attributes="0"/>
-                                          </Group>
-                                          <Group type="102" alignment="1" attributes="0">
-                                              <Component id="lblGiaNhap" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                                              <Component id="txtGiaNhap" min="-2" pref="33" max="-2" attributes="0"/>
-                                          </Group>
-                                      </Group>
-                                      <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
-                                      <Component id="lblSize" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="txtSizeSP" min="-2" pref="33" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="lblGiaXuat" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                                      <Component id="txtGiaXuat" min="-2" pref="33" max="-2" attributes="0"/>
-                                  </Group>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="lblTenSP" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblSize" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="txtTenSP" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                                  <Component id="txtSizeSP" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
                                       <Component id="lblKho" min="-2" max="-2" attributes="0"/>
@@ -242,6 +206,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtSizeSP">
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtSizeSPActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="lblSize">
               <Properties>
@@ -331,20 +298,6 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnChonAnhActionPerformed"/>
               </Events>
-            </Component>
-            <Component class="javax.swing.JTextField" name="txtGiaNhap">
-            </Component>
-            <Component class="javax.swing.JLabel" name="lblGiaNhap">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Gi&#xe1; nh&#x1ead;p"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="txtGiaXuat">
-            </Component>
-            <Component class="javax.swing.JLabel" name="lblGiaXuat">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Gi&#xe1; xu&#x1ea5;t"/>
-              </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btnTaoCauHinh">
               <Properties>

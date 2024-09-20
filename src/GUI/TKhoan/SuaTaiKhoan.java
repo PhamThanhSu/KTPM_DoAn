@@ -1,10 +1,10 @@
-
 package GUI.TKhoan;
 
 import BUS.NhomQuyenBUS;
 import BUS.TaiKhoanBUS;
 //import BUS.NhomQuyenBUS;
 import DAO.TaiKhoanDAO;
+import DTO.NhomQuyenDTO;
 import DTO.TaiKhoanDTO;
 import GUI.TaiKhoan;
 import com.formdev.flatlaf.FlatIntelliJLaf;
@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SuaTaiKhoan extends javax.swing.JFrame {
-    
+
     private Random randomGenerator = new Random();
     NhomQuyenBUS nhomQuyenBUS = new NhomQuyenBUS();
     TaiKhoanBUS taiKhoanBUS;
@@ -26,7 +26,8 @@ public class SuaTaiKhoan extends javax.swing.JFrame {
     TaiKhoanDTO taiKhoanDTO;
     TaiKhoan tk;
     int manv;
-
+    int manhomquyencuataikhoan = 0;
+    int manhomquyenoftaikhoan;
     public SuaTaiKhoan() {
         initComponents();
         lblTitle.setFont(new Font("Tahoma", Font.BOLD, 20));
@@ -41,8 +42,8 @@ public class SuaTaiKhoan extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         loadCombobox();
     }
-    
-    public SuaTaiKhoan(TaiKhoan tk, TaiKhoanDTO taiKhoanDTO) {
+
+    public SuaTaiKhoan(TaiKhoan tk, TaiKhoanDTO taiKhoanDTO, int manhomquyentk) throws IOException {
         initComponents();
         lblTitle.setFont(new Font("Tahoma", Font.BOLD, 20));
         this.setLocationRelativeTo(null);
@@ -59,28 +60,32 @@ public class SuaTaiKhoan extends javax.swing.JFrame {
         loadCombobox();
         LoadDuLieu(taiKhoanDTO);
         manv = taiKhoanDTO.getManv();
+        manhomquyencuataikhoan += manhomquyentk;
+        System.out.println("tài khoản dto từ tài khoản" + manhomquyentk);
+        manhomquyenoftaikhoan = manhomquyenoftaikhoan;
+        System.out.println("mã nhóm quyền selected" + manhomquyenoftaikhoan);
     }
-    
+
     private void LoadDuLieu(TaiKhoanDTO taiKhoanDTO) {
         txtTenDN.setText(taiKhoanDTO.getUsername());
         txtMatKhau.setText(taiKhoanDTO.getMatkhau());
-        
+
         String tenNhomQuyen = nhomQuyenBUS.selectByID(taiKhoanDTO.getManhomquyen()).getTennhomquyen();
         cbxNhomQuyen.setSelectedItem(tenNhomQuyen);
-        
+
         int trangThai = taiKhoanDTO.getTrangthai();
-        if ( trangThai == 1){
+        if (trangThai == 1) {
             cbxTrangThai.setSelectedItem("Hoạt động");
-        } else if ( trangThai == 0 ){
+        } else if (trangThai == 0) {
             cbxTrangThai.setSelectedItem("Ngưng hoạt động");
         }
     }
-    
+
     private void loadCombobox() {
         String[] arrTenNhomQuyen = nhomQuyenBUS.getArrTenNhomQuyen();
         selectCombobox(cbxNhomQuyen, arrTenNhomQuyen);
     }
-    
+
     private void selectCombobox(JComboBox comboBox, String[] obj) {
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         for (String ob : obj) {
@@ -88,7 +93,7 @@ public class SuaTaiKhoan extends javax.swing.JFrame {
         }
         comboBox.setModel(model);
     }
-    
+
     private TaiKhoanDTO getInfoTaiKhoanMoi() {
         String username = txtTenDN.getText();
         String matkhau = txtMatKhau.getText();
@@ -97,16 +102,35 @@ public class SuaTaiKhoan extends javax.swing.JFrame {
         taiKhoanDTO = new TaiKhoanDTO(username, matkhau, maNhomquyen, trangthai);
         return taiKhoanDTO;
     }
-    
-    private void suaTaiKhoan() throws IOException {
+
+    private void suaTaiKhoan(int manhomquyentk) throws IOException {
         TaiKhoanDTO tkNew = getInfoTaiKhoanMoi();
         tkNew.setManv(manv);
+        // Sử dụng lại hàm selectTaiKhoan() từ lớp TaiKhoan
+        TaiKhoanDTO selectedTaiKhoan = tk.selectTaiKhoan();
+        System.out.println("kiểm tra lần 1");
+        System.out.println("mã nhóm quyền tk lần 2 "+ manhomquyencuataikhoan);
+        NhomQuyenDTO nhomQuyenDTO = nhomQuyenBUS.selectByID(selectedTaiKhoan.getManhomquyen());
+        System.err.println("tài khoản dto" + selectedTaiKhoan.getManhomquyen());
+        System.err.println("nhóm quyền dto " + nhomQuyenDTO.getTennhomquyen());
+        System.err.println("combobox index" + cbxNhomQuyen.getSelectedIndex());
+        System.err.println("combobox item" + cbxNhomQuyen.getSelectedItem());
+        System.err.println("role của tài khoản" + cbxNhomQuyen.getSelectedItem());
         taiKhoanBUS = new TaiKhoanBUS();
+        String tenNhomQuyenMoi = cbxNhomQuyen.getSelectedItem().toString(); // Lấy giá trị là chuỗi
+
+        // Kiểm tra điều kiện, không thể sửa quyền của Quản lý kho và chính mình
+        if ( (selectedTaiKhoan.getManhomquyen() ==  manhomquyencuataikhoan ) ||(selectedTaiKhoan.getManhomquyen() == 5 && !tenNhomQuyenMoi.equals(nhomQuyenDTO.getTennhomquyen()))) {
+            manhomquyencuataikhoan = 0;
+            JOptionPane.showMessageDialog(this, "Không thể sửa tài khoản này!");
+            return; // Ngừng xử lý nếu không được phép cập nhật
+        }
         boolean thanhCong = taiKhoanBUS.suaTaiKhoan(tkNew);
         if (thanhCong) {
+            manhomquyencuataikhoan = 0;
             JOptionPane.showMessageDialog(null, "Sửa tài khoản thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
             tk.hienThiListTaiKhoan(taiKhoanBUS.getAllTaiKhoan());
-            dispose();  
+            dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Sửa tài khoản thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
@@ -258,8 +282,9 @@ public class SuaTaiKhoan extends javax.swing.JFrame {
 
     private void btnLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuActionPerformed
         // TODO add your handling code here:
+        
         try {
-            suaTaiKhoan();
+            suaTaiKhoan(manhomquyencuataikhoan);
         } catch (IOException ex) {
             Logger.getLogger(SuaTaiKhoan.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -269,7 +294,6 @@ public class SuaTaiKhoan extends javax.swing.JFrame {
         // TODO add your handling code here:
         dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
-
 
 //    public static void main(String args[]) {
 //        FlatRobotoFont.install();

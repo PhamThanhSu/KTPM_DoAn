@@ -31,22 +31,29 @@ public class ThongKeDAO {
             LocalDate ngayHienTai = LocalDate.now();
             System.out.println(ngayHienTai);
             // Lấy ngày bắt đầu là ngày hiện tại và sau đó lùi lại 6 ngày để lấy tổng cộng 7 ngày
-            LocalDate ngayBatDau = ngayHienTai.minusDays(7);
+            //LocalDate ngayBatDau = ngayHienTai.minusDays(7);
 
             // SQL query
-            String sql = "SELECT\n"
-                    + "  DATE(phieuxuat.thoigian) AS ngay,\n"
-                    + "  COALESCE(SUM(phieuxuat.tongtien), 0) AS doanhthu,\n"
-                    + "  COALESCE(SUM(ctphieuxuat.soluong * ctphieunhap.gianhap), 0) AS chiphi\n"
-                    + "FROM phieuxuat\n"
+            String sql = "WITH RECURSIVE dates AS (\n"
+                    + "    SELECT CURDATE() - INTERVAL 7 DAY AS date\n"
+                    + "    UNION ALL\n"
+                    + "    SELECT date + INTERVAL 1 DAY\n"
+                    + "    FROM dates\n"
+                    + "    WHERE date + INTERVAL 1 DAY < CURDATE() -- Không bao gồm ngày hiện tại\n"
+                    + ")\n"
+                    + "SELECT \n"
+                    + "    dates.date AS ngay, \n"
+                    + "    COALESCE(SUM(ctphieuxuat.giaxuat * ctphieuxuat.soluong), 0) AS doanhthu,\n"
+                    + "    COALESCE(SUM(ctphieuxuat.gianhap * ctphieuxuat.soluong), 0) AS chiphi\n"
+                    + "FROM dates\n"
+                    + "LEFT JOIN phieuxuat ON DATE(phieuxuat.thoigian) = dates.date\n"
                     + "LEFT JOIN ctphieuxuat ON phieuxuat.maphieuxuat = ctphieuxuat.maphieuxuat\n"
-                    + "LEFT JOIN ctphieunhap ON ctphieuxuat.masp = ctphieunhap.masp\n"
-                    + "WHERE phieuxuat.thoigian BETWEEN ? AND ?\n"
-                    + "GROUP BY ngay\n"
-                    + "ORDER BY ngay;";
+                    + "GROUP BY dates.date\n"
+                    + "HAVING doanhthu > 0 -- Chỉ hiển thị những ngày có doanh thu\n"
+                    + "ORDER BY dates.date;";
             PreparedStatement pst = con.prepareStatement(sql);
-            pst.setDate(1, java.sql.Date.valueOf(ngayBatDau));
-            pst.setDate(2, java.sql.Date.valueOf(ngayHienTai));
+//            pst.setDate(1, java.sql.Date.valueOf(ngayBatDau));
+//            pst.setDate(2, java.sql.Date.valueOf(ngayHienTai));
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 Date ngay = rs.getDate("ngay");
@@ -219,22 +226,22 @@ public class ThongKeDAO {
             String sqlSetStartYear = "SET @start_year = ?;";
             String sqlSetEndYear = "SET @end_year = ?;";
             String sqlSelect = """
-                     WITH RECURSIVE years(year) AS (
-                       SELECT @start_year
-                       UNION ALL
-                       SELECT year + 1
-                       FROM years
-                       WHERE year < @end_year
+                     WITH RECURSIVE years AS (
+                         SELECT @start_year AS year -- Giá trị năm bắt đầu
+                         UNION ALL
+                         SELECT year + 1
+                         FROM years
+                         WHERE year + 1 <= @end_year -- Điều kiện để chạy đến năm kết thúc
                      )
                      SELECT 
-                       years.year AS nam,
-                       COALESCE(SUM(ctphieunhap.dongia*ctphieuxuat.soluong), 0) AS chiphi, 
-                       COALESCE(SUM(ctphieuxuat.dongia*ctphieuxuat.soluong), 0) AS doanhthu
-                     FROM years 
-                     LEFT JOIN phieuxuat ON YEAR(phieuxuat.thoigian) = years.year
+                         years.year AS nam, 
+                         COALESCE(SUM(ctphieuxuat.giaxuat * ctphieuxuat.soluong), 0) AS doanhthu,
+                         COALESCE(SUM(ctphieuxuat.gianhap * ctphieuxuat.soluong), 0) AS chiphi
+                     FROM years
+                     LEFT JOIN phieuxuat ON YEAR(phieuxuat.thoigian) = years.year -- So sánh chính xác theo năm
                      LEFT JOIN ctphieuxuat ON phieuxuat.maphieuxuat = ctphieuxuat.maphieuxuat
-                     LEFT JOIN ctphieunhap ON ctphieunhap.masp = ctphieuxuat.masp
                      GROUP BY years.year
+                     HAVING doanhthu > 0 -- Chỉ hiển thị những năm có doanh thu
                      ORDER BY years.year;""";
             PreparedStatement pstStartYear = con.prepareStatement(sqlSetStartYear);
             PreparedStatement pstEndYear = con.prepareStatement(sqlSetEndYear);
@@ -245,7 +252,6 @@ public class ThongKeDAO {
 
             pstStartYear.execute();
             pstEndYear.execute();
-
             ResultSet rs = pstSelect.executeQuery();
             while (rs.next()) {
                 int thoigian = rs.getInt("nam");
@@ -260,36 +266,73 @@ public class ThongKeDAO {
         return result;
     }
 
+//    public ArrayList<ThongKeTheoThangDTO> getThongKeTheoThang(int nam) {
+//        ArrayList<ThongKeTheoThangDTO> result = new ArrayList<>();
+//        try {
+//            Connection con = MySQLConnection.getConnection();
+//            String selected_year = "SET @nam = ?;";
+//            String sql = """
+//                     WITH RECURSIVE months AS (
+//                         SELECT 1 AS month -- Bắt đầu từ tháng 1
+//                         UNION ALL
+//                         SELECT month + 1
+//                         FROM months
+//                         WHERE month + 1 <= 12 -- Tăng dần đến tháng 12
+//                     )
+//                     SELECT 
+//                         CONCAT(months.month, '-', @selected_year) AS thang_nam, -- Kết hợp tháng và năm để hiển thị
+//                         COALESCE(SUM(ctphieuxuat.giaxuat * ctphieuxuat.soluong), 0) AS doanhthu,
+//                         COALESCE(SUM(ctphieuxuat.gianhap * ctphieuxuat.soluong), 0) AS chiphi
+//                     FROM months
+//                     LEFT JOIN phieuxuat ON MONTH(phieuxuat.thoigian) = months.month AND YEAR(phieuxuat.thoigian) = @selected_year -- So sánh tháng và năm
+//                     LEFT JOIN ctphieuxuat ON phieuxuat.maphieuxuat = ctphieuxuat.maphieuxuat
+//                     GROUP BY months.month
+//                     HAVING doanhthu > 0 -- Chỉ hiển thị những tháng có doanh thu
+//                     ORDER BY months.month;""";
+//            PreparedStatement pst = con.prepareStatement(sql);
+//            pst.setInt(1, nam);
+//            ResultSet rs = pst.executeQuery();
+//            while (rs.next()) {
+//                int thang = rs.getInt("thang");
+//                int chiphi = rs.getInt("chiphi");
+//                int doanhthu = rs.getInt("doanhthu");
+//                int loinhuan = doanhthu - chiphi;
+//                ThongKeTheoThangDTO thongke = new ThongKeTheoThangDTO(thang, chiphi, doanhthu, loinhuan);
+//                result.add(thongke);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return result;
+//    }
     public ArrayList<ThongKeTheoThangDTO> getThongKeTheoThang(int nam) {
         ArrayList<ThongKeTheoThangDTO> result = new ArrayList<>();
         try {
             Connection con = MySQLConnection.getConnection();
-            String sql = "SELECT months.month AS thang, \n"
-                    + "       COALESCE(SUM(ctphieunhap.dongia*ctphieuxuat.soluong), 0) AS chiphi,\n"
-                    + "       COALESCE(SUM(ctphieuxuat.dongia*ctphieuxuat.soluong), 0) AS doanhthu\n"
-                    + "FROM (\n"
-                    + "       SELECT 1 AS month\n"
-                    + "       UNION ALL SELECT 2\n"
-                    + "       UNION ALL SELECT 3\n"
-                    + "       UNION ALL SELECT 4\n"
-                    + "       UNION ALL SELECT 5\n"
-                    + "       UNION ALL SELECT 6\n"
-                    + "       UNION ALL SELECT 7\n"
-                    + "       UNION ALL SELECT 8\n"
-                    + "       UNION ALL SELECT 9\n"
-                    + "       UNION ALL SELECT 10\n"
-                    + "       UNION ALL SELECT 11\n"
-                    + "       UNION ALL SELECT 12\n"
-                    + "     ) AS months\n"
-                    + "LEFT JOIN phieuxuat ON MONTH(phieuxuat.thoigian) = months.month AND YEAR(phieuxuat.thoigian) = ? \n"
-                    + "LEFT JOIN ctphieuxuat ON phieuxuat.maphieuxuat = ctphieuxuat.maphieuxuat\n"
-                    + "LEFT JOIN sanpham ON sanpham.masp = ctphieuxuat.masp\n"
-                    + "LEFT JOIN ctphieunhap ON sanpham.masp = ctphieunhap.masp\n"
-                    + "GROUP BY months.month\n"
-                    + "ORDER BY months.month;";
+
+            String sql = """
+                     WITH RECURSIVE months AS (
+                         SELECT 1 AS month -- Bắt đầu từ tháng 1
+                         UNION ALL
+                         SELECT month + 1
+                         FROM months
+                         WHERE month + 1 <= 12 -- Tăng dần đến tháng 12
+                     )
+                     SELECT 
+                         months.month AS thang, -- Chỉ lấy tháng
+                         COALESCE(SUM(ctphieuxuat.giaxuat * ctphieuxuat.soluong), 0) AS doanhthu,
+                         COALESCE(SUM(ctphieuxuat.gianhap * ctphieuxuat.soluong), 0) AS chiphi
+                     FROM months
+                     LEFT JOIN phieuxuat ON MONTH(phieuxuat.thoigian) = months.month AND YEAR(phieuxuat.thoigian) = ? -- Truyền năm vào
+                     LEFT JOIN ctphieuxuat ON phieuxuat.maphieuxuat = ctphieuxuat.maphieuxuat
+                     GROUP BY months.month
+                     -- HAVING doanhthu > 0 chỉ những tháng có doanh thu mới hiện
+                     ORDER BY months.month;""";
+
             PreparedStatement pst = con.prepareStatement(sql);
-            pst.setInt(1, nam);
+            pst.setInt(1, nam); // Truyền giá trị năm vào câu truy vấn
             ResultSet rs = pst.executeQuery();
+
             while (rs.next()) {
                 int thang = rs.getInt("thang");
                 int chiphi = rs.getInt("chiphi");
@@ -298,6 +341,7 @@ public class ThongKeDAO {
                 ThongKeTheoThangDTO thongke = new ThongKeTheoThangDTO(thang, chiphi, doanhthu, loinhuan);
                 result.add(thongke);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -347,7 +391,7 @@ public class ThongKeDAO {
         try {
             Connection con = MySQLConnection.getConnection();
             String ngayString = nam + "-" + thang + "-" + "01";
-
+            System.err.println("ngày tháng " + ngayString);
             String sql = "WITH RECURSIVE dates AS (\n"
                     + "    SELECT DATE('" + ngayString + "') AS date\n"
                     + "    UNION ALL\n"
@@ -357,19 +401,14 @@ public class ThongKeDAO {
                     + ")\n"
                     + "SELECT \n"
                     + "    dates.date AS ngay, \n"
-                    + "    COALESCE(SUM(phieuxuat.tongtien), 0) AS doanhthu,\n"
-                    + "    COALESCE(SUM(chiphi), 0) AS chiphi\n"
+                    + "    COALESCE(SUM(ctphieuxuat.giaxuat * ctphieuxuat.soluong), 0) AS doanhthu,\n"
+                    + "    COALESCE(SUM(ctphieuxuat.gianhap * ctphieuxuat.soluong), 0) AS chiphi\n"
                     + "FROM dates\n"
                     + "LEFT JOIN phieuxuat ON DATE(phieuxuat.thoigian) = dates.date\n"
-                    + "LEFT JOIN (\n"
-                    + "    SELECT ctphieuxuat.maphieuxuat,\n"
-                    + "        SUM(ctphieuxuat.soluong * sanpham.gianhap) AS chiphi\n"
-                    + "    FROM ctphieuxuat\n"
-                    + "    LEFT JOIN sanpham ON ctphieuxuat.masp = sanpham.masp\n"
-                    + "    GROUP BY ctphieuxuat.maphieuxuat\n"
-                    + ") AS chi_phi_table ON phieuxuat.maphieuxuat = chi_phi_table.maphieuxuat\n"
+                    + "LEFT JOIN ctphieuxuat ON phieuxuat.maphieuxuat = ctphieuxuat.maphieuxuat\n"
                     + "GROUP BY dates.date\n"
                     + "ORDER BY dates.date;";
+
             PreparedStatement pst = con.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
             System.out.println(rs);
@@ -387,55 +426,98 @@ public class ThongKeDAO {
         return result;
     }
 
-    public ArrayList<ThongKeTrongThangDTO> getThongKeTuNgayDenNgay(String star, String end) {
+//    public ArrayList<ThongKeTrongThangDTO> getThongKeTuNgayDenNgay(String star, String end) {
+//        ArrayList<ThongKeTrongThangDTO> result = new ArrayList<>();
+//        try {
+//            Connection con = MySQLConnection.getConnection();
+//
+//            String setStar = "SET @start_date = '" + star + "'";
+//            String setEnd = "SET @end_date = '" + end + "'  ;";
+//
+//            String dateDiffQuery = "SELECT DATEDIFF('" + end + "', '" + star + "') AS days_difference;";
+//            PreparedStatement pstDiff = con.prepareStatement(dateDiffQuery);
+//            ResultSet rsDiff = pstDiff.executeQuery();
+//            int dateDiff = 0;
+//            if (rsDiff.next()) {
+//                dateDiff = rsDiff.getInt("days_difference");
+//            }
+//            rsDiff.close();
+//            pstDiff.close();
+//
+//            String numbersQuery = "";
+//            for (int i = 0; i <= dateDiff; i++) {
+//                if (i > 0) {
+//                    numbersQuery += " UNION ALL ";
+//                }
+//                numbersQuery += "SELECT DATE_ADD('" + star + "', INTERVAL " + i + " DAY) AS date";
+//            }
+//
+//            String sqlSelect = "WITH RECURSIVE dates AS (\n"
+//                    + numbersQuery.toString() + "\n"
+//                    + ")\n"
+//                    + "SELECT \n"
+//                    + "    dates.date AS ngay, \n"
+//                    + "    COALESCE(SUM(ctphieuxuat.soluong * ctphieuxuat.giaxuat), 0) AS doanhthu,\n"
+//                    + "    COALESCE(SUM(ctphieuxuat.soluong * ctphieuxuat.gianhap), 0) AS chiphi\n"
+//                    + "FROM \n"
+//                    + "    dates\n"
+//                    + "LEFT JOIN phieuxuat ON DATE(phieuxuat.thoigian) = dates.date\n"
+//                    + "LEFT JOIN ctphieuxuat ON phieuxuat.maphieuxuat = ctphieuxuat.maphieuxuat\n"
+//                    +" HAVING doanhthu > 0 chỉ những ngày có doanh thu mới hiện\n"
+//                    + "GROUP BY dates.date\n"
+//                    + "ORDER BY dates.date;";
+//
+//            PreparedStatement pstStart = con.prepareStatement(setStar);
+//            PreparedStatement pstEnd = con.prepareStatement(setEnd);
+//            PreparedStatement pstSelect = con.prepareStatement(sqlSelect);
+//
+//            pstStart.execute();
+//            pstEnd.execute();
+//            ResultSet rs = pstSelect.executeQuery();
+//            while (rs.next()) {
+//                Date ngay = rs.getDate("ngay");
+//                int chiphi = rs.getInt("chiphi");
+//                int doanhthu = rs.getInt("doanhthu");
+//                int loinhuan = doanhthu - chiphi;
+//                ThongKeTrongThangDTO tn = new ThongKeTrongThangDTO(ngay, chiphi, doanhthu, loinhuan);
+//                result.add(tn);
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return result;
+//    }
+    public ArrayList<ThongKeTrongThangDTO> getThongKeTuNgayDenNgay(String start, String end) {
         ArrayList<ThongKeTrongThangDTO> result = new ArrayList<>();
         try {
             Connection con = MySQLConnection.getConnection();
 
-            String setStar = "SET @start_date = '" + star + "'";
-            String setEnd = "SET @end_date = '" + end + "'  ;";
+            // Tạo câu truy vấn SQL sử dụng WITH RECURSIVE để tạo dải ngày từ start đến end
+            String sqlSelect = """
+                WITH RECURSIVE dates AS (
+                    SELECT ? AS date -- Ngày bắt đầu
+                    UNION ALL
+                    SELECT date + INTERVAL 1 DAY
+                    FROM dates
+                    WHERE date + INTERVAL 1 DAY <= ?
+                )
+                SELECT 
+                    dates.date AS ngay, 
+                    COALESCE(SUM(ctphieuxuat.soluong * ctphieuxuat.giaxuat), 0) AS doanhthu,
+                    COALESCE(SUM(ctphieuxuat.soluong * ctphieuxuat.gianhap), 0) AS chiphi
+                FROM 
+                    dates
+                LEFT JOIN phieuxuat ON DATE(phieuxuat.thoigian) = dates.date
+                LEFT JOIN ctphieuxuat ON phieuxuat.maphieuxuat = ctphieuxuat.maphieuxuat
+                GROUP BY dates.date
+                HAVING doanhthu > 0 -- Chỉ những ngày có doanh thu mới hiển thị
+                ORDER BY dates.date;
+                """;
 
-            String dateDiffQuery = "SELECT DATEDIFF('" + end + "', '" + star + "') AS days_difference;";
-            PreparedStatement pstDiff = con.prepareStatement(dateDiffQuery);
-            ResultSet rsDiff = pstDiff.executeQuery();
-            int dateDiff = 0;
-            if (rsDiff.next()) {
-                dateDiff = rsDiff.getInt("days_difference");
-            }
-            rsDiff.close();
-            pstDiff.close();
-
-            String numbersQuery = "";
-            for (int i = 0; i <= dateDiff; i++) {
-                if (i > 0) {
-                    numbersQuery += " UNION ALL ";
-                }
-                numbersQuery += "SELECT DATE_ADD('" + star + "', INTERVAL " + i + " DAY) AS date";
-            }
-
-            String sqlSelect = "SELECT \n"
-                    + "    dates.date AS ngay, \n"
-                    + "    COALESCE(SUM(phieuxuat.tongtien), 0) AS doanhthu,\n"
-                    + "    COALESCE(SUM(chiphi), 0) AS chiphi\n"
-                    + "FROM \n"
-                    + "    (" + numbersQuery + ") AS dates\n"
-                    + "LEFT JOIN phieuxuat ON DATE(phieuxuat.thoigian) = dates.date\n"
-                    + "LEFT JOIN (\n"
-                    + "            SELECT ctphieuxuat.maphieuxuat,\n"
-                    + "            SUM(ctphieuxuat.soluong * sanpham.gianhap) AS chiphi\n"
-                    + "           FROM ctphieuxuat\n"
-                    + "            LEFT JOIN sanpham ON ctphieuxuat.masp = sanpham.masp\n"
-                    + "           GROUP BY ctphieuxuat.maphieuxuat\n"
-                    + "            ) AS chi_phi_table ON phieuxuat.maphieuxuat = chi_phi_table.maphieuxuat\n"
-                    + "GROUP BY dates.date\n"
-                    + "ORDER BY dates.date;";
-
-            PreparedStatement pstStart = con.prepareStatement(setStar);
-            PreparedStatement pstEnd = con.prepareStatement(setEnd);
             PreparedStatement pstSelect = con.prepareStatement(sqlSelect);
+            pstSelect.setString(1, start);  // Truyền giá trị start vào
+            pstSelect.setString(2, end);    // Truyền giá trị end vào
 
-            pstStart.execute();
-            pstEnd.execute();
             ResultSet rs = pstSelect.executeQuery();
             while (rs.next()) {
                 Date ngay = rs.getDate("ngay");
@@ -445,6 +527,9 @@ public class ThongKeDAO {
                 ThongKeTrongThangDTO tn = new ThongKeTrongThangDTO(ngay, chiphi, doanhthu, loinhuan);
                 result.add(tn);
             }
+
+            rs.close();
+            pstSelect.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

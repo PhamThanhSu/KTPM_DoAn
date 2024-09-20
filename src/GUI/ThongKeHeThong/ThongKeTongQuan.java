@@ -75,7 +75,7 @@ public class ThongKeTongQuan extends javax.swing.JPanel {
         model.setRowCount(0);
         System.out.println("hello");
         for (ThongKeTrongThangDTO thongKe : listDoanhThu) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Object[] row = {
                 dateFormat.format(thongKe.getNgay()),
                 formater.FormatVND(thongKe.getChiphi()),

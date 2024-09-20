@@ -200,6 +200,8 @@ public class TaoPhieuXuatt extends javax.swing.JPanel implements MouseListener, 
                 int masp = (int) tblsoluongsanpham.getValueAt(selectedRow, maspColumnIndex);
                 int giaxuatColumnIndex = taoPhieuNhap.getColumnIndexByName("Giá xuất", tblsoluongsanpham);
                 int giaxuat = (int) tblsoluongsanpham.getValueAt(selectedRow, giaxuatColumnIndex);
+                int gianhapColumnIndex = taoPhieuNhap.getColumnIndexByName("Giá nhập", tblsoluongsanpham);
+                int gianhap = (int) tblsoluongsanpham.getValueAt(selectedRow, gianhapColumnIndex);
                 SanPhamDTO result = taoPhieuNhap.selectSanPham(masp);
                 boolean found = false;
                 int soluongcheck = 0;
@@ -469,7 +471,7 @@ public class TaoPhieuXuatt extends javax.swing.JPanel implements MouseListener, 
 
             },
             new String [] {
-                "STT", "Mã SP", "Tên sản phẩm", "Size", "Xuất xứ", "Loại", "Thương hiệu", "Giá xuất", "Số lượng"
+                "STT", "Mã SP", "Tên sản phẩm", "Size", "Xuất xứ", "Loại", "Thương hiệu", "Giá xuất", "Số lượng", "Giá nhập"
             }
         ));
         tblthongtinspdathempx.setRowHeight(30);
@@ -660,7 +662,13 @@ public class TaoPhieuXuatt extends javax.swing.JPanel implements MouseListener, 
         loaiDAO = new LoaiDAO();
         xuatXuDAO = new XuatXuDAO();
         nhaCungCapDAO = new NhaCungCapDAO();
-        
+        int gianhap = 0;
+        int selectedRow = tblsoluongsanpham.getSelectedRow();
+            if (selectedRow != -1) {
+                int gianhapColumnIndex = taoPhieuNhap.getColumnIndexByName("Giá nhập", tblsoluongsanpham);
+                gianhap = (int) tblsoluongsanpham.getValueAt(selectedRow, gianhapColumnIndex);
+                System.err.println("giá nhập trong bảng chọn" + gianhap);
+            }
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         //String selectedSize = (String) cbbcauhinh.getSelectedItem(); // Ép kiểu sang String nếu cần
         
@@ -681,7 +689,8 @@ public class TaoPhieuXuatt extends javax.swing.JPanel implements MouseListener, 
             TenLoai,
             TenThuongHieu,
             decimalFormat.format(giaxuat),
-            soluong
+            soluong,
+            decimalFormat.format(gianhap)
         });
         totalPrice += giaxuat * soluong;
 
@@ -844,12 +853,14 @@ public class TaoPhieuXuatt extends javax.swing.JPanel implements MouseListener, 
         for (int i = 0; i < model.getRowCount(); i++) {
             int masp = (int) model.getValueAt(i, 1);
             int soluong = (int) model.getValueAt(i, 8);
+            String gianhapstr = model.getValueAt(i, 9).toString();
             String giaxuatstr = model.getValueAt(i, 7).toString();
             int giaxuat = Integer.parseInt(giaxuatstr.replaceAll("[.,đ]", "").trim());
+            int gianhap = Integer.parseInt(gianhapstr.replaceAll("[.,đ]", "").trim());
             try {
                 chiTietPhieuXuatDAO = new ChiTietPhieuXuatDAO();
                 chiTietPhieuXuatDAO.updateSoluongton(masp, soluong);
-                chiTietPhieuXuatDTO = new ChiTietPhieuXuatDTO(maphieuxuat, masp, soluong, giaxuat);
+                chiTietPhieuXuatDTO = new ChiTietPhieuXuatDTO(maphieuxuat, masp, soluong, giaxuat, gianhap);
                 chiTietPhieuXuatList.add(chiTietPhieuXuatDTO);
                 listctpn = chiTietPhieuNhapDAO.getAllChiTietPhieuNhap();
             for (ChiTietPhieuNhapDTO ctpn : listctpn) {

@@ -60,11 +60,13 @@ public class SuaNCCap extends javax.swing.JFrame {
         txtSoDt.setText(String.valueOf(nhaCungCapDTO.getSdt()));
         txtDiaChi.setText(String.valueOf(nhaCungCapDTO.getDiachi()));
         txtEmail.setText(String.valueOf(nhaCungCapDTO.getEmail()));
+        txtloinhuan.setText(String.valueOf(nhaCungCapDTO.getPhantramloinhuan()));
     } else {
         txtTenNCC.setText("");
         txtSoDt.setText("");
         txtDiaChi.setText("");
         txtEmail.setText("");
+        txtloinhuan.setText("");
         JOptionPane.showMessageDialog(this, "Không có thông tin nhà cung cấp để hiển thị", "Thông báo", JOptionPane.WARNING_MESSAGE);
     }
 }
@@ -73,7 +75,8 @@ public class SuaNCCap extends javax.swing.JFrame {
         String diaChi = txtDiaChi.getText();
         String soDienThoai = txtSoDt.getText();
         String email = txtEmail.getText();
-        nhaCungCapDTO = new NhaCungCapDTO(tenNhaCungCap,diaChi, email,soDienThoai);
+        int loinhuan = Integer.parseInt(txtloinhuan.getText());
+        nhaCungCapDTO = new NhaCungCapDTO(tenNhaCungCap,diaChi, email,soDienThoai, loinhuan);
         return nhaCungCapDTO;
     }
 
@@ -149,6 +152,8 @@ private boolean isValidEmail(String email) {
         lblTenNCC = new javax.swing.JLabel();
         txtSoDt = new javax.swing.JTextField();
         lblSoDT = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        txtloinhuan = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -201,28 +206,37 @@ private boolean isValidEmail(String email) {
 
         lblSoDT.setText("Số điện thoại");
 
+        jLabel1.setText("Lợi nhuận(%)");
+
         javax.swing.GroupLayout pnlCenterLayout = new javax.swing.GroupLayout(pnlCenter);
         pnlCenter.setLayout(pnlCenterLayout);
         pnlCenterLayout.setHorizontalGroup(
             pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlCenterLayout.createSequentialGroup()
+            .addGroup(pnlCenterLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(txtEmail)
-                        .addComponent(txtTenNCC, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(lblEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblTenNCC, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(lblSoDT, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblDiaChi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtSoDt, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(txtDiaChi, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(55, 55, 55))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlCenterLayout.createSequentialGroup()
+                        .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtEmail)
+                                .addComponent(txtTenNCC, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lblEmail, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblTenNCC, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(lblSoDT, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                                .addComponent(lblDiaChi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtSoDt, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtDiaChi, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(55, 55, 55))
+                    .addGroup(pnlCenterLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtloinhuan, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         pnlCenterLayout.setVerticalGroup(
             pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,7 +256,11 @@ private boolean isValidEmail(String email) {
                 .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtEmail)
                     .addComponent(txtSoDt, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtloinhuan, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -287,6 +305,7 @@ private boolean isValidEmail(String email) {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSave;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblDiaChi;
     private javax.swing.JLabel lblEmail;
     private javax.swing.JLabel lblSoDT;
@@ -298,5 +317,6 @@ private boolean isValidEmail(String email) {
     private javax.swing.JTextField txtEmail;
     private javax.swing.JTextField txtSoDt;
     private javax.swing.JTextField txtTenNCC;
+    private javax.swing.JTextField txtloinhuan;
     // End of variables declaration//GEN-END:variables
 }

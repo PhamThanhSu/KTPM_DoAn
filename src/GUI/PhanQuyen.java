@@ -6,11 +6,13 @@ package GUI;
 
 import BUS.NhomQuyenBUS;
 import DAO.ChiTietQuyenDAO;
+import DAO.NhomQuyenDAO;
 import DTO.ChiTietQuyenDTO;
 import DTO.NhomQuyenDTO;
 import DTO.PhieuNhapDTO;
 import DTO.TaiKhoanDTO;
 import GUI.Component.CheckAction;
+import GUI.Component.Export.JTableExporter;
 import GUI.PQuyen.PhanQuyenDialog;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.BorderLayout;
@@ -18,6 +20,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -42,6 +45,7 @@ public class PhanQuyen extends javax.swing.JPanel implements ActionListener {
     PhanQuyenDialog phanQuyenDialog;
     NhomQuyenDTO nhomQuyenDTO;
     NhomQuyenBUS nhomQuyenBUS;
+    NhomQuyenDAO nhomQuyenDAO;
 
     private DefaultTableModel tblModel;
 
@@ -91,12 +95,11 @@ public class PhanQuyen extends javax.swing.JPanel implements ActionListener {
 // Tạo đối tượng CheckAction
         CheckAction checkAction = new CheckAction(taiKhoanDTO.getManhomquyen(), "nhomquyen", action, buttonMap);
 
-        
         // Tải dữ liệu vào bảng
         loadData();
     }
 
-    private void loadData() {
+    public void loadData() {
         // Khởi tạo NhomQuyenBUS nếu chưa có
         if (nhomQuyenBUS == null) {
             nhomQuyenBUS = new NhomQuyenBUS();
@@ -282,7 +285,36 @@ public class PhanQuyen extends javax.swing.JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnThem) {
+            try {
+                // Tạo đối tượng NhomQuyenDTO mới với giá trị mặc định (chưa có mã)
+                String tenNhomQuyen = JOptionPane.showInputDialog(pnlCenter, "Nhập tên nhóm quyền mới:");
+                if (tenNhomQuyen == null || tenNhomQuyen.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(pnlCenter, "Tên nhóm quyền không được để trống!");
+                    return;
+                }
 
+                // Kiểm tra tên nhóm quyền có tồn tại không (nếu cần)
+                NhomQuyenDAO nhomQuyenDAO = new NhomQuyenDAO();
+                if (nhomQuyenDAO.isTenNhomQuyenTonTai(tenNhomQuyen)) {
+                    JOptionPane.showMessageDialog(pnlCenter, "Tên nhóm quyền đã tồn tại!");
+                    return;
+                }
+
+                // Khởi tạo NhomQuyenDTO mới (ma = 0 vì đây là nhóm quyền mới)
+                NhomQuyenDTO nhomQuyenDTO = new NhomQuyenDTO(0, tenNhomQuyen);
+
+                // Tạo danh sách chi tiết quyền rỗng vì nhóm quyền mới chưa có quyền nào
+                ArrayList<ChiTietQuyenDTO> dsChiTietQuyen = new ArrayList<>();
+
+                // Khởi tạo dialog thêm phân quyền với tên nhóm quyền đã nhập
+                String tenchucnang = "Thêm nhóm quyền mới";
+                phanQuyenDialog = new PhanQuyenDialog(nhomQuyenDTO, dsChiTietQuyen, tenchucnang, this, false);
+                // Hiển thị dialog
+                phanQuyenDialog.setVisible(true);
+
+            } catch (SQLException ex) {
+                Logger.getLogger(PhanQuyen.class.getName()).log(Level.SEVERE, "Lỗi khi thêm nhóm quyền: ", ex);
+            }
         } else if (e.getSource() == btnSua) {
             try {
                 // Lấy chỉ số dòng được chọn
@@ -292,6 +324,7 @@ public class PhanQuyen extends javax.swing.JPanel implements ActionListener {
                     String maNhomQuyen = tblquyen.getValueAt(selectedRow, 0).toString();
                     String tenNhomQuyen = tblquyen.getValueAt(selectedRow, 1).toString();
                     int ma = Integer.parseInt(maNhomQuyen);
+
                     // Tạo đối tượng NhomQuyenDTO
                     NhomQuyenDTO nhomQuyenDTO = new NhomQuyenDTO(ma, tenNhomQuyen);
 
@@ -300,22 +333,65 @@ public class PhanQuyen extends javax.swing.JPanel implements ActionListener {
                     ArrayList<ChiTietQuyenDTO> dsChiTietQuyen = chiTietQuyenDAO.getChiTietQuyen(maNhomQuyen);
                     String tenchucnang = "Cập nhật nhóm quyền";
                     // Khởi tạo dialog và truyền dữ liệu quyền vào dialog
-                    phanQuyenDialog = new PhanQuyenDialog(nhomQuyenDTO, dsChiTietQuyen, tenchucnang);
+                    phanQuyenDialog = new PhanQuyenDialog(nhomQuyenDTO, dsChiTietQuyen, tenchucnang, this, true);
 
                     // Hiển thị dialog
                     phanQuyenDialog.setVisible(true);
-                } else{
+                } else {
                     JOptionPane.showMessageDialog(pnlCenter, "Vui lòng chọn nhóm quyền cần xem");
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(PhanQuyen.class.getName()).log(Level.SEVERE, "Lỗi khi khởi tạo PhanQuyenDialog: ", ex);
             }
         } else if (e.getSource() == btnXoa) {
-            // Xử lý xóa quyền
+            try {
+                // Lấy chỉ số dòng được chọn
+                int selectedRow = tblquyen.getSelectedRow();
+                if (selectedRow != -1) {
+                    // Lấy mã nhóm quyền từ dòng được chọn trong bảng
+                    String maNhomQuyen = tblquyen.getValueAt(selectedRow, 0).toString();
+                    String tenNhomQuyen = tblquyen.getValueAt(selectedRow, 1).toString();
+                    int ma = Integer.parseInt(maNhomQuyen);
+                    if (tenNhomQuyen.equals("Quản lý kho") || ma == 5) {
+                        JOptionPane.showMessageDialog(this, "Không thể xóa nhóm quyền này.");
+                        return; // Ngừng xử lý nếu không được phép cập nhật
+                    }
+                    // Hiển thị hộp thoại xác nhận trước khi xóa
+                    int confirm = JOptionPane.showConfirmDialog(pnlCenter,
+                            "Bạn có chắc chắn muốn xóa quyền này?",
+                            "Xác nhận xóa",
+                            JOptionPane.YES_NO_OPTION);
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        // Xóa quyền trong cơ sở dữ liệu
+                        ChiTietQuyenDAO chiTietQuyenDAO = new ChiTietQuyenDAO();
+                        nhomQuyenBUS = new NhomQuyenBUS();
+                        try {
+                            chiTietQuyenDAO.deleteAllChiTietQuyen(ma);
+                            nhomQuyenBUS.xoaNhomQuyen(ma);
+                            JOptionPane.showMessageDialog(pnlCenter, "Xóa quyền thành công!");
+                            // Cập nhật giao diện
+                            ((DefaultTableModel) tblquyen.getModel()).removeRow(selectedRow);
+                        } catch (SQLException ex) {
+                            JOptionPane.showMessageDialog(pnlCenter, "Lỗi khi xóa quyền. Vui lòng thử lại.");
+                            Logger.getLogger(PhanQuyen.class.getName()).log(Level.SEVERE, "Lỗi khi xóa quyền: ", ex);
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(pnlCenter, "Vui lòng chọn quyền cần xóa");
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(pnlCenter, "Đã xảy ra lỗi. Vui lòng thử lại.");
+                Logger.getLogger(PhanQuyen.class.getName()).log(Level.SEVERE, "Lỗi khi xử lý yêu cầu xóa quyền: ", ex);
+            }
         } else if (e.getSource() == btnXuatExcel) {
-            // Xử lý xuất Excel
+            try {
+                JTableExporter.exportJTableToExcel(tblquyen);
+            } catch (IOException ex) {
+                java.util.logging.Logger.getLogger(PhieuNhap.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            }
         } else if (e.getSource() == btnLamMoi) {
-            // Xử lý làm mới dữ liệu
+            loadData();
         }
     }
 

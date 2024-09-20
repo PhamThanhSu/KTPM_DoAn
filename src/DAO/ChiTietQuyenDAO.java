@@ -53,11 +53,11 @@ public class ChiTietQuyenDAO {
         }
     }
     
-    public void deleteAllChiTietQuyen(String maNhomQuyen) throws SQLException {
+    public void deleteAllChiTietQuyen(int maNhomQuyen) throws SQLException {
         String sql = "DELETE FROM ctquyen WHERE manhomquyen = ?";
         try (Connection connection = MySQLConnection.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, maNhomQuyen);
+            ps.setInt(1, maNhomQuyen);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace(); // Xử lý lỗi SQL

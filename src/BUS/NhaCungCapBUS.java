@@ -28,4 +28,8 @@ public class NhaCungCapBUS {
     public NhaCungCapDTO selectByID(int manhacungcap){
         return nhaCungCapDAO.selectById(manhacungcap);
     }
+    
+    public NhaCungCapDTO selectByTenNCC(String tenncc){
+        return nhaCungCapDAO.selectByTenNCC(tenncc);
+    }
 }

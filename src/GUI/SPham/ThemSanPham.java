@@ -145,10 +145,6 @@ public class ThemSanPham extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập tên sản phẩm");
         } else if (!isInteger(txtSizeSP.getText()) || Integer.parseInt(txtSizeSP.getText()) < 0) {
             JOptionPane.showMessageDialog(null, "Vui lòng nhập size hợp lệ");
-        } else if (!isInteger(txtGiaNhap.getText())) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập giá nhập là số");
-        } else if (!isInteger(txtGiaXuat.getText())) {
-            JOptionPane.showMessageDialog(null, "Vui lòng nhập giá xuất là số");
         }
 
         String hinhAnh = selectedFile.getPath();
@@ -158,9 +154,7 @@ public class ThemSanPham extends javax.swing.JFrame {
         int maThuongHieuSanPham = thuongHieuBUS.getAllThuongHieu().get(this.cbxThuongHieu.getSelectedIndex()).getMathuonghieu();
         int maXuatXuSanPham = xuatXuBUS.getAllXuatXu().get(this.cbxXuatXu.getSelectedIndex()).getMaxuatxu();
         int maKhuVucKhoSanPham = khuVucKhoBUS.getAllKho().get(this.cbxKho.getSelectedIndex()).getMakhuvuc();
-        int giaNhapSanPham = Integer.parseInt(txtGiaNhap.getText());
-        int giaXuatSanPham = Integer.parseInt(txtGiaXuat.getText());
-        sanPhamDTO = new SanPhamDTO(tenSanPham, sizeSanPham, hinhAnh, maXuatXuSanPham, maLoaiSanPham, maThuongHieuSanPham, maKhuVucKhoSanPham, giaNhapSanPham, giaXuatSanPham);
+        sanPhamDTO = new SanPhamDTO(tenSanPham, sizeSanPham, hinhAnh, maXuatXuSanPham, maLoaiSanPham, maThuongHieuSanPham, maKhuVucKhoSanPham);
         return sanPhamDTO;
     }
 
@@ -219,10 +213,6 @@ public class ThemSanPham extends javax.swing.JFrame {
         cbxLoai = new javax.swing.JComboBox<>();
         lblThuongHieu = new javax.swing.JLabel();
         btnChonAnh = new javax.swing.JButton();
-        txtGiaNhap = new javax.swing.JTextField();
-        lblGiaNhap = new javax.swing.JLabel();
-        txtGiaXuat = new javax.swing.JTextField();
-        lblGiaXuat = new javax.swing.JLabel();
         btnTaoCauHinh = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
         pnlTop = new javax.swing.JPanel();
@@ -254,6 +244,12 @@ public class ThemSanPham extends javax.swing.JFrame {
 
         lblKho.setText("Khu vực kho");
 
+        txtSizeSP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSizeSPActionPerformed(evt);
+            }
+        });
+
         lblSize.setText("Size");
 
         lblXuatXu.setText("Xuất xứ");
@@ -284,10 +280,6 @@ public class ThemSanPham extends javax.swing.JFrame {
                 btnChonAnhActionPerformed(evt);
             }
         });
-
-        lblGiaNhap.setText("Giá nhập");
-
-        lblGiaXuat.setText("Giá xuất");
 
         btnTaoCauHinh.setBackground(new java.awt.Color(0, 255, 0));
         btnTaoCauHinh.setText("Lưu");
@@ -331,28 +323,15 @@ public class ThemSanPham extends javax.swing.JFrame {
                             .addComponent(cbxXuatXu, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblTenSP, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtTenSP, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlCenterLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(lblGiaNhap, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtGiaNhap, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(pnlCenterLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(cbxLoai, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cbxThuongHieu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(lblLoai)
-                                    .addComponent(lblThuongHieu)))))
-                    .addGroup(pnlCenterLayout.createSequentialGroup()
-                        .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtSizeSP, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblSize))
                         .addGap(18, 18, 18)
-                        .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(lblGiaXuat, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtGiaXuat, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(cbxLoai, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cbxThuongHieu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblLoai)
+                            .addComponent(lblThuongHieu)
+                            .addComponent(txtSizeSP, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblSize))))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
         pnlCenterLayout.setVerticalGroup(
@@ -361,25 +340,13 @@ public class ThemSanPham extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlCenterLayout.createSequentialGroup()
-                        .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(pnlCenterLayout.createSequentialGroup()
-                                .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(pnlCenterLayout.createSequentialGroup()
-                                        .addComponent(lblTenSP)
-                                        .addGap(4, 4, 4)
-                                        .addComponent(txtTenSP, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(pnlCenterLayout.createSequentialGroup()
-                                        .addComponent(lblGiaNhap)
-                                        .addGap(4, 4, 4)
-                                        .addComponent(txtGiaNhap, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(7, 7, 7)
-                                .addComponent(lblSize)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtSizeSP, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnlCenterLayout.createSequentialGroup()
-                                .addComponent(lblGiaXuat)
-                                .addGap(4, 4, 4)
-                                .addComponent(txtGiaXuat, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblTenSP)
+                            .addComponent(lblSize))
+                        .addGap(4, 4, 4)
+                        .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtTenSP, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtSizeSP, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(pnlCenterLayout.createSequentialGroup()
@@ -485,6 +452,10 @@ public class ThemSanPham extends javax.swing.JFrame {
         System.out.println(hinhAnh);
     }//GEN-LAST:event_btnChonAnhActionPerformed
 
+    private void txtSizeSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSizeSPActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSizeSPActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -499,8 +470,6 @@ public class ThemSanPham extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cbxThuongHieu;
     private javax.swing.JComboBox<String> cbxXuatXu;
     private javax.swing.JLabel lblAnhSanPham;
-    private javax.swing.JLabel lblGiaNhap;
-    private javax.swing.JLabel lblGiaXuat;
     private javax.swing.JLabel lblKho;
     private javax.swing.JLabel lblLoai;
     private javax.swing.JLabel lblSize;
@@ -511,8 +480,6 @@ public class ThemSanPham extends javax.swing.JFrame {
     private javax.swing.JPanel panelOne;
     private javax.swing.JPanel pnlCenter;
     private javax.swing.JPanel pnlTop;
-    private javax.swing.JTextField txtGiaNhap;
-    private javax.swing.JTextField txtGiaXuat;
     private javax.swing.JTextField txtSizeSP;
     private javax.swing.JTextField txtTenSP;
     // End of variables declaration//GEN-END:variables

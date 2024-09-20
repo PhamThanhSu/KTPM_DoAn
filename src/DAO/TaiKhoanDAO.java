@@ -116,6 +116,7 @@ public class TaiKhoanDAO {
 
     public boolean suaTaiKhoan(TaiKhoanDTO taiKhoanDTO) {
         boolean thanhCong = false;
+        System.out.println("kiếm tra lần 2");
         String query = "UPDATE taikhoan SET tendangnhap=?, matkhau=?, manhomquyen=?, trangthai=? WHERE manv = ?";
         try {
             connection = MySQLConnection.getConnection();

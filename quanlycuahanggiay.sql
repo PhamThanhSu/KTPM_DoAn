@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th9 18, 2024 lúc 12:49 PM
+-- Thời gian đã tạo: Th9 20, 2024 lúc 03:41 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -41,10 +41,16 @@ CREATE TABLE `ctphieunhap` (
 --
 
 INSERT INTO `ctphieunhap` (`maphieunhap`, `masp`, `soluong`, `gianhap`, `giaxuat`, `soluongconlai`) VALUES
-(1, 1, 10, 1000000, 1150000, 0),
-(1, 2, 5, 2000000, 2300000, 5),
-(2, 1, 10, 2000000, 2300000, 10),
-(2, 3, 20, 1500000, 1725000, 10);
+(1, 1, 10, 2000000, 2500000, 0),
+(1, 2, 10, 1500000, 1875000, 3),
+(1, 3, 5, 2000000, 2500000, 5),
+(1, 4, 10, 2000000, 2500000, 5),
+(1, 5, 7, 1700000, 2125000, 5),
+(2, 6, 10, 1500000, 1800000, 5),
+(2, 7, 5, 1800000, 2160000, 3),
+(2, 8, 10, 1000000, 1200000, 3),
+(2, 9, 8, 2000000, 2400000, 5),
+(3, 1, 10, 1000000, 1250000, 7);
 
 -- --------------------------------------------------------
 
@@ -56,6 +62,7 @@ CREATE TABLE `ctphieuxuat` (
   `maphieuxuat` int(11) NOT NULL,
   `masp` int(11) NOT NULL DEFAULT 0,
   `soluong` int(11) NOT NULL DEFAULT 0,
+  `gianhap` int(11) NOT NULL DEFAULT 0,
   `giaxuat` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -63,10 +70,19 @@ CREATE TABLE `ctphieuxuat` (
 -- Đang đổ dữ liệu cho bảng `ctphieuxuat`
 --
 
-INSERT INTO `ctphieuxuat` (`maphieuxuat`, `masp`, `soluong`, `giaxuat`) VALUES
-(1, 1, 5, 1150000),
-(2, 1, 5, 1150000),
-(3, 3, 10, 1725000);
+INSERT INTO `ctphieuxuat` (`maphieuxuat`, `masp`, `soluong`, `gianhap`, `giaxuat`) VALUES
+(1, 1, 5, 2000000, 2500000),
+(1, 2, 5, 1500000, 1875000),
+(2, 4, 5, 2000000, 2500000),
+(2, 7, 2, 1800000, 2160000),
+(2, 9, 3, 2000000, 2400000),
+(3, 1, 5, 2000000, 2500000),
+(3, 5, 2, 1700000, 2125000),
+(3, 8, 3, 1000000, 1200000),
+(4, 1, 3, 1000000, 1250000),
+(4, 2, 2, 1500000, 1875000),
+(5, 6, 5, 1500000, 1800000),
+(5, 8, 4, 1000000, 1200000);
 
 -- --------------------------------------------------------
 
@@ -87,12 +103,16 @@ CREATE TABLE `ctquyen` (
 INSERT INTO `ctquyen` (`manhomquyen`, `machucnang`, `hanhdong`) VALUES
 (1, 'nhanvien', 'view'),
 (1, 'nhomquyen', 'create'),
-(1, 'nhomquyen', 'delete'),
 (1, 'nhomquyen', 'view'),
 (1, 'taikhoan', 'create'),
+(1, 'taikhoan', 'delete'),
 (1, 'taikhoan', 'update'),
 (1, 'taikhoan', 'view'),
+(2, 'khuvuckho', 'view'),
+(2, 'nhaphang', 'view'),
+(2, 'sanpham', 'view'),
 (2, 'thongke', 'view'),
+(2, 'xuathang', 'view'),
 (3, 'khachhang', 'view'),
 (3, 'khuvuckho', 'view'),
 (3, 'nhacungcap', 'view'),
@@ -157,7 +177,10 @@ INSERT INTO `ctquyen` (`manhomquyen`, `machucnang`, `hanhdong`) VALUES
 (5, 'xuathang', 'create'),
 (5, 'xuathang', 'delete'),
 (5, 'xuathang', 'update'),
-(5, 'xuathang', 'view');
+(5, 'xuathang', 'view'),
+(7, 'xuathang', 'view'),
+(19, 'taikhoan', 'create'),
+(19, 'taikhoan', 'view');
 
 -- --------------------------------------------------------
 
@@ -306,7 +329,7 @@ INSERT INTO `nhanvien` (`manv`, `hoten`, `gioitinh`, `ngaysinh`, `sdt`, `email`,
 CREATE TABLE `nhomquyen` (
   `manhomquyen` int(11) NOT NULL,
   `tennhomquyen` varchar(255) NOT NULL,
-  `type` int(11) NOT NULL
+  `type` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -318,7 +341,10 @@ INSERT INTO `nhomquyen` (`manhomquyen`, `tennhomquyen`, `type`) VALUES
 (2, 'Nhân viên thống kê', 2),
 (3, 'Nhân viên xuất hàng', 3),
 (4, 'Nhân viên nhập hàng', 4),
-(5, 'Quản lý kho', 5);
+(5, 'Quản lý kho', 5),
+(6, 'test', NULL),
+(7, 'test lan 2', NULL),
+(19, 'test lan 3', NULL);
 
 -- --------------------------------------------------------
 
@@ -340,8 +366,9 @@ CREATE TABLE `phieunhap` (
 --
 
 INSERT INTO `phieunhap` (`maphieunhap`, `thoigian`, `manhacungcap`, `manv`, `tongtien`, `trangthai`) VALUES
-(1, '2024-09-18 16:19:05', 6, 3, 20000000, 1),
-(2, '2024-09-18 16:44:03', 6, 3, 50000000, 1);
+(1, '2024-09-15 00:45:27', 5, 3, 76900000, 1),
+(2, '2024-09-16 00:51:47', 4, 3, 50000000, 1),
+(3, '2024-09-17 00:55:34', 5, 3, 10000000, 1);
 
 -- --------------------------------------------------------
 
@@ -363,9 +390,11 @@ CREATE TABLE `phieuxuat` (
 --
 
 INSERT INTO `phieuxuat` (`maphieuxuat`, `thoigian`, `tongtien`, `manv`, `makh`, `trangthai`) VALUES
-(1, '2024-09-16 16:19:17', 5750000, 3, 17, 1),
-(2, '2024-09-17 16:19:49', 5750000, 3, 13, 1),
-(3, '2024-09-18 16:44:18', 17250000, 3, 5, 1);
+(1, '2022-09-15 00:52:55', 21875000, 3, 15, 1),
+(2, '2023-09-13 00:55:04', 24020000, 3, 17, 1),
+(3, '2024-08-22 00:56:43', 20350000, 3, 11, 1),
+(4, '2024-09-18 00:57:14', 7500000, 3, 5, 1),
+(5, '2024-09-19 08:06:54', 13800000, 3, 16, 1);
 
 -- --------------------------------------------------------
 
@@ -420,15 +449,15 @@ CREATE TABLE `sanpham` (
 --
 
 INSERT INTO `sanpham` (`masp`, `tensp`, `size`, `hinhanh`, `xuatxu`, `loai`, `thuonghieu`, `khuvuckho`, `soluongton`, `trangthai`) VALUES
-(1, '1Nike Air Zoom Pegasus', 41, 'Nike-Air-Zoom-Pegasus.png', 3, 1, 2, 1, 10, 1),
-(2, 'Nike Pegasus 40', 43, 'Nike-Pegasus-40.png', 3, 1, 2, 2, 5, 1),
-(3, 'Puma Carina Street', 38, 'Puma-Carina-Street', 1, 2, 3, 3, 10, 1),
-(4, 'Adidas Supernova Solution', 44, 'Adidas-Supernova-Solution.png\r\n', 3, 1, 1, 4, 0, 1),
-(5, 'Nike Air Winflo', 40, 'Nike-Air-Winflo.png', 2, 1, 2, 1, 0, 1),
-(6, 'Puma Suede', 41, 'Puma-Suede.png', 1, 2, 3, 2, 0, 1),
-(7, 'Adidas SWITCH RUN', 42, 'adidas-SWITCH-RUN.png', 3, 1, 1, 4, 0, 1),
-(8, 'Nike Air zoom', 38, 'Nike-Air-zoom.png', 3, 1, 2, 3, 0, 1),
-(9, 'Nike Pegasus', 45, 'Nike-Pegasus.png', 1, 2, 2, 2, 0, 1),
+(1, '1Nike Air Zoom Pegasus', 41, 'Nike-Air-Zoom-Pegasus.png', 3, 1, 2, 1, 7, 1),
+(2, 'Nike Pegasus 40', 43, 'Nike-Pegasus-40.png', 3, 1, 2, 2, 3, 1),
+(3, 'Puma Carina Street', 38, 'Puma-Carina-Street', 1, 2, 3, 3, 5, 1),
+(4, 'Adidas Supernova Solution', 44, 'Adidas-Supernova-Solution.png\r\n', 3, 1, 1, 4, 5, 1),
+(5, 'Nike Air Winflo', 40, 'Nike-Air-Winflo.png', 2, 1, 2, 1, 5, 1),
+(6, 'Puma Suede', 41, 'Puma-Suede.png', 1, 2, 3, 2, 5, 1),
+(7, 'Adidas SWITCH RUN', 42, 'adidas-SWITCH-RUN.png', 3, 1, 1, 4, 3, 1),
+(8, 'Nike Air zoom', 38, 'Nike-Air-zoom.png', 3, 1, 2, 3, 3, 1),
+(9, 'Nike Pegasus', 45, 'Nike-Pegasus.png', 1, 2, 2, 2, 5, 1),
 (10, 'Puma RS-Z AS', 41, 'Puma-RS-Z-AS.png', 1, 2, 3, 2, 0, 1),
 (11, 'Adidas ULTRABOOST LIGHT', 44, 'Adidas-ULTRABOOST-LIGHT.png', 3, 1, 1, 1, 0, 1),
 (12, 'Puma Caven', 38, 'Puma-Caven.png', 2, 2, 3, 2, 0, 1),
@@ -666,7 +695,7 @@ ALTER TABLE `nhanvien`
 -- AUTO_INCREMENT cho bảng `nhomquyen`
 --
 ALTER TABLE `nhomquyen`
-  MODIFY `manhomquyen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `manhomquyen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT cho bảng `phieunhap`

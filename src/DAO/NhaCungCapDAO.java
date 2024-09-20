@@ -152,5 +152,28 @@ public class NhaCungCapDAO {
         }
         return result;
     }
+    
+    public NhaCungCapDTO selectByTenNCC(String tenncc) {
+        NhaCungCapDTO result = null;
+        try {
+            connection = MySQLConnection.getConnection();
+            String sql = "SELECT * FROM nhacungcap WHERE tennhacungcap=?";
+            pst = connection.prepareStatement(sql);
+            pst.setString(1, tenncc);
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            while (rs.next()) {
+                int ma = rs.getInt("manhacungcap");
+                String ten = rs.getString("tennhacungcap");
+                String diachi = rs.getString("diachi");
+                String email = rs.getString("email");
+                String sdt = rs.getString("sdt");
+                int loinhuan = rs.getInt("phantramloinhuan");
+                result = new NhaCungCapDTO(ma, ten, diachi, email, sdt, loinhuan);
+            }
+            MySQLConnection.closeConnection(connection);
+        } catch (SQLException e) {
+        }
+        return result;
+    }
 
 }

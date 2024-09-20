@@ -182,6 +182,7 @@ public class PhieuNhapDAO {
                 }
                 thanhCong = true;
             }
+            MySQLConnection.closeConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

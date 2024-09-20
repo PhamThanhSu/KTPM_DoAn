@@ -410,18 +410,25 @@ public class SanPham extends javax.swing.JPanel implements ActionListener {
         int selectedRow = tblSanPham.getSelectedRow();
         if (selectedRow != -1) {
             int maSP = (int) tblSanPham.getValueAt(selectedRow, 0);
-            String anhCanXoa = sanPhamBus.selectAnhByMaSP(maSP);
-            sanPhamBus = new SanPhamBUS();
+            SanPhamDTO sanPhamDTO = sanPhamBus.selectByID(maSP);
+
+            // Kiểm tra số lượng tồn kho
+            if (sanPhamDTO.getSoluongton() > 0) {
+                JOptionPane.showMessageDialog(null, "Sản phẩm còn trong kho nên không thể xóa!");
+                return; // Thoát khỏi phương thức thay vì sử dụng break
+            }
+
+            // Thực hiện xóa sản phẩm
             boolean thanhCong = sanPhamBus.xoaSanPham(maSP);
             if (thanhCong) {
                 JOptionPane.showMessageDialog(null, "Xóa sản phẩm thành công");
                 listSanPham = sanPhamBus.getAllSanPham();
-                hienThiListSanPham();
+                hienThiListSanPham(); // Cập nhật lại danh sách sản phẩm
             } else {
                 JOptionPane.showMessageDialog(null, "Xóa sản phẩm lỗi");
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phảm để xóa");
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn sản phẩm để xóa");
         }
     }
 

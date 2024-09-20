@@ -27,8 +27,9 @@ public class ChiTietPhieuXuatDAO {
         connection = MySQLConnection.getConnection();
     }
 
+    // Thêm trường gianhap vào câu lệnh insert
     public void insert(ArrayList<ChiTietPhieuXuatDTO> chiTietPhieuXuatList) {
-        String sql = "INSERT INTO `ctphieuxuat`(`maphieuxuat`, `masp`, `soluong`, `giaxuat`) VALUES (?,?,?,?)";
+        String sql = "INSERT INTO `ctphieuxuat`(`maphieuxuat`, `masp`, `soluong`, `giaxuat`, `gianhap`) VALUES (?,?,?,?,?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             for (ChiTietPhieuXuatDTO chiTiet : chiTietPhieuXuatList) {
                 if (chiTiet != null) {
@@ -36,9 +37,11 @@ public class ChiTietPhieuXuatDAO {
                     ps.setInt(2, chiTiet.getMaSp());
                     ps.setInt(3, chiTiet.getSoluong());
                     ps.setInt(4, chiTiet.getGiaxuat());
+                    ps.setInt(5, chiTiet.getGianhap());  // Thêm giá trị gianhap
                     ps.executeUpdate();
                 }
             }
+            MySQLConnection.closeConnection(connection);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Lỗi SQL");
         }
@@ -57,12 +60,14 @@ public class ChiTietPhieuXuatDAO {
                 System.out.println(soluongton);
                 ps.executeUpdate(); // Thực hiện cập nhật
             }
+            MySQLConnection.closeConnection(connection);
         } catch (SQLException e) {
             // Xử lý ngoại lệ
             e.printStackTrace();
         }
     }
 
+    // Thêm gianhap vào kết quả selectAll
     public ArrayList<ChiTietPhieuXuatDTO> selectAll(String t) {
         connection = MySQLConnection.getConnection();
         ArrayList<ChiTietPhieuXuatDTO> result = new ArrayList<>();
@@ -76,9 +81,11 @@ public class ChiTietPhieuXuatDAO {
                     int masp = rs.getInt("masp");
                     int giaxuat = rs.getInt("giaxuat");
                     int soluong = rs.getInt("soluong");
-                    ChiTietPhieuXuatDTO ctphieu = new ChiTietPhieuXuatDTO(maphieu, masp, soluong, giaxuat);
+                    int gianhap = rs.getInt("gianhap");  // Lấy giá trị gianhap từ kết quả truy vấn
+                    ChiTietPhieuXuatDTO ctphieu = new ChiTietPhieuXuatDTO(maphieu, masp, soluong, giaxuat, gianhap); // Thêm gianhap vào constructor
                     result.add(ctphieu);
                 }
+                MySQLConnection.closeConnection(connection);
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(null, "Lỗi SQL: " + ex.getMessage());
             }
@@ -88,6 +95,7 @@ public class ChiTietPhieuXuatDAO {
         return result;
     }
 
+    // Cập nhật phương thức selectByID để lấy gianhap
     public ChiTietPhieuXuatDTO selectByID(int mapx) {
         ChiTietPhieuXuatDTO result = null;
         try {
@@ -101,7 +109,8 @@ public class ChiTietPhieuXuatDAO {
                 int masp = rs.getInt("masp");
                 int soluong = rs.getInt("soluong");
                 int giaxuat = rs.getInt("giaxuat");
-                result = new ChiTietPhieuXuatDTO(maphieuxuat, masp, soluong, giaxuat);
+                int gianhap = rs.getInt("gianhap");  // Lấy giá trị gianhap
+                result = new ChiTietPhieuXuatDTO(maphieuxuat, masp, soluong, giaxuat, gianhap); // Thêm gianhap vào constructor
             }
             MySQLConnection.closeConnection(connection);
         } catch (SQLException e) {
@@ -109,6 +118,7 @@ public class ChiTietPhieuXuatDAO {
         return result;
     }
 
+    // Cập nhật phương thức selectByMASP để lấy gianhap
     public ChiTietPhieuXuatDTO selectByMASP(int masp) {
         ChiTietPhieuXuatDTO result = null;
         try {
@@ -122,7 +132,8 @@ public class ChiTietPhieuXuatDAO {
                 int masanpham = rs.getInt("masp");
                 int soluong = rs.getInt("soluong");
                 int giaxuat = rs.getInt("giaxuat");
-                result = new ChiTietPhieuXuatDTO(maphieunhap, masanpham, soluong, giaxuat);
+                int gianhap = rs.getInt("gianhap");  // Lấy giá trị gianhap
+                result = new ChiTietPhieuXuatDTO(maphieunhap, masanpham, soluong, giaxuat, gianhap); // Thêm gianhap vào constructor
             }
         } catch (SQLException e) {
         }
@@ -135,14 +146,17 @@ public class ChiTietPhieuXuatDAO {
         String sql = "SELECT * FROM ctphieuxuat WHERE maphieuxuat = ?";
         System.out.println(mapx);
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, mapx); // Đặt giá trị cho tham số mapn
+            ps.setInt(1, mapx); // Đặt giá trị cho tham số maphieuxuat
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 int maphieu = rs.getInt("maphieuxuat");
                 int masp = rs.getInt("masp");
                 int giaxuat = rs.getInt("giaxuat");
                 int soluong = rs.getInt("soluong");
-                ChiTietPhieuXuatDTO ctphieu = new ChiTietPhieuXuatDTO(maphieu, masp, soluong, giaxuat);
+                int gianhap = rs.getInt("gianhap");  // Lấy giá trị gianhap từ ResultSet
+
+                // Khởi tạo đối tượng ChiTietPhieuXuatDTO với gianhap
+                ChiTietPhieuXuatDTO ctphieu = new ChiTietPhieuXuatDTO(maphieu, masp, soluong, giaxuat, gianhap);
                 result.add(ctphieu);
                 System.out.println(result);
             }

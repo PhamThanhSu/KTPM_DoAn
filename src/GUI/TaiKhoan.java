@@ -1,5 +1,6 @@
 package GUI;
 
+import BUS.SanPhamBUS;
 import BUS.TaiKhoanBUS;
 //import DAO.NhomQuyenDAO;
 import DAO.TaiKhoanDAO;
@@ -42,8 +43,10 @@ public class TaiKhoan extends javax.swing.JPanel implements ActionListener {
     SuaTaiKhoan suaTaiKhoan;
     ChonNhanVien chonNhanVien;
     ArrayList<TaiKhoanDTO> listTaiKhoan = taiKhoanBus.getAllTaiKhoan();
-    
-    public TaiKhoan(TaiKhoanDTO taikhoan) throws SQLException {
+    TaiKhoanDTO taiKhoanDTO;
+
+    public TaiKhoan(TaiKhoanDTO taiKhoanDTO) throws SQLException {
+        this.taiKhoanDTO = taiKhoanDTO;
         initComponents();
         addIcon();
         Color BackgroundColor = new Color(240, 247, 250);
@@ -80,12 +83,11 @@ public class TaiKhoan extends javax.swing.JPanel implements ActionListener {
 //        buttonMap.put("import", btnNhapExcelTK);  // Nút nhập Excel
 
 // Tạo đối tượng CheckAction
-        CheckAction checkAction = new CheckAction(taikhoan.getManhomquyen(), "taikhoan", action, buttonMap);
+        CheckAction checkAction = new CheckAction(taiKhoanDTO.getManhomquyen(), "taikhoan", action, buttonMap);
 
 //        for (String ac : action) {
 //            checkAction.btn.get(ac).addActionListener(this);
 //        }
-        
         hienThiListTaiKhoan(listTaiKhoan);
     }
 
@@ -325,8 +327,16 @@ public class TaiKhoan extends javax.swing.JPanel implements ActionListener {
     private void xoaTaiKhoan() {
         int selectedRow = tblTaiKhoan.getSelectedRow();
         if (selectedRow != -1) {
-            int manv = (int) tblTaiKhoan.getValueAt(selectedRow, 0);
             taiKhoanBus = new TaiKhoanBUS();
+            int manv = (int) tblTaiKhoan.getValueAt(selectedRow, 0);
+//          String tennhomquyen = (String) tblTaiKhoan.getValueAt(selectedRow, 2);
+            taiKhoanBus = new TaiKhoanBUS();
+            int manhomquyen = taiKhoanBus.selectByID(manv).getManhomquyen();
+            //Không thể xóa Quản lý và chính mình
+            if ((taiKhoanDTO.getManhomquyen() == manhomquyen || manhomquyen == 5) || (taiKhoanDTO.getManhomquyen() == selectTaiKhoan().getManhomquyen())) {
+                JOptionPane.showMessageDialog(this, "Không thể xóa tài khoản này!");
+                return; // Ngừng xử lý nếu không được phép cập nhật
+            }
             boolean thanhCong = taiKhoanBus.xoaTaiKhoan(manv);
             if (thanhCong) {
                 JOptionPane.showMessageDialog(null, "Xóa tài khoản thành công");
@@ -340,7 +350,7 @@ public class TaiKhoan extends javax.swing.JPanel implements ActionListener {
         }
     }
 
-    private TaiKhoanDTO selectTaiKhoan() {
+    public TaiKhoanDTO selectTaiKhoan() {
         int selectedRow = tblTaiKhoan.getSelectedRow();
         TaiKhoanDTO result = null;
         if (selectedRow != -1) {
@@ -361,9 +371,16 @@ public class TaiKhoan extends javax.swing.JPanel implements ActionListener {
             xoaTaiKhoan();
         } else if (e.getSource() == btnSuaTK) {
             if (selectTaiKhoan() != null) {
-                suaTaiKhoan = new SuaTaiKhoan(this, selectTaiKhoan());
-                suaTaiKhoan.setLocationRelativeTo(null);
-                suaTaiKhoan.setVisible(true);
+                try {
+                    int manhomquyenselected = selectTaiKhoan().getManhomquyen();
+                    int manhomquyentk = taiKhoanDTO.getManhomquyen();
+                    System.out.println("mã nhóm quyền tk trong file tk "+ manhomquyentk);
+                    suaTaiKhoan = new SuaTaiKhoan(this, selectTaiKhoan(), manhomquyentk);
+                    suaTaiKhoan.setLocationRelativeTo(null);
+                    suaTaiKhoan.setVisible(true);
+                } catch (IOException ex) {
+                    Logger.getLogger(TaiKhoan.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Vui lòng chọn tài khoản");
             }

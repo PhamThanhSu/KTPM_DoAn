@@ -7,6 +7,7 @@ import DAO.ChiTietQuyenDAO;
 import DTO.ChiTietQuyenDTO;
 import DTO.NhomQuyenDTO;
 import DTO.QuyenChucNangDTO;
+import DTO.TaiKhoanDTO;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import GUI.Component.ButtonCustom;
+import GUI.PhanQuyen;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -33,6 +35,8 @@ import javax.swing.JOptionPane;
 
 public class PhanQuyenDialog extends JDialog implements ActionListener {
 
+    private PhanQuyen phanQuyen;
+    TaiKhoanDTO taiKhoanDTO;
     private JLabel lblTennhomquyen;
     private JTextField txtTennhomquyen;
     private JPanel jpTop, jpLeft, jpCen, jpBottom;
@@ -44,12 +48,24 @@ public class PhanQuyenDialog extends JDialog implements ActionListener {
     String[] mahanhdong = {"view", "create", "update", "delete"};
     private NhomQuyenDTO nhomquyenDTO;
     private NhomQuyenBUS nhomquyenBUS;
+    private NhomQuyenDAO nhomquyenDAO;
     private JButton btnAddNhomQuyen, btnHuybo;
+    private boolean isUpdate;
     int index;
 
-    public PhanQuyenDialog(NhomQuyenDTO nhomQuyenDTO, ArrayList<ChiTietQuyenDTO> dsChiTietQuyen, String tenchucnang) throws SQLException {
+//    // Constructor mới nhận thêm tham số `isUpdate`
+//    public PhanQuyenDialog(NhomQuyenDTO nhomQuyenDTO, ArrayList<ChiTietQuyenDTO> dsChiTietQuyen, String tenchucnang, boolean isUpdate) throws SQLException {
+//        this.nhomquyenDTO = nhomQuyenDTO;
+//        this.dsChiTietQuyen = dsChiTietQuyen;
+//        this.isUpdate = isUpdate; // Gán giá trị cho biến
+//        initComponents(tenchucnang); // Khởi tạo giao diện
+//        initUpdate(); // Cập nhật giao diện với dữ liệu chi tiết quyền nếu cần
+//    }
+    public PhanQuyenDialog(NhomQuyenDTO nhomQuyenDTO, ArrayList<ChiTietQuyenDTO> dsChiTietQuyen, String tenchucnang, PhanQuyen phanQuyen, boolean isUpdate) throws SQLException {
+        this.phanQuyen = phanQuyen;
         this.nhomquyenDTO = nhomQuyenDTO;
         this.dsChiTietQuyen = dsChiTietQuyen;
+        this.isUpdate = isUpdate; // Gán giá trị cho biến
         initComponents(tenchucnang); // Khởi tạo giao diện
         initUpdate(); // Cập nhật giao diện với dữ liệu chi tiết quyền
     }
@@ -124,17 +140,19 @@ public class PhanQuyenDialog extends JDialog implements ActionListener {
             }
         }
 
-        // Hiển thị nút thêm
         jpBottom = new JPanel(new FlowLayout());
         jpBottom.setBackground(Color.white);
         jpBottom.setBorder(new EmptyBorder(20, 0, 20, 0));
 
-        // Nút "Thêm nhóm quyền"
-        btnAddNhomQuyen = new ButtonCustom(tenchucnang, "success", 14);
+        // Điều chỉnh nhãn của nút dựa trên biến `isUpdate`
+        if (isUpdate) {
+            btnAddNhomQuyen = new ButtonCustom("Cập nhật nhóm quyền", "success", 14);
+        } else {
+            btnAddNhomQuyen = new ButtonCustom("Thêm nhóm quyền", "success", 14);
+        }
         btnAddNhomQuyen.addActionListener(this);
         jpBottom.add(btnAddNhomQuyen);
 
-        // Nút "Huỷ bỏ"
         btnHuybo = new ButtonCustom("Huỷ bỏ", "danger", 14);
         btnHuybo.addActionListener(this);
         jpBottom.add(btnHuybo);
@@ -149,40 +167,66 @@ public class PhanQuyenDialog extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
         if (e.getSource() == btnAddNhomQuyen) {
             try {
-                updatePermissionsToDatabase();
-                JOptionPane.showMessageDialog(rootPane, "Cập nhật thành công!");
-                this.dispose();
+                if (isUpdate) {
+                    updatePermissionsToDatabase(); // Thực hiện cập nhật
+
+                } else {
+                    addNewNhomQuyen(); // Thêm mới nhóm quyền
+                    JOptionPane.showMessageDialog(rootPane, "Thêm nhóm quyền thành công!");
+
+                }
+                this.dispose(); // Đóng dialog sau khi thành công
             } catch (SQLException ex) {
                 Logger.getLogger(PhanQuyenDialog.class.getName()).log(Level.SEVERE, null, ex);
             }
-                
         } else if (e.getSource() == btnHuybo) {
             this.dispose(); // Đóng dialog nếu bấm "Huỷ bỏ"
         }
     }
 
+    // Phương thức để thêm mới nhóm quyền
+    private void addNewNhomQuyen() throws SQLException {
+        NhomQuyenDTO newNhomQuyen = new NhomQuyenDTO();
+        nhomquyenDAO = new NhomQuyenDAO();
+        newNhomQuyen.setTennhomquyen(txtTennhomquyen.getText());
+
+        // Thêm nhóm quyền mới vào database thông qua DAO
+        nhomquyenDAO.themNhomQuyen(newNhomQuyen);
+        // Cập nhật lại đối tượng nhomquyenDTO hiện tại thành nhóm quyền mới
+        nhomquyenDTO = newNhomQuyen;
+        // Lấy mã nhóm quyền vừa thêm
+        int manhomquyenMoi = newNhomQuyen.getManhomquyen();
+
+        // Sau khi thêm nhóm quyền, lưu chi tiết quyền
+        updatePermissionsToDatabase();
+        phanQuyen.loadData();
+    }
+
+    // Phương thức cập nhật chi tiết quyền trong database (không thay đổi)
     private void updatePermissionsToDatabase() throws SQLException {
+        // Kiểm tra nếu mã nhóm quyền là 'Quản lý kho' hoặc mã 5
+        if (nhomquyenDTO.getTennhomquyen().equals("Quản lý kho") || nhomquyenDTO.getManhomquyen() == 5) {
+            JOptionPane.showMessageDialog(this, "Không thể cập nhật nhóm quyền này.");
+            return; // Ngừng xử lý nếu không được phép cập nhật
+        }
+
         // Tạo danh sách quyền chi tiết để lưu
         ArrayList<ChiTietQuyenDTO> updatedChiTietQuyen = new ArrayList<>();
 
-        // Duyệt qua tất cả checkbox
         for (int i = 0; i < sizeQuyencn; i++) {
             for (int j = 0; j < sizeHanhdong; j++) {
-                boolean isSelected = listCheckBox[i][j].isSelected(); // Kiểm tra trạng thái của checkbox
-                String maChucNang = quyencn.get(i).getMaChucNang();   // Mã chức năng tương ứng
-                String hanhDong = mahanhdong[j];                      // Hành động tương ứng (view, create, update, delete)
+                boolean isSelected = listCheckBox[i][j].isSelected();
+                String maChucNang = quyencn.get(i).getMaChucNang();
+                String hanhDong = mahanhdong[j];
 
-                // Nếu checkbox được chọn, thêm vào danh sách quyền chi tiết
                 if (isSelected) {
                     ChiTietQuyenDTO chiTietQuyenDTO = new ChiTietQuyenDTO();
-                    chiTietQuyenDTO.setMaNhomQuyen(nhomquyenDTO.getManhomquyen());  // Gán mã nhóm quyền
-                    chiTietQuyenDTO.setMaChucNang(maChucNang);                      // Gán mã chức năng
-                    chiTietQuyenDTO.setHanhDong(hanhDong);                          // Gán hành động
-
-                    updatedChiTietQuyen.add(chiTietQuyenDTO);                       // Thêm quyền chi tiết vào danh sách
+                    chiTietQuyenDTO.setMaNhomQuyen(nhomquyenDTO.getManhomquyen());
+                    chiTietQuyenDTO.setMaChucNang(maChucNang);
+                    chiTietQuyenDTO.setHanhDong(hanhDong);
+                    updatedChiTietQuyen.add(chiTietQuyenDTO);
                 }
             }
         }
@@ -190,21 +234,23 @@ public class PhanQuyenDialog extends JDialog implements ActionListener {
         // Cập nhật vào database thông qua DAO
         ChiTietQuyenDAO chiTietQuyenDAO = new ChiTietQuyenDAO();
 
-        // Xóa các quyền cũ trước khi thêm mới
-        chiTietQuyenDAO.deleteAllChiTietQuyen(String.valueOf(nhomquyenDTO.getManhomquyen()));
+        // Xoá các quyền cũ trước khi thêm mới
+        chiTietQuyenDAO.deleteAllChiTietQuyen(nhomquyenDTO.getManhomquyen());
 
         // Thêm danh sách quyền chi tiết mới vào database
         for (ChiTietQuyenDTO quyen : updatedChiTietQuyen) {
-            chiTietQuyenDAO.addChiTietQuyen(quyen); // Gọi phương thức thêm quyền
+            chiTietQuyenDAO.addChiTietQuyen(quyen);
         }
-
+        JOptionPane.showMessageDialog(rootPane, "Cập nhật thành công!");
     }
 
     public void initUpdate() {
+        // Đặt tên nhóm quyền khi cập nhật
         if (nhomquyenDTO != null) {
             this.txtTennhomquyen.setText(nhomquyenDTO.getTennhomquyen());
         }
 
+        // Đặt trạng thái checkbox dựa trên quyền chi tiết khi cập nhật
         if (ctQuyen != null) {
             for (ChiTietQuyenDTO k : ctQuyen) {
                 for (int i = 0; i < sizeQuyencn; i++) {
