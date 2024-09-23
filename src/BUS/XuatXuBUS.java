@@ -62,4 +62,8 @@ public class XuatXuBUS {
     public XuatXuDTO selectByID(int maxuatxu){
         return xuatXuDAO.selectById(maxuatxu);
     }
+    
+    public XuatXuDTO selectByTen(String ten){
+        return xuatXuDAO.selectByTen(ten);
+    }
 }

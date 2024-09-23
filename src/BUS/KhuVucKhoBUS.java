@@ -37,6 +37,9 @@ public class KhuVucKhoBUS {
         return khuVucKhoDAO.selectById(makhuvuc);
     }
     
+    public KhuVucKhoDTO selectByTen(String ten){
+        return khuVucKhoDAO.selectByTen(ten);
+    }
     
     public boolean xoaKhuVucKho(int makhuvuc) {
         return khuVucKhoDAO.xoaKho(makhuvuc);

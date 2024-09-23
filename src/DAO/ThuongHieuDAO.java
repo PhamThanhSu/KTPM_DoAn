@@ -142,5 +142,24 @@ public class ThuongHieuDAO {
         }
         return result;
     }
+    
+    public ThuongHieuDTO selectByTen(String ten) {
+        ThuongHieuDTO result = null;
+        try {
+            connection = (Connection) MySQLConnection.getConnection();
+            String sql = "SELECT * FROM thuonghieu WHERE tenthuonghieu=?";
+            pst = (PreparedStatement) connection.prepareStatement(sql);
+            pst.setString(1, ten);
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            while (rs.next()) {
+                int mathuonghieu = rs.getInt("mathuonghieu");
+                String tenthuonghieu = rs.getString("tenthuonghieu");
+                result = new ThuongHieuDTO(mathuonghieu, tenthuonghieu);
+            }
+            MySQLConnection.closeConnection(connection);
+        } catch (Exception e) {
+        }
+        return result;
+    }
 
 }

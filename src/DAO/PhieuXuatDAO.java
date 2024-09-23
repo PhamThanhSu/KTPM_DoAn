@@ -140,13 +140,14 @@ public class PhieuXuatDAO {
             connection = MySQLConnection.getConnection();
 
             // Cập nhật trạng thái chi tiết phiếu xuất thành 0
-            String sqlUpdateChiTietPhieuXuat = "UPDATE ctphieuxuat SET trangthai = 0 WHERE maphieuxuat = ?";
+            String sqlUpdateChiTietPhieuXuat = "DELETE FROM ctphieuxuat WHERE maphieuxuat = ?";
             psUpdateChiTietPhieuXuat = connection.prepareStatement(sqlUpdateChiTietPhieuXuat);
             psUpdateChiTietPhieuXuat.setInt(1, mapx);
             int rowsUpdatedChiTiet = psUpdateChiTietPhieuXuat.executeUpdate();
 
             // Cập nhật trạng thái phiếu xuất thành 0
-            String sqlUpdatePhieuXuat = "UPDATE phieuxuat SET trangthai = 0 WHERE maphieuxuat = ?";
+//            String sqlUpdatePhieuXuat = "UPDATE phieuxuat SET trangthai = 0 WHERE maphieuxuat = ?";
+            String sqlUpdatePhieuXuat = "DELETE FROM phieuxuat WHERE maphieuxuat = ?";
             psUpdatePhieuXuat = connection.prepareStatement(sqlUpdatePhieuXuat);
             psUpdatePhieuXuat.setInt(1, mapx);
             int rowsUpdatedPhieuXuat = psUpdatePhieuXuat.executeUpdate();

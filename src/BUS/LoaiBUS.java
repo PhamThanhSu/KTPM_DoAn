@@ -66,6 +66,10 @@ public class LoaiBUS {
     public LoaiDTO selectByID(int maxuatxu){
         return loaiDAO.selectById(maxuatxu);
     }
+    
+    public LoaiDTO selectByTen(String tenloai){
+        return loaiDAO.selectByTen(tenloai);
+    }
 }
 
 

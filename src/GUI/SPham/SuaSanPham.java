@@ -222,7 +222,7 @@ public class SuaSanPham extends javax.swing.JFrame {
         boolean thanhCong = sanPhamBUS.suaSanPham(spNew);
         if (thanhCong) {
             JOptionPane.showMessageDialog(null, "Sửa sản phẩm thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
-            sp.hienThiListSanPham();
+            sp.hienThiListSanPham(sanPhamBUS.getAllSanPham());
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Sửa sản phẩm thất bại", "Lỗi", JOptionPane.ERROR_MESSAGE);

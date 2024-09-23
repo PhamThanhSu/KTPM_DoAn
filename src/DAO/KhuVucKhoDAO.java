@@ -65,6 +65,26 @@ public class KhuVucKhoDAO {
         }
         return result;
     }
+    
+    public KhuVucKhoDTO selectByTen(String ten) {
+        KhuVucKhoDTO result = null;
+        try {
+            connection = (Connection) MySQLConnection.getConnection();
+            String sql = "SELECT * FROM khuvuckho WHERE tenkhuvuc=?";
+            pst = (PreparedStatement) connection.prepareStatement(sql);
+            pst.setString(1, ten);
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            while (rs.next()) {
+                int makhuvuc = rs.getInt("makhuvuc");
+                String tenkhuvuc = rs.getString("tenkhuvuc");
+                String ghiChu = rs.getString("ghichu");
+                result = new KhuVucKhoDTO(makhuvuc, tenkhuvuc, ghiChu);
+            }
+            MySQLConnection.closeConnection(connection);
+        } catch (Exception e) {
+        }
+        return result;
+    }
 
     public boolean xoaKho(int makhuvuc) {
         boolean thanhCong = false;

@@ -142,4 +142,23 @@ public class LoaiDAO {
         }
         return result;
     }
+    
+    public LoaiDTO selectByTen(String ten) {
+        LoaiDTO result = null;
+        try {
+            connection = (Connection) MySQLConnection.getConnection();
+            String sql = "SELECT * FROM loai WHERE tenloai=?";
+            pst = (PreparedStatement) connection.prepareStatement(sql);
+            pst.setString(1, ten);
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            while (rs.next()) {
+                int maloai = rs.getInt("maloai");
+                String tenloai = rs.getString("tenloai");
+                result = new LoaiDTO(maloai, tenloai);
+            }
+            MySQLConnection.closeConnection(connection);
+        } catch (Exception e) {
+        }
+        return result;
+    }
 }

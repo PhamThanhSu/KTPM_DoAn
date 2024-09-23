@@ -64,4 +64,8 @@ public class ThuongHieuBUS {
     public ThuongHieuDTO getSelectByID(int mathuonghieu){
         return thuongHieuDAO.selectById(mathuonghieu);
     }
+    
+    public ThuongHieuDTO selectByTen(String ten){
+        return thuongHieuDAO.selectByTen(ten);
+    }
 }

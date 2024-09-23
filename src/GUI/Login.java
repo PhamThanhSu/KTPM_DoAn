@@ -29,7 +29,7 @@ public class Login extends javax.swing.JFrame {
     public Login() {
         initComponents();
         setLocationRelativeTo(null);
-        setTitle("Hệ thống quản lý cửa hàng giày");
+        setTitle("Hệ thống quản lý kho giày");
         setBackground(Color.white);
 //    pnltop.setOpaque(false);
 //    panelLogin.setBackground(BackgroundColor);

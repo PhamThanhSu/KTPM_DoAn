@@ -135,4 +135,23 @@ public boolean themXuatXu(XuatXuDTO xuatXuDTO){
         }
         return result;
     }
+    
+    public XuatXuDTO selectByTen(String ten) {
+        XuatXuDTO result = null;
+        try {
+            connection = (Connection) MySQLConnection.getConnection();
+            String sql = "SELECT * FROM xuatxu WHERE tenxuatxu=?";
+            pst = (PreparedStatement) connection.prepareStatement(sql);
+            pst.setString(1, ten);
+            ResultSet rs = (ResultSet) pst.executeQuery();
+            while (rs.next()) {
+                int maxuatxu = rs.getInt("maxuatxu");
+                String tenxuatxu = rs.getString("tenxuatxu");
+                result = new XuatXuDTO(maxuatxu, tenxuatxu);
+            }
+            MySQLConnection.closeConnection(connection);
+        } catch (Exception e) {
+        }
+        return result;
+    }
 }
