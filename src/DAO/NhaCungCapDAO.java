@@ -49,7 +49,7 @@ public class NhaCungCapDAO {
 
     public boolean themNhaCungCap(NhaCungCapDTO nhaCungCapDTO) {
         boolean thanhCong = false;
-        String query = "INSERT INTO nhacungcap (tennhacungcap, diachi, email, sdt) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO nhacungcap (tennhacungcap, diachi, email, sdt, phantramloinhuan) VALUES (?, ?, ?, ?, ?)";
         try {
             connection = MySQLConnection.getConnection();
             pst = connection.prepareStatement(query);
@@ -57,6 +57,7 @@ public class NhaCungCapDAO {
             pst.setString(2, nhaCungCapDTO.getDiachi());
             pst.setString(3, nhaCungCapDTO.getSdt());
             pst.setString(4, nhaCungCapDTO.getEmail());
+            pst.setInt(5, nhaCungCapDTO.getPhantramloinhuan());
             int rowAff = pst.executeUpdate();
             if (rowAff > 0) {
                 thanhCong = true;
@@ -101,13 +102,14 @@ public class NhaCungCapDAO {
         boolean thanhCong = false;
         try {
             connection = MySQLConnection.getConnection();
-            String query = "UPDATE nhacungcap SET tennhacungcap=?, diachi=?, email=? , sdt=? WHERE manhacungcap=?";
+            String query = "UPDATE nhacungcap SET tennhacungcap=?, diachi=?, email=? , sdt=?, phantramloinhuan =? WHERE manhacungcap=?";
             pst = connection.prepareStatement(query);
             pst.setString(1, nhaCungCapDTO.getTenncc());
             pst.setString(2, nhaCungCapDTO.getDiachi());
             pst.setString(4, nhaCungCapDTO.getSdt());
             pst.setString(3, nhaCungCapDTO.getEmail());
-            pst.setInt(5, nhaCungCapDTO.getMancc());
+            pst.setInt(5, nhaCungCapDTO.getPhantramloinhuan());
+            pst.setInt(6, nhaCungCapDTO.getMancc());
             int rowAff = pst.executeUpdate();
             if (rowAff > 0) {
                 thanhCong = true;

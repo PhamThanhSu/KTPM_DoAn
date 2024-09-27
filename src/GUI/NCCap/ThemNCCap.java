@@ -58,6 +58,8 @@ public class ThemNCCap extends javax.swing.JFrame {
     String diaChi = txtDiaChi.getText();
     String soDienThoai = txtSoDt.getText();
     String email = txtEmail.getText();
+    String loinhuanstr = txtloinhuan.getText();
+    int loinhuan = Integer.valueOf(loinhuanstr);
 
     if (tenNhaCungCap.isEmpty() || diaChi.isEmpty() || soDienThoai.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin khách hàng", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -77,6 +79,10 @@ public class ThemNCCap extends javax.swing.JFrame {
     }
     if (isDuplicateTenNCC(tenNhaCungCap)) {
         JOptionPane.showMessageDialog(this, "Tên nhà cung cấp đã tồn tại", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+    if(loinhuan <= 0 || loinhuan > 60){
+        JOptionPane.showMessageDialog(this, "Lợi nhuận phải > 0 và < 60", "Lỗi", JOptionPane.ERROR_MESSAGE);
         return false;
     }
     return true;

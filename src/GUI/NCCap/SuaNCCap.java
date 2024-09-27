@@ -86,6 +86,8 @@ private boolean isValidData() {
     String diaChi = txtDiaChi.getText();
     String soDienThoai = txtSoDt.getText();
     String email = txtEmail.getText();
+    String loinhuanstr = txtloinhuan.getText();
+    int loinhuan = Integer.valueOf(loinhuanstr);
 
     if (tenKhachHang.isEmpty() || diaChi.isEmpty() || soDienThoai.isEmpty()) {
         JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin khách hàng", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -103,7 +105,11 @@ private boolean isValidData() {
         JOptionPane.showMessageDialog(this, "Email không hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
         return false;
     }
-
+    if(loinhuan <= 0 || loinhuan > 60){
+        JOptionPane.showMessageDialog(this, "Lợi nhuận phải > 0 và < 60", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+    
     return true;
 }
 
