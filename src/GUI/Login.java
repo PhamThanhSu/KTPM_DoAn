@@ -7,10 +7,15 @@ import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane; 
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 
 /*
@@ -49,6 +54,14 @@ public class Login extends javax.swing.JFrame {
         // Gán icon đã thay đổi kích thước cho label logo
         logo.setIcon(scaledIcon);
         btnDangNhap.setBorderPainted(false);
+        // Gán phím Enter để kích hoạt nút Đăng nhập
+    btnDangNhap.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "loginAction");
+    btnDangNhap.getActionMap().put("loginAction", new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            btnDangNhap.doClick();  // Kích hoạt nút Đăng nhập khi nhấn Enter
+        }
+    });
         btnDangNhap.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent evt) {

@@ -1,6 +1,7 @@
 package GUI;
 
 import BUS.NhanVienBUS;
+import BUS.TaiKhoanBUS;
 import DAO.NhanVienDAO;
 import DTO.NhanVienDTO;
 import DTO.TaiKhoanDTO;
@@ -15,6 +16,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -39,9 +41,11 @@ public class NhanVien extends javax.swing.JPanel implements ActionListener {
     ThemNhanVien themNhanVien;
     SuaNhanVien suaNhanVien;
     ChiTietNhanVien chiTietNhanVien;
+    TaiKhoanBUS taiKhoanBUS;
     public ArrayList<NhanVienDTO> listNhanVien = nhanVienBus.getAllNhanVien();
-
+    TaiKhoanDTO taiKhoanDTO;
     public NhanVien(TaiKhoanDTO taiKhoanDTO) throws SQLException {
+        this.taiKhoanDTO = taiKhoanDTO;
         initComponents();
         addIcon();
         Color BackgroundColor = new Color(240, 247, 250);
@@ -68,7 +72,8 @@ public class NhanVien extends javax.swing.JPanel implements ActionListener {
         setPreferredSize(new Dimension(1200, 800));
         this.add(pnlTop, BorderLayout.NORTH);
         this.add(pnlCenter, BorderLayout.CENTER);
-
+        
+        txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên nhân viên...");
         btnLamMoi.setIcon(new FlatSVGIcon("./icon/refresh.svg"));
         
         String[] action = {"create", "update", "delete", "view"};
@@ -83,24 +88,30 @@ public class NhanVien extends javax.swing.JPanel implements ActionListener {
 // Tạo đối tượng CheckAction
         CheckAction checkAction = new CheckAction(taiKhoanDTO.getManhomquyen(), "nhanvien", action, buttonMap);
 
+        txtTimKiem.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                String timkiem = txtTimKiem.getText().trim();
+                timKiemNhanVien(timkiem);
+            }
+        });
         
         hienThiListNhanVien(listNhanVien);
     }
 
     private void timKiemNhanVien(String keyword) {
         ArrayList<NhanVienDTO> ketQuaTimKiem = new ArrayList<>();
-        DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
-        for (int i = 0; i < model.getRowCount(); i++) {
-            String tenNhanVien = (String) model.getValueAt(i, 1);
+        ArrayList<NhanVienDTO> nhanVienTimKiem = nhanVienBus.getAllNhanVien();
+        for(NhanVienDTO timkiem : nhanVienTimKiem){
+            String tenNhanVien = timkiem.getHoten().trim();
             if (tenNhanVien.toLowerCase().contains(keyword.toLowerCase())) {
-                ketQuaTimKiem.add(nhanVienBus.selectByID((int) model.getValueAt(i, 0)));
+                ketQuaTimKiem.add(timkiem);
             }
         }
         hienThiListNhanVien(ketQuaTimKiem);
     }
 
     public void hienThiListNhanVien(ArrayList<NhanVienDTO> listNhanVien) {
-        nhanVienBus = new NhanVienBUS();
         DefaultTableModel model = (DefaultTableModel) tblNhanVien.getModel();
         model.setRowCount(0);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -288,10 +299,10 @@ public class NhanVien extends javax.swing.JPanel implements ActionListener {
 
     private void txtTimKiemKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyPressed
         // TODO add your handling code here:
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            String keyword = txtTimKiem.getText().trim();
-            timKiemNhanVien(keyword);
-        }
+//        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+//            String keyword = txtTimKiem.getText().trim();
+//            timKiemNhanVien(keyword);
+//        }
     }//GEN-LAST:event_txtTimKiemKeyPressed
 
     private void btnLamMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLamMoiActionPerformed
@@ -306,6 +317,13 @@ public class NhanVien extends javax.swing.JPanel implements ActionListener {
         if (selectedRow != -1) {
             int maNV = (int) tblNhanVien.getValueAt(selectedRow, 0);
             nhanVienBus = new NhanVienBUS();
+            taiKhoanBUS = new TaiKhoanBUS();
+            int manhomquyen = taiKhoanBUS.selectByID(maNV).getManhomquyen();
+            //Không thể xóa Quản lý và chính mình
+            if ((taiKhoanDTO.getManhomquyen() == manhomquyen || manhomquyen == 5) || (taiKhoanDTO.getManv()== selectNhanVien().getManv())) {
+                JOptionPane.showMessageDialog(this, "Không thể xóa tài khoản này!");
+                return; // Ngừng xử lý nếu không được phép cập nhật
+            }
             boolean thanhCong = nhanVienBus.xoaNhanVien(maNV);
             if (thanhCong) {
                 JOptionPane.showMessageDialog(null, "Xóa nhân viên thành công");
