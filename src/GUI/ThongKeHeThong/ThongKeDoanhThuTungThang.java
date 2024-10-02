@@ -39,21 +39,22 @@ public class ThongKeDoanhThuTungThang extends javax.swing.JPanel {
         thongkeBUS = new ThongKeBUS();
         loadThongKeThang(yearchooser.getYear());
     }
-    public class Formater {
-
-        public static String FormatVND(double vnd) {
-            DecimalFormat formatter = new DecimalFormat("###,###,###");
-            return formatter.format(vnd) + "đ";
-        }
-
-        public static String FormatTime(Timestamp thoigian) {
-            SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/YYYY HH:mm");
-            return formatDate.format(thoigian);
-        }
-    }
+//    public class Formater {
+//
+//        public static String FormatVND(double vnd) {
+//            DecimalFormat formatter = new DecimalFormat("###,###,###");
+//            return formatter.format(vnd) + "đ";
+//        }
+//
+//        public static String FormatTime(Timestamp thoigian) {
+//            SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/YYYY HH:mm");
+//            return formatDate.format(thoigian);
+//        }
+//    }
    public void loadThongKeThang(int nam) {
         ArrayList<ThongKeTheoThangDTO> list = thongkeBUS.getThongKeTheoThang(nam);
         DefaultTableModel model = (DefaultTableModel) tblThongKe.getModel();
+        DecimalFormat decimalFormat = new DecimalFormat("#,### đ"); // Khởi tạo một đối tượng DecimalFormat
         pnlChart.removeAll();
         chart = new Chart();
         chart.addLegend("Vốn", new Color(37,150,190));
@@ -70,7 +71,7 @@ public class ThongKeDoanhThuTungThang extends javax.swing.JPanel {
         model.setRowCount(0);
         for (int i = 0; i < list.size(); i++) {
             model.addRow(new Object[]{
-                "Tháng " + (i + 1), Formater.FormatVND(list.get(i).getChiphi()), Formater.FormatVND(list.get(i).getDoanhthu()), Formater.FormatVND(list.get(i).getLoinhuan())
+                "Tháng " + (i + 1), decimalFormat.format(list.get(i).getChiphi()), decimalFormat.format(list.get(i).getDoanhthu()), decimalFormat.format(list.get(i).getLoinhuan())
             });
         }
 

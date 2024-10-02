@@ -10,6 +10,7 @@ import GUI.KhuVucKhoOpTions.ThemKhuVucKho;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -62,23 +63,31 @@ public class KhuVucKho extends javax.swing.JPanel {
 //        buttonMap.put("detail", btnChiTietNV);    // Nút chi tiết
         buttonMap.put("export", btnXuatExcelKho);  // Nút xuất Excel
 //        buttonMap.put("import",btnNhapExcel);  // Nút nhập Excel
-
+    
 // Tạo đối tượng CheckAction
         CheckAction checkAction = new CheckAction(taiKhoanDTO.getManhomquyen(), "khuvuckho", action, buttonMap);
 
+        txtTimKiem.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                String timkiem = txtTimKiem.getText().trim();
+                timKiemKhuVucKho(timkiem);
+            }
+        });
         
         hienThiListKhuVucKho();
 
         this.setOpaque(false);
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
         setPreferredSize(new Dimension(1200, 800));
-
+        
         pnlCenter.setBorder(new EmptyBorder(20, 0, 0, 0));
         btnLamMoi.setIcon(new FlatSVGIcon("./icon/refresh.svg"));
         pnlCenter.setBackground(BackgroundColor);
     }
 
     private void addIcon() {
+        txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên khu vực...");
         btnThemKho.setIcon(new FlatSVGIcon("./icon/add.svg"));
         btnSuaKho.setIcon(new FlatSVGIcon("./icon/edit.svg"));
         btnXoaKho.setIcon(new FlatSVGIcon("./icon/delete.svg"));
@@ -127,15 +136,14 @@ public class KhuVucKho extends javax.swing.JPanel {
 
     private void timKiemKhuVucKho(String keyword) {
         ArrayList<KhuVucKhoDTO> ketQuaTimKiem = new ArrayList<>();
-        DefaultTableModel model = (DefaultTableModel) tblKho.getModel();
-        for (int i = 0; i < model.getRowCount(); i++) {
-            String tenKhuVucKho = (String) model.getValueAt(i, 1);
-            int maKhuVucKho = (int) model.getValueAt(i, 0);
-
+        ArrayList<KhuVucKhoDTO> AllKho = khuVucKhoBUS.getAllKho();
+        for(KhuVucKhoDTO kho : AllKho){
+            String tenKhuVucKho = kho.getTenkhuvuc().trim();
             if (tenKhuVucKho.toLowerCase().contains(keyword.toLowerCase())) {
-                ketQuaTimKiem.add(khuVucKhoBUS.selectByID(maKhuVucKho));
+                ketQuaTimKiem.add(kho);
             }
         }
+        
         hienThiListKhuVucKho(ketQuaTimKiem);
     }
 
@@ -328,10 +336,10 @@ public class KhuVucKho extends javax.swing.JPanel {
 
     private void txtTimKiemKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyPressed
         // TODO add your handling code here:
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            String keyword = txtTimKiem.getText().trim();
-            timKiemKhuVucKho(keyword);
-        }
+//        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+//            String keyword = txtTimKiem.getText().trim();
+//            timKiemKhuVucKho(keyword);
+//        }
     }//GEN-LAST:event_txtTimKiemKeyPressed
 
     private void btnLamMoiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLamMoiActionPerformed

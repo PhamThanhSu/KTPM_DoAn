@@ -150,7 +150,7 @@ public class ThongKeDAO {
                 + "JOIN ctphieuxuat ct ON sp.masp = ct.masp "
                 + "JOIN phieuxuat px ON ct.maphieuxuat = px.maphieuxuat "
                 + "WHERE MONTH(px.thoigian) = ? AND YEAR(px.thoigian) = ? "
-                + "GROUP BY sp.tensp "
+                + "GROUP BY sp.masp, sp.tensp "
                 + "ORDER BY soluong_ban DESC ";
 
         try {

@@ -14,6 +14,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -79,12 +80,20 @@ public class KhachHang extends javax.swing.JPanel implements ActionListener {
 
 // Tạo đối tượng CheckAction
         CheckAction checkAction = new CheckAction(taiKhoanDTO.getManhomquyen(), "khachhang", action, buttonMap);
-
+        
+        txtTimKiem.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                String timkiem = txtTimKiem.getText().trim();
+                timKiemKhachHang(timkiem);
+            }
+        });
         
         hienThiListKhachHang(listKhachHang);
     }
 
     private void addIcon() {
+        txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên khách hàng, mã khách hàng...");
         btnThemKH.setIcon(new FlatSVGIcon("./icon/add.svg"));
         btnSuaKH.setIcon(new FlatSVGIcon("./icon/edit.svg"));
         btnXoaKH.setIcon(new FlatSVGIcon("./icon/delete.svg"));
@@ -94,15 +103,13 @@ public class KhachHang extends javax.swing.JPanel implements ActionListener {
 
     private void timKiemKhachHang(String keyword) {
         ArrayList<KhachHangDTO> ketQuaTimKiem = new ArrayList<>();
-        DefaultTableModel model = (DefaultTableModel) tblKhachHang.getModel();
-        for (int i = 0; i < model.getRowCount(); i++) {
-            String tenKhachHang = (String) model.getValueAt(i, 1);
-            if (tenKhachHang.toLowerCase().contains(keyword.toLowerCase())) {
-                ketQuaTimKiem.add(khachHangBUS.selectByID((int) model.getValueAt(i, 0))); // Thêm khách hàng vào danh sách kết quả
-            }
-            String soDienThoai = (String) model.getValueAt(i, 3);
-            if (soDienThoai.contains(keyword)) {
-                ketQuaTimKiem.add(khachHangBUS.selectByID((int) model.getValueAt(i, 0))); // Thêm khách hàng vào danh sách kết quả
+        ArrayList<KhachHangDTO> allKhachHang = khachHangBUS.getAllKhachHang();
+        for(KhachHangDTO kh : allKhachHang){
+            String tenKhachHang = kh.getHoten().trim();
+            //String soDienThoai = kh.getSdt();
+            String maKH = String.valueOf(kh.getMaKH());
+            if (tenKhachHang.toLowerCase().contains(keyword.toLowerCase()) || maKH.contains(keyword)) {
+                ketQuaTimKiem.add(kh); // Thêm khách hàng vào danh sách kết quả
             }
         }
         hienThiListKhachHang(ketQuaTimKiem);
@@ -391,10 +398,10 @@ public class KhachHang extends javax.swing.JPanel implements ActionListener {
 
     private void txtTimKiemKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyPressed
         // TODO add your handling code here:
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            String keyword = txtTimKiem.getText().trim();
-            timKiemKhachHang(keyword);
-        }
+//        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+//            String keyword = txtTimKiem.getText().trim();
+//            timKiemKhachHang(keyword);
+//        }
     }//GEN-LAST:event_txtTimKiemKeyPressed
 
     private void btnSuaKHMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSuaKHMouseEntered

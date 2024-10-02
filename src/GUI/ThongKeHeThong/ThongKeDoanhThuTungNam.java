@@ -4,6 +4,7 @@ import BUS.ThongKeBUS;
 import DTO.ThongKe.ThongKeDoanhThuDTO;
 import GUI.Component.Chart.BarChart.Chart;
 import GUI.Component.Chart.BarChart.ModelChart;
+import GUI.Component.Formater;
 import java.awt.Color;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,23 +41,13 @@ public class ThongKeDoanhThuTungNam extends javax.swing.JPanel {
     public ThongKeDoanhThuTungNam() {
         initComponents();
         thongkeBUS = new ThongKeBUS();
+        Formater formater = new Formater();
         this.current_year = LocalDate.now().getYear();
         this.listtkNam = this.thongkeBUS.getDoanhThuTheoTungNam(current_year - 5, current_year);
         loadDataTalbe(listtkNam);
         loadDataChart(listtkNam);
     }
-    public class Formater {
-
-    public static String FormatVND(double vnd) {
-        DecimalFormat formatter = new DecimalFormat("###,###,###");
-        return formatter.format(vnd) + "đ";
-    }
     
-    public static String FormatTime(Timestamp thoigian) {
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/YYYY HH:mm");
-        return formatDate.format(thoigian);
-    }
-}
     public void loadDataTalbe(ArrayList<ThongKeDoanhThuDTO> listtkNam) {
     DefaultTableModel model = (DefaultTableModel) tblThongKe.getModel();
         model.setRowCount(0);

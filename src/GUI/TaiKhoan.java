@@ -15,6 +15,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -85,19 +86,25 @@ public class TaiKhoan extends javax.swing.JPanel implements ActionListener {
 // Tạo đối tượng CheckAction
         CheckAction checkAction = new CheckAction(taiKhoanDTO.getManhomquyen(), "taikhoan", action, buttonMap);
 
-//        for (String ac : action) {
-//            checkAction.btn.get(ac).addActionListener(this);
-//        }
+        txtTimKiem.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                String timkiem = txtTimKiem.getText().trim();
+                timKiemTaiKhoan(timkiem);
+            }
+        });
+        
         hienThiListTaiKhoan(listTaiKhoan);
     }
 
     private void timKiemTaiKhoan(String keyword) {
         ArrayList<TaiKhoanDTO> ketQuaTimKiem = new ArrayList<>();
-        DefaultTableModel model = (DefaultTableModel) tblTaiKhoan.getModel();
-        for (int i = 0; i < model.getRowCount(); i++) {
-            String tenTaiKhoan = (String) model.getValueAt(i, 1);
-            if (tenTaiKhoan.toLowerCase().contains(keyword.toLowerCase())) {
-                ketQuaTimKiem.add(taiKhoanBus.selectByID((int) model.getValueAt(i, 0))); // Thêm tài khoản vào danh sách kết quả
+        ArrayList<TaiKhoanDTO> allTaiKhoan = taiKhoanBus.getAllTaiKhoan();
+        for(TaiKhoanDTO tk : allTaiKhoan){
+            String tenTK = tk.getUsername().trim();
+            String maNV = String.valueOf(tk.getManv());
+            if (tenTK.toLowerCase().contains(keyword.toLowerCase()) || maNV.contains(keyword)) {
+                ketQuaTimKiem.add(tk); // Thêm khách hàng vào danh sách kết quả
             }
         }
         hienThiListTaiKhoan(ketQuaTimKiem);
@@ -133,6 +140,7 @@ public class TaiKhoan extends javax.swing.JPanel implements ActionListener {
     }
 
     private void addIcon() {
+        txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên tài khoản...");
         btnThemTK.setIcon(new FlatSVGIcon("./icon/add.svg"));
         btnSuaTK.setIcon(new FlatSVGIcon("./icon/edit.svg"));
         btnXoaTK.setIcon(new FlatSVGIcon("./icon/delete.svg"));

@@ -14,6 +14,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -79,12 +80,20 @@ public class NhaCungCap extends javax.swing.JPanel implements ActionListener {
 
 // Tạo đối tượng CheckAction
         CheckAction checkAction = new CheckAction(taiKhoanDTO.getManhomquyen(), "nhacungcap", action, buttonMap);
-
+        
+        txtTimKiem.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                String timkiem = txtTimKiem.getText().trim();
+                timKiemNhaCungCap(timkiem);
+            }
+        });
         
         hienThiListNhaCungCap(listNhaCungCap);
     }
 
     private void addIcon() {
+        txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên, mã, địa chỉ nhà cung cấp...");
         btnThemNhaCC.setIcon(new FlatSVGIcon("./icon/add.svg"));
         btnSuaNhaCC.setIcon(new FlatSVGIcon("./icon/edit.svg"));
         btnXoaNhaCC.setIcon(new FlatSVGIcon("./icon/delete.svg"));
@@ -95,17 +104,16 @@ public class NhaCungCap extends javax.swing.JPanel implements ActionListener {
 
     private void timKiemNhaCungCap(String keyword) {
         ArrayList<NhaCungCapDTO> ketQuaTimKiem = new ArrayList<>();
-        DefaultTableModel model = (DefaultTableModel) tblNhaCC.getModel();
-        for (int i = 0; i < model.getRowCount(); i++) {
-            String tenNhaCungCap = (String) model.getValueAt(i, 1);
-            if (tenNhaCungCap.toLowerCase().contains(keyword.toLowerCase())) {
-                ketQuaTimKiem.add(nhaCungCapBUS.selectByID((int) model.getValueAt(i, 0))); // Thêm ncc vào danh sách kết quả
-            }
-            String soDienThoai = (String) model.getValueAt(i, 4);
-            if (soDienThoai.contains(keyword)) {
-                ketQuaTimKiem.add(nhaCungCapBUS.selectByID((int) model.getValueAt(i, 0))); // Thêm nccvào danh sách kết quả
+        ArrayList<NhaCungCapDTO> allNhaCungCap = nhaCungCapBUS.getAllNhaCungCap();
+        for(NhaCungCapDTO ncc : allNhaCungCap){
+            String tenNCC = ncc.getTenncc().trim();
+            String diaChi = ncc.getDiachi();
+            String maNCC = String.valueOf(ncc.getMancc());
+            if (tenNCC.toLowerCase().contains(keyword.toLowerCase()) || diaChi.toLowerCase().contains(keyword.toLowerCase()) || maNCC.contains(keyword)) {
+                ketQuaTimKiem.add(ncc); // Thêm khách hàng vào danh sách kết quả
             }
         }
+
         hienThiListNhaCungCap(ketQuaTimKiem);
     }
 
