@@ -1,13 +1,19 @@
-﻿# DoAnJAVA
-# Kiểm Thử Phần Mềm and # Công Nghệ Phần Mềm
-#Getting Started
-#Tải source code về:
+# DoAnJAVA
+**# Kiểm Thử Phần Mềm** and **# Công Nghệ Phần Mềm**
 
-#git clone https://github.com/PhamThanhSu/KTPM_DoAn.git
-#Mở xampp và vào trang http://localhost/phpmyadmin/ tạo 1 database mới có tên là quanlicuahanggiay và import cơ sở dữ liệu trong folder database .
-#Giao diện được tham khảo và thêm 1 số chức năng.
-#Sử dụng netbeans JDK 21 để chạy source code.
+## Getting Started
 
-#Tài khoản Admin
-#Username: thanhsu
-#Password: 123123
+Tải source code về:
+
+```bash
+git clone https://github.com/PhamThanhSu/KTPM_DoAn.git
+Mở XAMPP và vào trang http://localhost/phpmyadmin/.
+Tạo một database mới có tên là quanlicuahanggiay.
+Import cơ sở dữ liệu trong folder database.
+Giao diện được tham khảo và thêm một số chức năng.
+
+Sử dụng NetBeans với JDK 21 để chạy source code.
+
+Tài khoản Admin
+Username: thanhsu
+Password: 123123
