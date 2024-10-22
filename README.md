@@ -2,8 +2,6 @@
 **# Kiểm Thử Phần Mềm** and **# Công Nghệ Phần Mềm**
 
 ## Getting Started
-
-Tải source code về:
 *Lưu ý 1: Tạo file db.properties (KTPM_DoAn/db.properties), đuôi phải là .properties
 nội dung file ghi vào:
 url=jdbc:mysql://localhost:port tại máy của bạn/ tên file sql
