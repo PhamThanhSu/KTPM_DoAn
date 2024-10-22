@@ -147,63 +147,6 @@ public final class Main extends javax.swing.JFrame {
         lblChucVu.setText(tenChucVuc);
     }
 
-//    public void phanQuyen(int role) {
-//        if (role == 1) {
-//            // Quản lý nhân viên và tài khoản
-//            btnTrangChu.setVisible(false);
-//            btnSanPham.setVisible(false);
-//            btnThuocTinh.setVisible(false);
-//            btnKhuVucKho.setVisible(false);
-//            btnNhaCungCap.setVisible(false);
-//            btnKhachHang.setVisible(false);
-//            btnPhieuNhap.setVisible(false);
-//            btnPhieuXuat.setVisible(false);
-//            btnThongKe.setVisible(false);
-////            btnTaiKhoan.setVisible(false);
-////            btnNhanVien.setVisible(false);
-//
-//        } else if (role == 2) {
-//            // Nhân viên thống kê
-//            btnTrangChu.setVisible(false);
-//            btnSanPham.setVisible(false);
-//            btnThuocTinh.setVisible(false);
-//            btnKhuVucKho.setVisible(false);
-//            btnNhaCungCap.setVisible(false);
-//            btnKhachHang.setVisible(false);
-//            btnPhieuNhap.setVisible(false);
-//            btnPhieuXuat.setVisible(false);
-////            btnThongKe.setVisible(false);
-//            btnTaiKhoan.setVisible(false);
-//            btnNhanVien.setVisible(false);
-//        } else if (role == 3) {
-//            // Nhân viên xuất hàng
-//            btnTrangChu.setVisible(false);
-//            //btnSanPham.setVisible(false);
-//            btnThuocTinh.setVisible(false);
-//            btnKhuVucKho.setVisible(false);
-//            //btnNhaCungCap.setVisible(false);
-//            //btnKhachHang.setVisible(false);
-//            btnPhieuNhap.setVisible(false);
-//            //btnPhieuXuat.setVisible(false);
-//            btnThongKe.setVisible(false);
-//            btnTaiKhoan.setVisible(false);
-//            btnNhanVien.setVisible(false);
-//            btnPhanquyen.setVisible(false);
-//        } else if (role == 4) {
-//            // Nhân viên nhập hàng
-//            btnTrangChu.setVisible(false);
-////            btnSanPham.setVisible(false);
-////            btnThuocTinh.setVisible(false);
-////            btnKhuVucKho.setVisible(false);
-////            btnNhaCungCap.setVisible(false);
-//            btnKhachHang.setVisible(false);
-////            btnPhieuNhap.setVisible(false);
-//            btnPhieuXuat.setVisible(false);
-//            btnThongKe.setVisible(false);
-//            btnTaiKhoan.setVisible(false);
-//            btnNhanVien.setVisible(false);
-//        }
-//    }
     public void phanQuyen(String role) throws SQLException {
         updateButtonsVisibility(role);
     }
