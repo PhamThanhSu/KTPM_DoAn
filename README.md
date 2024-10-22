@@ -21,9 +21,7 @@ Categories kéo xuống dưới chọn Other, File Types chọn Poperties File
 Đặt tên là db
 Nhấp Finish để tạo file.
 Nhập Nội Dung vào File:
-
 Mở file db.properties vừa tạo và nhập nội dung như sau:
-
 url=jdbc:mysql://localhost:port tại máy của bạn/ tên file sql
 user= tên user của bạn 
 password= password của bạn
