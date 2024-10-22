@@ -45,7 +45,7 @@ Nếu bạn mở thư mục dự án trong file explorer (Windows Explorer hoặ
 ```bash
 git clone https://github.com/PhamThanhSu/KTPM_DoAn.git
 Mở XAMPP và vào trang http://localhost/phpmyadmin/.
-Tạo một database mới có tên là quanlicuahanggiay.
+Tạo một database mới có tên là quanlycuahanggiay.
 Import cơ sở dữ liệu trong folder database.
 Giao diện được tham khảo và thêm một số chức năng.
 
