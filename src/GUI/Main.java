@@ -1,8 +1,11 @@
 package GUI;
 
 import BUS.NhanVienBUS;
+import BUS.NhomQuyenBUS;
 import BUS.TaiKhoanBUS;
+import DTO.ChiTietQuyenDTO;
 import DTO.NhanVienDTO;
+import DTO.QuyenChucNangDTO;
 import DTO.TaiKhoanDTO;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
@@ -16,7 +19,11 @@ import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.security.Permission;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -63,7 +70,6 @@ public final class Main extends javax.swing.JFrame {
     private final Color hoverColor = new Color(187, 222, 251);
     Color BackgroundColor = new Color(240, 247, 250);
 //    Color BackgroundColor = new Color(235,235,235);
-    
 
     public Main() {
         this.setPreferredSize(new Dimension(1400, 800));
@@ -80,7 +86,7 @@ public final class Main extends javax.swing.JFrame {
         menuTaskbar.add(scrollPane, java.awt.BorderLayout.CENTER);
     }
 
-    public Main(TaiKhoanDTO taiKhoanDTO) {
+    public Main(TaiKhoanDTO taiKhoanDTO) throws SQLException {
         this.taiKhoanDTO = taiKhoanDTO;
         this.setPreferredSize(new Dimension(1400, 800));
         initComponents();
@@ -94,8 +100,42 @@ public final class Main extends javax.swing.JFrame {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBorder(null);
         menuTaskbar.add(scrollPane, java.awt.BorderLayout.CENTER);
-        phanQuyen(this.taiKhoanDTO.getManhomquyen());
+        phanQuyen(String.valueOf(this.taiKhoanDTO.getManhomquyen()));
         setThongTinNhanVien(this.taiKhoanDTO);
+    }
+
+    public void updateButtonsVisibility(String manhomquyen) throws SQLException {
+        // Ánh xạ các chức năng (machucnang) với nút tương ứng
+        System.out.println("manhomquyen" + manhomquyen);
+        Map<String, JToggleButton> buttonMap = new HashMap<>();
+        buttonMap.put("khachhang", btnKhachHang);
+        buttonMap.put("khuvuckho", btnKhuVucKho);
+        buttonMap.put("nhacungcap", btnNhaCungCap);
+        buttonMap.put("nhanvien", btnNhanVien);
+        buttonMap.put("nhaphang", btnPhieuNhap);
+        buttonMap.put("xuathang", btnPhieuXuat);
+        buttonMap.put("sanpham", btnSanPham);
+        buttonMap.put("taikhoan", btnTaiKhoan);
+        buttonMap.put("thongke", btnThongKe);
+        buttonMap.put("thuoctinh", btnThuocTinh);
+        buttonMap.put("trangchu", btnTrangChu);
+        buttonMap.put("nhomquyen", btnPhanquyen);
+        NhomQuyenBUS nhomQuyenBUS = new NhomQuyenBUS();
+        ArrayList<QuyenChucNangDTO> listQuyenChucNang = nhomQuyenBUS.getAllQuyenChucNang();
+
+        for (QuyenChucNangDTO quyenChucNangDTO : listQuyenChucNang) {
+            String machucnang = quyenChucNangDTO.getMaChucNang();
+            // Kiểm tra xem chức năng có nút tương ứng không
+            JToggleButton button = buttonMap.get(machucnang);
+            if (button != null) {
+//            // Hiển thị hoặc ẩn nút dựa trên hanhdong
+                if (nhomQuyenBUS.checkPermisson(Integer.valueOf(manhomquyen), machucnang, "view")) {
+                    button.setVisible(true);
+                } else {
+                    button.setVisible(false);
+                }
+            }
+        }
     }
 
     public void setThongTinNhanVien(TaiKhoanDTO taiKhoan) {
@@ -107,61 +147,65 @@ public final class Main extends javax.swing.JFrame {
         lblChucVu.setText(tenChucVuc);
     }
 
-    public void phanQuyen(int role) {
-        if (role == 1) {
-            // Quản lý nhân viên và tài khoản
-            btnTrangChu.setVisible(false);
-            btnSanPham.setVisible(false);
-            btnThuocTinh.setVisible(false);
-            btnKhuVucKho.setVisible(false);
-            btnNhaCungCap.setVisible(false);
-            btnKhachHang.setVisible(false);
-            btnPhieuNhap.setVisible(false);
-            btnPhieuXuat.setVisible(false);
-            btnThongKe.setVisible(false);
-//            btnTaiKhoan.setVisible(false);
-//            btnNhanVien.setVisible(false);
-
-        } else if (role == 2) {
-            // Nhân viên thống kê
-            btnTrangChu.setVisible(false);
-            btnSanPham.setVisible(false);
-            btnThuocTinh.setVisible(false);
-            btnKhuVucKho.setVisible(false);
-            btnNhaCungCap.setVisible(false);
-            btnKhachHang.setVisible(false);
-            btnPhieuNhap.setVisible(false);
-            btnPhieuXuat.setVisible(false);
-//            btnThongKe.setVisible(false);
-            btnTaiKhoan.setVisible(false);
-            btnNhanVien.setVisible(false);
-        } else if (role == 3) {
-            // Nhân viên xuất hàng
-            btnTrangChu.setVisible(false);
-            btnSanPham.setVisible(false);
-            btnThuocTinh.setVisible(false);
-            btnKhuVucKho.setVisible(false);
-            btnNhaCungCap.setVisible(false);
-//            btnKhachHang.setVisible(false);
-            btnPhieuNhap.setVisible(false);
-//            btnPhieuXuat.setVisible(false);
-            btnThongKe.setVisible(false);
-            btnTaiKhoan.setVisible(false);
-            btnNhanVien.setVisible(false);
-        } else if (role == 4) {
-            // Nhân viên nhập hàng
-            btnTrangChu.setVisible(false);
+//    public void phanQuyen(int role) {
+//        if (role == 1) {
+//            // Quản lý nhân viên và tài khoản
+//            btnTrangChu.setVisible(false);
 //            btnSanPham.setVisible(false);
 //            btnThuocTinh.setVisible(false);
 //            btnKhuVucKho.setVisible(false);
 //            btnNhaCungCap.setVisible(false);
-            btnKhachHang.setVisible(false);
+//            btnKhachHang.setVisible(false);
 //            btnPhieuNhap.setVisible(false);
-            btnPhieuXuat.setVisible(false);
-            btnThongKe.setVisible(false);
-            btnTaiKhoan.setVisible(false);
-            btnNhanVien.setVisible(false);
-        }
+//            btnPhieuXuat.setVisible(false);
+//            btnThongKe.setVisible(false);
+////            btnTaiKhoan.setVisible(false);
+////            btnNhanVien.setVisible(false);
+//
+//        } else if (role == 2) {
+//            // Nhân viên thống kê
+//            btnTrangChu.setVisible(false);
+//            btnSanPham.setVisible(false);
+//            btnThuocTinh.setVisible(false);
+//            btnKhuVucKho.setVisible(false);
+//            btnNhaCungCap.setVisible(false);
+//            btnKhachHang.setVisible(false);
+//            btnPhieuNhap.setVisible(false);
+//            btnPhieuXuat.setVisible(false);
+////            btnThongKe.setVisible(false);
+//            btnTaiKhoan.setVisible(false);
+//            btnNhanVien.setVisible(false);
+//        } else if (role == 3) {
+//            // Nhân viên xuất hàng
+//            btnTrangChu.setVisible(false);
+//            //btnSanPham.setVisible(false);
+//            btnThuocTinh.setVisible(false);
+//            btnKhuVucKho.setVisible(false);
+//            //btnNhaCungCap.setVisible(false);
+//            //btnKhachHang.setVisible(false);
+//            btnPhieuNhap.setVisible(false);
+//            //btnPhieuXuat.setVisible(false);
+//            btnThongKe.setVisible(false);
+//            btnTaiKhoan.setVisible(false);
+//            btnNhanVien.setVisible(false);
+//            btnPhanquyen.setVisible(false);
+//        } else if (role == 4) {
+//            // Nhân viên nhập hàng
+//            btnTrangChu.setVisible(false);
+////            btnSanPham.setVisible(false);
+////            btnThuocTinh.setVisible(false);
+////            btnKhuVucKho.setVisible(false);
+////            btnNhaCungCap.setVisible(false);
+//            btnKhachHang.setVisible(false);
+////            btnPhieuNhap.setVisible(false);
+//            btnPhieuXuat.setVisible(false);
+//            btnThongKe.setVisible(false);
+//            btnTaiKhoan.setVisible(false);
+//            btnNhanVien.setVisible(false);
+//        }
+//    }
+    public void phanQuyen(String role) throws SQLException {
+        updateButtonsVisibility(role);
     }
 
     /**
@@ -256,7 +300,7 @@ public final class Main extends javax.swing.JFrame {
 
         btnDangXuat.setIcon(new FlatSVGIcon("./icon/log_out.svg"));
         btnDangXuat.setHorizontalAlignment(SwingConstants.LEFT);
-    
+
         btnPhanquyen.setIcon(new FlatSVGIcon("./icon/permission.svg"));
         btnPhanquyen.setHorizontalAlignment(SwingConstants.LEFT);
     }

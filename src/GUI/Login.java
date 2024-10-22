@@ -11,6 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -96,7 +99,7 @@ public class Login extends javax.swing.JFrame {
 
     TaiKhoanBUS taiKhoanBUS;
 
-    public void checkLogin() {
+    public void checkLogin() throws SQLException {
         String username = txtTenDangNhap.getText().trim();
         String password = new String(txtMatKhau.getPassword()).trim();
 
@@ -239,7 +242,11 @@ public class Login extends javax.swing.JFrame {
         char[] password = txtMatKhau.getPassword();
         String passwordText = new String(password);
         System.out.print(passwordText);
-        checkLogin();
+        try {
+            checkLogin();
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }//GEN-LAST:event_btnDangNhapActionPerformed
 

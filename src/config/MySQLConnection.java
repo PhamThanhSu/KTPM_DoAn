@@ -1,17 +1,28 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package config;
+
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class MySQLConnection {
-    // Thông tin kết nối cơ sở dữ liệu
-    private static final String URL = "jdbc:mysql://localhost:3306/quanlycuahanggiay"; // URL của cơ sở dữ liệu
-    private static final String USER = "root"; // Tên người dùng MySQL
-    private static final String PASSWORD = "123456"; // Mật khẩu MySQL
+    private static String URL;
+    private static String USER;
+    private static String PASSWORD;
+    //Lưu ý: tạo file db.properties (tạo ở ngoài cùng) (đuôi mở rộng là properties, thể tạo txt xong đổi lại thành properties)
+    static {
+        Properties properties = new Properties();
+        try (FileInputStream input = new FileInputStream("db.properties")) {
+            properties.load(input);
+            URL = properties.getProperty("url");
+            USER = properties.getProperty("user");
+            PASSWORD = properties.getProperty("password");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     // Phương thức để thiết lập và trả về kết nối
     public static Connection getConnection() {
@@ -38,7 +49,3 @@ public class MySQLConnection {
         }
     }
 }
-
-
-
-
