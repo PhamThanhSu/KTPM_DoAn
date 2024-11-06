@@ -44,6 +44,11 @@ public class SanPhamBUS {
     public SanPhamDTO selectByID(int masp) {
         return sanPhamDAO.selectById(masp);
     }
+    
+    public ArrayList<SanPhamDTO> selectByKho(int makho) {
+        return sanPhamDAO.selectByKho(makho);
+    }
+    
     private ArrayList<SanPhamDTO> listSP = new ArrayList<>();
 
     public boolean add(SanPhamDTO lh) {

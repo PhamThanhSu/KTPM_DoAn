@@ -1,17 +1,23 @@
 package GUI;
 
 import BUS.KhuVucKhoBUS;
+import BUS.SanPhamBUS;
 import DAO.KhuVucKhoDAO;
 import DTO.KhuVucKhoDTO;
+import DTO.SanPhamDTO;
 import DTO.TaiKhoanDTO;
 import GUI.Component.CheckAction;
+import GUI.Component.ImageRenderer;
 import GUI.KhuVucKhoOpTions.SuaKhuVucKho;
 import GUI.KhuVucKhoOpTions.ThemKhuVucKho;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -43,6 +50,7 @@ public class KhuVucKho extends javax.swing.JPanel {
     KhuVucKhoDAO khuVucKhoDAO;
     KhuVucKhoBUS khuVucKhoBUS;
     SuaKhuVucKho suaKhuVucKho;
+    SanPhamBUS sanPhamBUS;
     Color BackgroundColor = new Color(240, 247, 250);
 
     public KhuVucKho(TaiKhoanDTO taiKhoanDTO) throws SQLException {
@@ -54,7 +62,12 @@ public class KhuVucKho extends javax.swing.JPanel {
         tblKho.getColumnModel().getColumn(1).setPreferredWidth(180);
         tblKho.setFocusable(false);
         tblKho.setAutoCreateRowSorter(true);
-        
+        tblsanphamtrongkho.setFocusable(false);
+        tblsanphamtrongkho.setDefaultEditor(Object.class, null); // set ko cho sửa dữ liệu trên table
+        tblsanphamtrongkho.getColumnModel().getColumn(1).setPreferredWidth(180);
+        tblsanphamtrongkho.setFocusable(false);
+        tblsanphamtrongkho.setAutoCreateRowSorter(true);
+
         String[] action = {"create", "update", "delete", "view"};
         Map<String, JButton> buttonMap = new HashMap<>();
         buttonMap.put("create", btnThemKho);       // Nút thêm
@@ -63,7 +76,7 @@ public class KhuVucKho extends javax.swing.JPanel {
 //        buttonMap.put("detail", btnChiTietNV);    // Nút chi tiết
         buttonMap.put("export", btnXuatExcelKho);  // Nút xuất Excel
 //        buttonMap.put("import",btnNhapExcel);  // Nút nhập Excel
-    
+
 // Tạo đối tượng CheckAction
         CheckAction checkAction = new CheckAction(taiKhoanDTO.getManhomquyen(), "khuvuckho", action, buttonMap);
 
@@ -74,13 +87,24 @@ public class KhuVucKho extends javax.swing.JPanel {
                 timKiemKhuVucKho(timkiem);
             }
         });
-        
+
         hienThiListKhuVucKho();
+        // Add a MouseListener to the table for row click detection
+        tblKho.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selectedRow = tblKho.getSelectedRow();
+                if (selectedRow != -1) {
+                    int makhuvuc = (int) tblKho.getValueAt(selectedRow, 0);
+                    getAllSanPhamTrongKho(makhuvuc);
+                }
+            }
+        });
 
         this.setOpaque(false);
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
         setPreferredSize(new Dimension(1200, 800));
-        
+
         pnlCenter.setBorder(new EmptyBorder(20, 0, 0, 0));
         btnLamMoi.setIcon(new FlatSVGIcon("./icon/refresh.svg"));
         pnlCenter.setBackground(BackgroundColor);
@@ -137,13 +161,13 @@ public class KhuVucKho extends javax.swing.JPanel {
     private void timKiemKhuVucKho(String keyword) {
         ArrayList<KhuVucKhoDTO> ketQuaTimKiem = new ArrayList<>();
         ArrayList<KhuVucKhoDTO> AllKho = khuVucKhoBUS.getAllKho();
-        for(KhuVucKhoDTO kho : AllKho){
+        for (KhuVucKhoDTO kho : AllKho) {
             String tenKhuVucKho = kho.getTenkhuvuc().trim();
             if (tenKhuVucKho.toLowerCase().contains(keyword.toLowerCase())) {
                 ketQuaTimKiem.add(kho);
             }
         }
-        
+
         hienThiListKhuVucKho(ketQuaTimKiem);
     }
 
@@ -172,10 +196,47 @@ public class KhuVucKho extends javax.swing.JPanel {
         }
     }
 
+    public void getAllSanPhamTrongKho(int makho) {
+
+        DefaultTableModel model = (DefaultTableModel) tblsanphamtrongkho.getModel();
+        model.setRowCount(0);
+        sanPhamBUS = new SanPhamBUS();
+        ArrayList<SanPhamDTO> listsp = sanPhamBUS.selectByKho(makho);
+        for (SanPhamDTO sanpham : listsp) {
+            ImageIcon icon = new ImageIcon("./src/img_product/" + sanpham.getHinhanh());
+            Image img = icon.getImage();
+            Image scaledImg = img.getScaledInstance(150, 70, Image.SCALE_SMOOTH);
+            ImageIcon scaledIcon = new ImageIcon(scaledImg);
+            Object[] row = {
+                sanpham.getMasp(),
+                sanpham.getTensp(),
+                scaledIcon,
+                sanpham.getSize(),
+                sanpham.getSoluongton(),};
+            model.addRow(row);
+        }
+
+        // Set the cell renderer for the column that displays the image
+        tblsanphamtrongkho.getColumnModel().getColumn(2).setCellRenderer(new ImageRenderer());
+        // Tạo renderer để hiển thị nội dung ở giữa ô
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Áp dụng renderer căn giữa cho các cột khác
+        for (int i = 0; i < tblsanphamtrongkho.getColumnCount(); i++) {
+            if (i != 2) { // Tránh áp dụng renderer này cho cột hình ảnh
+                tblsanphamtrongkho.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollBar1 = new javax.swing.JScrollBar();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
         panelTop = new javax.swing.JPanel();
         btnThemKho = new javax.swing.JButton();
         btnSuaKho = new javax.swing.JButton();
@@ -187,6 +248,21 @@ public class KhuVucKho extends javax.swing.JPanel {
         pnlCenter = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblKho = new javax.swing.JTable();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblsanphamtrongkho = new javax.swing.JTable();
+
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane4.setViewportView(jTable2);
 
         setLayout(new java.awt.BorderLayout());
 
@@ -268,17 +344,32 @@ public class KhuVucKho extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(tblKho);
 
+        tblsanphamtrongkho.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Mã sản phẩm", "Tên sản phẩm", "Hình ảnh", "Size", "Số lượng"
+            }
+        ));
+        jScrollPane3.setViewportView(tblsanphamtrongkho);
+
         javax.swing.GroupLayout pnlCenterLayout = new javax.swing.GroupLayout(pnlCenter);
         pnlCenter.setLayout(pnlCenterLayout);
         pnlCenterLayout.setHorizontalGroup(
             pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlCenterLayout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 783, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 768, Short.MAX_VALUE)
+            .addComponent(jScrollPane3)
         );
         pnlCenterLayout.setVerticalGroup(
             pnlCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 741, Short.MAX_VALUE)
+            .addGroup(pnlCenterLayout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE))
         );
 
         add(pnlCenter, java.awt.BorderLayout.CENTER);
@@ -357,10 +448,15 @@ public class KhuVucKho extends javax.swing.JPanel {
     private javax.swing.JButton btnXoaKho;
     private javax.swing.JButton btnXuatExcelKho;
     private javax.swing.JLabel jLabel62;
+    private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTable jTable2;
     private javax.swing.JPanel panelTop;
     private javax.swing.JPanel pnlCenter;
     private javax.swing.JTable tblKho;
+    private javax.swing.JTable tblsanphamtrongkho;
     private javax.swing.JTextField txtTimKiem;
     // End of variables declaration//GEN-END:variables
 }

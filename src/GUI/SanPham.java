@@ -386,6 +386,11 @@ public class SanPham extends javax.swing.JPanel implements ActionListener {
 
         btnSuaSP.setText("Sửa");
         btnSuaSP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSuaSP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSuaSPActionPerformed(evt);
+            }
+        });
         pnlTop.add(btnSuaSP);
 
         btnXoaSP.setText("Xóa");
@@ -566,6 +571,10 @@ public class SanPham extends javax.swing.JPanel implements ActionListener {
     private void btntienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btntienActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btntienActionPerformed
+
+    private void btnSuaSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaSPActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSuaSPActionPerformed
 
     private void xoaSanPham() {
         int selectedRow = tblSanPham.getSelectedRow();

@@ -222,4 +222,48 @@ public class SanPhamDAO {
         return thanhCong;
     }
 
+    public ArrayList<SanPhamDTO> selectByKho(int makho) {
+        ArrayList<SanPhamDTO> result = new ArrayList<>();
+        ResultSet rs = null;
+        try {
+            connection = MySQLConnection.getConnection();
+            String sql = "SELECT * FROM sanpham WHERE khuvuckho=? AND trangthai = 1";
+            pst = connection.prepareStatement(sql);
+            pst.setInt(1, makho);
+            rs = pst.executeQuery();
+            while (rs.next()) {
+                int maSP = rs.getInt("masp");
+                String tenSP = rs.getString("tensp");
+                int size = rs.getInt("size");
+                String hinhanh = rs.getString("hinhanh");
+                int xuatxu = rs.getInt("xuatxu");
+                int loai = rs.getInt("loai");
+                int thuonghieu = rs.getInt("thuonghieu");
+                int khuvuckho = rs.getInt("khuvuckho");
+                int soluongton = rs.getInt("soluongton");
+                // Create SanPhamDTO object and add it to the list
+                SanPhamDTO sanPham = new SanPhamDTO(maSP, tenSP, size, hinhanh, xuatxu, loai, thuonghieu, khuvuckho, soluongton);
+                result.add(sanPham);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Print the exception to help with debugging
+        } finally {
+            // Close resources in the finally block
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pst != null) {
+                    pst.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
 }

@@ -19,16 +19,23 @@
             <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/Login.java</file>
             <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/Component/CheckAction.java</file>
             <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/NhomQuyenDAO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/ThuocTinh.java</file>
             <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/PhanQuyen.java</file>
             <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/BUS/NhomQuyenBUS.java</file>
             <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/Main.java</file>
             <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DTO/QuyenChucNangDTO.java</file>
             <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/PhieuNhap.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/ThuocTinhSP/ThuongHieu.java</file>
             <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/SanPham.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/ButtonCustom.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/NhanVienDAO.java</file>
             <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/QuyenChucNangDAO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/style/FlatIntelliJLaf.properties</file>
             <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/TaiKhoan.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/BUS/NhanVienBUS.java</file>
             <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DTO/NhomQuyenDTO.java</file>
             <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/config/MySQLConnection.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/TKhoan/ChonNhanVien.java</file>
         </group>
     </open-files>
 </project-private>
