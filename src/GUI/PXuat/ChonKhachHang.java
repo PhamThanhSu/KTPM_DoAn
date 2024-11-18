@@ -10,7 +10,10 @@ import DAO.KhachHangDAO;
 import GUI.Panel.TaoPhieuNhap;
 import GUI.Panel.TaoPhieuXuatt;
 import java.awt.Window;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -28,6 +31,7 @@ public class ChonKhachHang extends javax.swing.JPanel {
     KhachHangBUS khachHangBUS;
     TaoPhieuNhap taoPhieuNhap;
     private TaoPhieuXuatt taoPhieuXuat;
+    private int maKh = -1;
     /**
      * Creates new form ChonKhachHang
      */
@@ -46,6 +50,10 @@ public class ChonKhachHang extends javax.swing.JPanel {
         LoadDataTable(listKhachHang);
     }
 
+    public int getMaKhachHang() {
+        return maKh;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -139,22 +147,21 @@ public class ChonKhachHang extends javax.swing.JPanel {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void btnchonkhachhangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnchonkhachhangActionPerformed
-        themKhachHang();
+        maKh = themKhachHang();
     }//GEN-LAST:event_btnchonkhachhangActionPerformed
     
     public int themKhachHang(){
         KhachHangDTO selectedKhachHang = SelectKhachHang();
-        int maKh = -1;
-        if (selectedKhachHang == null) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng!", "Chưa chọn khách hàng", JOptionPane.WARNING_MESSAGE);
-        } else {            
-            // Đóng dialog chứa panel
+        if (selectedKhachHang != null) {
             maKh = selectedKhachHang.getMaKH();
+            // Đóng dialog chứa panel
             Window window = SwingUtilities.getWindowAncestor(this); // Lấy ra cửa sổ chứa panel
             if (window instanceof JDialog) {
                 JDialog dialog = (JDialog) window;
                 dialog.dispose(); // Đóng dialog
             }
+        } else {
+            JOptionPane.showMessageDialog(this, "Không có khách hàng nào được chọn.");
         }
         return maKh;
     }

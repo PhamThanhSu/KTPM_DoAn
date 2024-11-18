@@ -1,6 +1,7 @@
 package GUI;
 
 import DTO.TaiKhoanDTO;
+import GUI.ThuocTinhSP.GiamGia;
 import GUI.ThuocTinhSP.Loai;
 import GUI.ThuocTinhSP.ThuongHieu;
 import GUI.ThuocTinhSP.XuatXu;
@@ -27,6 +28,7 @@ public class ThuocTinh extends javax.swing.JPanel {
     ThuongHieu thuongHieu ;
     Loai loai;
     XuatXu xuatXu;
+    GiamGia giamGia;
     Color BackgroundColor = new Color(240, 247, 250);
    
     public ThuocTinh(TaiKhoanDTO taiKhoanDTO) throws SQLException {
@@ -41,9 +43,11 @@ public class ThuocTinh extends javax.swing.JPanel {
         thuongHieu = new ThuongHieu(taiKhoanDTO);
         loai = new Loai(taiKhoanDTO);
         xuatXu = new XuatXu(taiKhoanDTO);
+        giamGia = new GiamGia(taiKhoanDTO);
         tabPaneThuocTinh.addTab("Thương hiệu", thuongHieu);
         tabPaneThuocTinh.addTab("Loại", loai);
         tabPaneThuocTinh.addTab("Xuất xứ", xuatXu);
+        tabPaneThuocTinh.addTab("Giảm giá", giamGia);
        
     }
 

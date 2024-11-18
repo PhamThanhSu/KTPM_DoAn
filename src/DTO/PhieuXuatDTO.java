@@ -1,11 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DTO;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 /**
  *
@@ -19,10 +14,11 @@ public class PhieuXuatDTO {
     private int manv;
     private int makh;
     private int trangthai;
+    private int magiamgia; // Thêm thuộc tính mã giảm giá
 
     public PhieuXuatDTO() {
     }
-
+    
     public PhieuXuatDTO(int maphieuxuat, Timestamp thoigiantao, long tongTien, int manv, int makh, int trangthai) {
         this.maphieuxuat = maphieuxuat;
         this.thoigiantao = thoigiantao;
@@ -30,6 +26,16 @@ public class PhieuXuatDTO {
         this.manv = manv;
         this.makh = makh;
         this.trangthai = trangthai;
+    }
+
+    public PhieuXuatDTO(int maphieuxuat, Timestamp thoigiantao, long tongTien, int manv, int makh, int trangthai, int magiamgia) {
+        this.maphieuxuat = maphieuxuat;
+        this.thoigiantao = thoigiantao;
+        this.tongTien = tongTien;
+        this.manv = manv;
+        this.makh = makh;
+        this.trangthai = trangthai;
+        this.magiamgia = magiamgia; // Khởi tạo mã giảm giá
     }
 
     public int getMaphieuxuat() {
@@ -56,6 +62,10 @@ public class PhieuXuatDTO {
         return trangthai;
     }
 
+    public int getMagiamgia() {
+        return magiamgia; // Getter cho mã giảm giá
+    }
+
     public void setMaphieuxuat(int maphieuxuat) {
         this.maphieuxuat = maphieuxuat;
     }
@@ -78,6 +88,10 @@ public class PhieuXuatDTO {
 
     public void setTrangthai(int trangthai) {
         this.trangthai = trangthai;
+    }
+
+    public void setMagiamgia(int magiamgia) {
+        this.magiamgia = magiamgia; // Setter cho mã giảm giá
     }
 
     @Override
@@ -104,6 +118,6 @@ public class PhieuXuatDTO {
 
     @Override
     public String toString() {
-        return "PhieuXuatDTO{" + "makh=" + makh + '}';
+        return "PhieuXuatDTO{" + "makh=" + makh + ", magiamgia=" + magiamgia + '}'; // Cập nhật toString() để bao gồm mã giảm giá
     }
 }

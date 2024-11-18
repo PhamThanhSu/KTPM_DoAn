@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane; 
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 
@@ -58,13 +58,13 @@ public class Login extends javax.swing.JFrame {
         logo.setIcon(scaledIcon);
         btnDangNhap.setBorderPainted(false);
         // Gán phím Enter để kích hoạt nút Đăng nhập
-    btnDangNhap.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "loginAction");
-    btnDangNhap.getActionMap().put("loginAction", new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            btnDangNhap.doClick();  // Kích hoạt nút Đăng nhập khi nhấn Enter
-        }
-    });
+        btnDangNhap.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "loginAction");
+        btnDangNhap.getActionMap().put("loginAction", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                btnDangNhap.doClick();  // Kích hoạt nút Đăng nhập khi nhấn Enter
+            }
+        });
         btnDangNhap.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent evt) {

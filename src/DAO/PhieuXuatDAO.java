@@ -17,6 +17,7 @@ public class PhieuXuatDAO {
 
     private Connection connection;
     private PreparedStatement ps;
+    GiamGiaDAO giamGiaDAO;
 
     public static PhieuXuatDAO getInstance() {
         return new PhieuXuatDAO();
@@ -33,9 +34,10 @@ public class PhieuXuatDAO {
 
     public void insertPhieuXuat(PhieuXuatDTO phieuXuatDTO, long now) {
         try {
+            giamGiaDAO = new GiamGiaDAO();
             Timestamp currentTime = new Timestamp(now); // Tạo đối tượng Timestamp từ giá trị now
             // Chèn dữ liệu vào cơ sở dữ liệu
-            String sql = "INSERT INTO phieuxuat (maphieuxuat, thoigian, makh, manv, tongtien, trangthai) VALUES (?, ?, ?, ?, ?, 1)";
+            String sql = "INSERT INTO phieuxuat (maphieuxuat, thoigian, makh, manv, tongtien, trangthai, magiamgia) VALUES (?, ?, ?, ?, ?, 1, ?)";
 
             ps = connection.prepareStatement(sql);
             ps.setInt(1, phieuXuatDTO.getMaphieuxuat());
@@ -43,10 +45,15 @@ public class PhieuXuatDAO {
             ps.setInt(3, phieuXuatDTO.getMakh());
             ps.setInt(4, phieuXuatDTO.getManv());
             ps.setLong(5, phieuXuatDTO.getTongTien());
+            // Kiểm tra mã giảm giá hợp lệ hoặc đặt NULL nếu không có
+            if (!giamGiaDAO.isValidMagiamgia(phieuXuatDTO.getMagiamgia())) {
+                ps.setNull(6, java.sql.Types.INTEGER); // Đặt NULL nếu mã giảm giá không hợp lệ
+            } else {
+                ps.setInt(6, phieuXuatDTO.getMagiamgia());
+            }
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            // Xử lý hoặc thông báo lỗi theo nhu cầu của bạn
         } finally {
             try {
                 if (ps != null) {

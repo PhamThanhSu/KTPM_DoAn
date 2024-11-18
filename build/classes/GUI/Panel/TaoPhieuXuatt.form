@@ -131,16 +131,13 @@
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="txtgiaxuat" min="-2" pref="124" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
-                                          <Component id="txtsoluongton" min="-2" pref="126" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="jLabel4" min="-2" pref="108" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
-                                          <Component id="jLabel7" min="-2" pref="81" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="jLabel4" alignment="0" min="-2" pref="108" max="-2" attributes="0"/>
+                                      <Component id="txtgiaxuat" alignment="0" min="-2" pref="124" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="txtsoluongton" min="-2" pref="126" max="-2" attributes="0"/>
+                                      <Component id="jLabel7" min="-2" pref="81" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace pref="34" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -155,6 +152,22 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btnxoasanpham" min="-2" pref="190" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabel5" alignment="0" min="-2" pref="78" max="-2" attributes="0"/>
+                                      <Component id="txtmagiamgia" alignment="0" min="-2" pref="84" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabel6" min="-2" pref="78" max="-2" attributes="0"/>
+                                      <Group type="102" attributes="0">
+                                          <Component id="txttengiamgia" min="-2" pref="227" max="-2" attributes="0"/>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Component id="btngiamgia" pref="85" max="32767" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -182,12 +195,25 @@
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtgiaxuat" alignment="3" min="-2" pref="38" max="-2" attributes="0"/>
-                              <Component id="txtsoluongton" alignment="3" min="-2" pref="38" max="-2" attributes="0"/>
-                              <Component id="txtsoluong" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="txtgiaxuat" alignment="3" min="-2" pref="38" max="-2" attributes="0"/>
+                                  <Component id="txtsoluong" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="txtsoluongton" alignment="0" min="-2" pref="38" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="167" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jLabel5" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Component id="jLabel6" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="txtmagiamgia" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                              <Component id="txttengiamgia" alignment="3" min="-2" pref="38" max="-2" attributes="0"/>
+                              <Component id="btngiamgia" alignment="3" min="-2" pref="38" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="btnsuasanpham" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
                               <Component id="btnxoasanpham" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
@@ -233,9 +259,9 @@
                     <Property name="text" type="java.lang.String" value="S&#x1ed1; l&#x1b0;&#x1ee3;ng t&#x1ed3;n"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="txtsoluongton">
+                <Component class="javax.swing.JTextField" name="txttengiamgia">
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtsoluongtonActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txttengiamgiaActionPerformed"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtsoluong">
@@ -271,6 +297,34 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnxoasanphamActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JLabel" name="jLabel5">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="M&#xe3; gi&#x1ea3;m gi&#xe1;"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="jLabel6">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="T&#xea;n gi&#x1ea3;m gi&#xe1;"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="txtmagiamgia">
+                </Component>
+                <Component class="javax.swing.JTextField" name="txtsoluongton">
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtsoluongtonActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="btngiamgia">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="ee" green="ee" red="8d" type="rgb"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Gi&#x1ea3;m gi&#xe1;"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btngiamgiaActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>
@@ -356,32 +410,32 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtkhachhang" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnchonkhachhang" min="-2" pref="46" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
-                              <Component id="jLabel10" min="-2" pref="84" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="txttongtien" min="-2" pref="101" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="jLabel17" alignment="0" pref="287" max="32767" attributes="0"/>
-                                      <Component id="txtmaphieuxuat" alignment="0" pref="287" max="32767" attributes="0"/>
-                                      <Component id="jLabel18" alignment="0" pref="287" max="32767" attributes="0"/>
-                                      <Component id="txtnhanvienxuat" alignment="0" pref="287" max="32767" attributes="0"/>
-                                      <Component id="jLabel16" alignment="0" pref="287" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="txtkhachhang" pref="235" max="32767" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btnchonkhachhang" min="-2" pref="46" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="btnxuathang" alignment="0" pref="287" max="32767" attributes="0"/>
+                                  <Component id="jLabel17" alignment="0" pref="287" max="32767" attributes="0"/>
+                                  <Component id="txtmaphieuxuat" alignment="0" pref="287" max="32767" attributes="0"/>
+                                  <Component id="jLabel18" alignment="0" pref="287" max="32767" attributes="0"/>
+                                  <Component id="txtnhanvienxuat" alignment="0" pref="287" max="32767" attributes="0"/>
+                                  <Component id="jLabel16" alignment="0" pref="287" max="32767" attributes="0"/>
                               </Group>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btnxuathang" min="-2" pref="287" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
+                              <Component id="jLabel10" min="-2" pref="84" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="txttongtien" min="-2" pref="101" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace pref="11" max="32767" attributes="0"/>
@@ -406,14 +460,14 @@
                           <Component id="txtkhachhang" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
                           <Component id="btnchonkhachhang" alignment="3" min="-2" pref="41" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="355" max="32767" attributes="0"/>
+                      <EmptySpace pref="379" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel10" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
                           <Component id="txttongtien" alignment="3" min="-2" pref="37" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                       <Component id="btnxuathang" min="-2" pref="35" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

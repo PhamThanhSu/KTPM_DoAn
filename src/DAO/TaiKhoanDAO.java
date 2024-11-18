@@ -21,7 +21,7 @@ public class TaiKhoanDAO {
         TaiKhoanDTO result = null;
         try {
             connection = MySQLConnection.getConnection();
-            String sql = "SELECT * FROM taikhoan WHERE tendangnhap=?";
+            String sql = "SELECT * FROM taikhoan WHERE tendangnhap=? AND trangthai =1";
             pst = connection.prepareStatement(sql);
             pst.setString(1, t);
             ResultSet rs = (ResultSet) pst.executeQuery();

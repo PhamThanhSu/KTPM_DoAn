@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="2">
         <file>
             <url>src/DAO/ThongKeDAO.java</url>
             <bookmark id="1">
@@ -9,33 +9,30 @@
                 <key/>
             </bookmark>
         </file>
+        <file>
+            <url>src/GUI/ThuocTinhSP/GiamGia.java</url>
+            <bookmark id="2">
+                <name/>
+                <line>126</line>
+                <key/>
+            </bookmark>
+        </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DTO/ChiTietQuyenDTO.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/PQuyen/PhanQuyenDialog.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/ChiTietQuyenDAO.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DTO/PhieuNhapDTO.java</file>
             <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/Login.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/Component/CheckAction.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/NhomQuyenDAO.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/ThuocTinh.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DTO/GiamGiaDTO.java</file>
             <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/PhanQuyen.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/BUS/NhomQuyenBUS.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/Main.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DTO/QuyenChucNangDTO.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/PhieuNhap.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/ThuocTinhSP/ThuongHieu.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/SanPham.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/ButtonCustom.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/NhanVienDAO.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/QuyenChucNangDAO.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/style/FlatIntelliJLaf.properties</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/TaiKhoan.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/BUS/NhanVienBUS.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DTO/NhomQuyenDTO.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/config/MySQLConnection.java</file>
-            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/TKhoan/ChonNhanVien.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/BUS/GiamGiaBUS.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/PXuat/ChonGiamGia.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/ThuocTinhSP/GiamGia.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/GiamGiaSanPhamDAO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DAO/GiamGiaDAO.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/BUS/GiamGiaSanPhamBUS.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/PXuat/ChonKhachHang.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/ThuocTinhSP/FormGiamGiaDialog.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/GUI/ThuocTinhSP/ApDungSanPhamDialog.java</file>
+            <file>file:/D:/DoAn_KTPM/KTPM_DoAn/src/DTO/GiamGiaSanPhamDTO.java</file>
         </group>
     </open-files>
 </project-private>

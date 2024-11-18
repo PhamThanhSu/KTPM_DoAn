@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th9 20, 2024 lúc 03:41 AM
+-- Máy chủ: 127.0.0.1:3307
+-- Thời gian đã tạo: Th10 18, 2024 lúc 05:07 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -126,7 +126,6 @@ INSERT INTO `ctquyen` (`manhomquyen`, `machucnang`, `hanhdong`) VALUES
 (4, 'khachhang', 'view'),
 (4, 'khuvuckho', 'view'),
 (4, 'nhacungcap', 'view'),
-(4, 'nhanvien', 'view'),
 (4, 'nhaphang', 'create'),
 (4, 'nhaphang', 'update'),
 (4, 'nhaphang', 'view'),
@@ -185,6 +184,54 @@ INSERT INTO `ctquyen` (`manhomquyen`, `machucnang`, `hanhdong`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `giamgia`
+--
+
+CREATE TABLE `giamgia` (
+  `magiamgia` int(11) NOT NULL,
+  `tengiamgia` varchar(255) NOT NULL,
+  `phantramgiam` int(11) NOT NULL,
+  `giatrihoadon` bigint(20) NOT NULL,
+  `ngaybatdau` date NOT NULL,
+  `ngayketthuc` date NOT NULL,
+  `trangthai` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `giamgia`
+--
+
+INSERT INTO `giamgia` (`magiamgia`, `tengiamgia`, `phantramgiam`, `giatrihoadon`, `ngaybatdau`, `ngayketthuc`, `trangthai`) VALUES
+(3, 'giảm giá 1', 10, 0, '2024-11-18', '2024-11-21', 'Có hiệu lực'),
+(4, 'giảm giá tháng 11', 30, 2500000, '2024-11-20', '2024-11-23', 'Có hiệu lực'),
+(5, 'giảm giá ngày 18', 10, 0, '2024-11-18', '2024-11-19', 'Có hiệu lực'),
+(6, 'giảm giá ngày 19', 20, 0, '2024-11-19', '2024-11-20', 'Có hiệu lực');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `giamgiasanpham`
+--
+
+CREATE TABLE `giamgiasanpham` (
+  `magiamgia` int(11) NOT NULL,
+  `masp` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `giamgiasanpham`
+--
+
+INSERT INTO `giamgiasanpham` (`magiamgia`, `masp`) VALUES
+(4, 1),
+(4, 2),
+(4, 3),
+(4, 4),
+(4, 5);
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `khachhang`
 --
 
@@ -203,9 +250,9 @@ CREATE TABLE `khachhang` (
 
 INSERT INTO `khachhang` (`makh`, `tenkhachhang`, `diachi`, `sdt`, `trangthai`, `ngaythamgia`) VALUES
 (1, 'Nguyễn Văn A', 'Gia Đức, Ân Đức, Hoài Ân, Bình Định', '0387913347', 1, '2024-03-19 09:52:29'),
-(2, 'Trần Nhất Nhất', '205 Trần Hưng Đạo, Phường 10, Quận 5, Thành phố Hồ Chí Minh', '0123456789', 1, '2024-03-19 09:52:29'),
-(3, 'Hoàng Gia Bo', 'Khoa Trường, Hoài Ân, Bình Định', '0987654321', 1, '2024-03-19 09:52:29'),
-(4, 'Hồ Minh Hưng', 'Khoa Trường, Hoài Ân, Bình Định', '0867987456', 1, '2024-03-19 09:52:29'),
+(2, 'Trần Nhất Hai', '205 Trần Hưng Đạo, Phường 10, Quận 5, Thành phố Hồ Chí Minh', '0123456789', 1, '2024-03-19 09:52:29'),
+(3, 'Hoàng Gia Nghĩa', 'Khoa Trường, Hoài Ân, Bình Định', '0987654321', 1, '2024-03-19 09:52:29'),
+(4, 'Hồ Minh Hưng', 'Khoa Trường, Hoài Ân, Bình Định', '0867987456', 0, '2024-03-19 09:52:29'),
 (5, 'Nguyễn Thị Minh Anh', '123 Phố Huế, Quận Hai Bà Trưng, Hà Nội', '0935123456', 1, '2024-03-23 17:59:57'),
 (6, 'Trần Đức Minh', '789 Đường Lê Hồng Phong, Thành phố Đà Nẵng', '0983456789', 1, '2024-03-23 18:08:12'),
 (7, 'Lê Hải Yến', '456 Tôn Thất Thuyết, Quận 4, Thành phố Hồ Chí Minh', '0977234567', 1, '2024-03-23 18:08:47'),
@@ -318,7 +365,8 @@ INSERT INTO `nhanvien` (`manv`, `hoten`, `gioitinh`, `ngaysinh`, `sdt`, `email`,
 (2, 'Phạm Thiên Phúc', 1, '2004-04-17', '0932831928', 'phuc@gmail.com', 1),
 (3, 'Phạm Thanh Sự', 1, '2004-03-20', '0932831928', 'su@gmail.com', 1),
 (4, 'Dương Minh Trí', 1, '2004-04-17', '0932831928', 'tri@gmail.com', 1),
-(5, 'Đoàn Ánh Dương', 1, '2004-03-16', '0338641606', 'duong@gmail.com', 1);
+(5, 'Đoàn Ánh Dương', 1, '2004-03-16', '0338641606', 'duong@gmail.com', 1),
+(10, 'test', 1, '2024-11-04', '0123456789', 'tht@gmail.com', 1);
 
 -- --------------------------------------------------------
 
@@ -368,7 +416,8 @@ CREATE TABLE `phieunhap` (
 INSERT INTO `phieunhap` (`maphieunhap`, `thoigian`, `manhacungcap`, `manv`, `tongtien`, `trangthai`) VALUES
 (1, '2024-09-15 00:45:27', 5, 3, 76900000, 1),
 (2, '2024-09-16 00:51:47', 4, 3, 50000000, 1),
-(3, '2024-09-17 00:55:34', 5, 3, 10000000, 1);
+(3, '2024-09-17 00:55:34', 5, 3, 10000000, 1),
+(4, '2024-11-05 10:37:58', 4, 3, 100000, 1);
 
 -- --------------------------------------------------------
 
@@ -459,7 +508,7 @@ INSERT INTO `sanpham` (`masp`, `tensp`, `size`, `hinhanh`, `xuatxu`, `loai`, `th
 (8, 'Nike Air zoom', 38, 'Nike-Air-zoom.png', 3, 1, 2, 3, 3, 1),
 (9, 'Nike Pegasus', 45, 'Nike-Pegasus.png', 1, 2, 2, 2, 5, 1),
 (10, 'Puma RS-Z AS', 41, 'Puma-RS-Z-AS.png', 1, 2, 3, 2, 0, 1),
-(11, 'Adidas ULTRABOOST LIGHT', 44, 'Adidas-ULTRABOOST-LIGHT.png', 3, 1, 1, 1, 0, 1),
+(11, 'Adidas ULTRABOOST LIGHT', 44, 'Adidas-ULTRABOOST-LIGHT.png', 3, 1, 1, 1, 0, 0),
 (12, 'Puma Caven', 38, 'Puma-Caven.png', 2, 2, 3, 2, 0, 1),
 (13, 'Adidas ADIZERO TAKUMI SEN 10', 45, 'adidas-ADIZERO-TAKUMI-SEN-10.png', 3, 1, 1, 4, 0, 1),
 (14, 'Puma White Black', 40, 'Puma-White-Black.png', 1, 2, 3, 3, 0, 1),
@@ -509,7 +558,8 @@ CREATE TABLE `thuonghieu` (
 INSERT INTO `thuonghieu` (`mathuonghieu`, `tenthuonghieu`, `trangthai`) VALUES
 (1, 'Adidas', 1),
 (2, 'Nike', 1),
-(3, 'Puma', 1);
+(3, 'Puma', 1),
+(5, 'frr', 0);
 
 -- --------------------------------------------------------
 
@@ -556,6 +606,19 @@ ALTER TABLE `ctphieuxuat`
 ALTER TABLE `ctquyen`
   ADD PRIMARY KEY (`manhomquyen`,`machucnang`,`hanhdong`),
   ADD KEY `fk_quyenchucnang` (`machucnang`);
+
+--
+-- Chỉ mục cho bảng `giamgia`
+--
+ALTER TABLE `giamgia`
+  ADD PRIMARY KEY (`magiamgia`);
+
+--
+-- Chỉ mục cho bảng `giamgiasanpham`
+--
+ALTER TABLE `giamgiasanpham`
+  ADD PRIMARY KEY (`magiamgia`,`masp`),
+  ADD KEY `masp` (`masp`);
 
 --
 -- Chỉ mục cho bảng `khachhang`
@@ -662,6 +725,12 @@ ALTER TABLE `ctphieuxuat`
   MODIFY `maphieuxuat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
+-- AUTO_INCREMENT cho bảng `giamgia`
+--
+ALTER TABLE `giamgia`
+  MODIFY `magiamgia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT cho bảng `khachhang`
 --
 ALTER TABLE `khachhang`
@@ -689,7 +758,7 @@ ALTER TABLE `nhacungcap`
 -- AUTO_INCREMENT cho bảng `nhanvien`
 --
 ALTER TABLE `nhanvien`
-  MODIFY `manv` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `manv` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT cho bảng `nhomquyen`
@@ -725,7 +794,7 @@ ALTER TABLE `taikhoan`
 -- AUTO_INCREMENT cho bảng `thuonghieu`
 --
 ALTER TABLE `thuonghieu`
-  MODIFY `mathuonghieu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `mathuonghieu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT cho bảng `xuatxu`
@@ -757,6 +826,13 @@ ALTER TABLE `ctphieuxuat`
 ALTER TABLE `ctquyen`
   ADD CONSTRAINT `fk_nhomquyen` FOREIGN KEY (`manhomquyen`) REFERENCES `nhomquyen` (`manhomquyen`),
   ADD CONSTRAINT `fk_quyenchucnang` FOREIGN KEY (`machucnang`) REFERENCES `quyenchucnang` (`machucnang`);
+
+--
+-- Các ràng buộc cho bảng `giamgiasanpham`
+--
+ALTER TABLE `giamgiasanpham`
+  ADD CONSTRAINT `giamgiasanpham_ibfk_1` FOREIGN KEY (`magiamgia`) REFERENCES `giamgia` (`magiamgia`) ON DELETE CASCADE,
+  ADD CONSTRAINT `giamgiasanpham_ibfk_2` FOREIGN KEY (`masp`) REFERENCES `sanpham` (`masp`) ON DELETE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `phieunhap`

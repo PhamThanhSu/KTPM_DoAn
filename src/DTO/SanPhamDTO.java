@@ -25,6 +25,22 @@ public class SanPhamDTO {
     public SanPhamDTO() {
     }
 
+    public SanPhamDTO(int masp, int size) {
+        this.masp = masp;
+        this.size = size;
+    }
+
+    public SanPhamDTO(int masp, String tensp, int size, int soluongton, int loai, int thuonghieu, int xuatxu, int khuvuckho) {
+        this.masp = masp;
+        this.tensp = tensp;
+        this.size = size;
+        this.xuatxu = xuatxu;
+        this.loai = loai;
+        this.thuonghieu = thuonghieu;
+        this.khuvuckho = khuvuckho;
+        this.soluongton = soluongton;
+    }
+
     public SanPhamDTO(String tensp, int size, String hinhanh, int xuatxu, int loai, int thuonghieu, int khuvuckho) {
         this.tensp = tensp;
         this.size = size;
@@ -93,7 +109,7 @@ public class SanPhamDTO {
     public int getSoluongton() {
         return soluongton;
     }
-    
+
     public void setMasp(int masp) {
         this.masp = masp;
     }
@@ -129,9 +145,7 @@ public class SanPhamDTO {
     public void setSoluongton(int soluongton) {
         this.soluongton = soluongton;
     }
-    
 
-    
 //
 //    @Override
 //    public int hashCode() {
@@ -210,12 +224,9 @@ public class SanPhamDTO {
 //        }
 //        return Objects.equals(this.cameratruoc, other.cameratruoc);
 //    }
-
     @Override
     public String toString() {
         return "SanPhamDTO{" + "masp=" + masp + ", tensp=" + tensp + ", size=" + size + ", hinhanh=" + hinhanh + ", xuatxu=" + xuatxu + ", loai=" + loai + ", thuonghieu=" + thuonghieu + ", khuvuckho=" + khuvuckho + ", soluongton=" + soluongton + '}';
     }
-
- 
 
 }

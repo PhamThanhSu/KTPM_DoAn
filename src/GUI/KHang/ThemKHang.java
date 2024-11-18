@@ -67,16 +67,15 @@ public class ThemKHang extends javax.swing.JFrame {
     private boolean isValidData() {
         String tenKhachHang = txtTenKH.getText();
         String diaChi = txtDiaChi.getText();
-        String soDienThoai = txtSoDT.getText();
-
+        String soDienThoai = txtSoDT.getText().trim();
         if (tenKhachHang.isEmpty() || diaChi.isEmpty() || soDienThoai.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin khách hàng", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
         // Kiểm tra định dạng số điện thoại
-        if (soDienThoai.length() != 10||soDienThoai.startsWith("0") ) {
-            JOptionPane.showMessageDialog(this, "Số điện thoại phải đủ 10 số", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        if (soDienThoai.length() != 10 || !soDienThoai.startsWith("0") ) {
+            JOptionPane.showMessageDialog(this, "Số điện thoại phải đủ 10 số và bắt đầu bằng số 0", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return false;
         }
         if(soDienThoai.matches("0 1 2 3 4 5 6 7 8 9")){

@@ -44,6 +44,7 @@ public class NhanVien extends javax.swing.JPanel implements ActionListener {
     TaiKhoanBUS taiKhoanBUS;
     public ArrayList<NhanVienDTO> listNhanVien = nhanVienBus.getAllNhanVien();
     TaiKhoanDTO taiKhoanDTO;
+
     public NhanVien(TaiKhoanDTO taiKhoanDTO) throws SQLException {
         this.taiKhoanDTO = taiKhoanDTO;
         initComponents();
@@ -72,10 +73,10 @@ public class NhanVien extends javax.swing.JPanel implements ActionListener {
         setPreferredSize(new Dimension(1200, 800));
         this.add(pnlTop, BorderLayout.NORTH);
         this.add(pnlCenter, BorderLayout.CENTER);
-        
+
         txtTimKiem.putClientProperty("JTextField.placeholderText", "Tên nhân viên...");
         btnLamMoi.setIcon(new FlatSVGIcon("./icon/refresh.svg"));
-        
+
         String[] action = {"create", "update", "delete", "view"};
         Map<String, JButton> buttonMap = new HashMap<>();
         buttonMap.put("create", btnThemNV);       // Nút thêm
@@ -95,14 +96,14 @@ public class NhanVien extends javax.swing.JPanel implements ActionListener {
                 timKiemNhanVien(timkiem);
             }
         });
-        
+
         hienThiListNhanVien(listNhanVien);
     }
 
     private void timKiemNhanVien(String keyword) {
         ArrayList<NhanVienDTO> ketQuaTimKiem = new ArrayList<>();
         ArrayList<NhanVienDTO> nhanVienTimKiem = nhanVienBus.getAllNhanVien();
-        for(NhanVienDTO timkiem : nhanVienTimKiem){
+        for (NhanVienDTO timkiem : nhanVienTimKiem) {
             String tenNhanVien = timkiem.getHoten().trim();
             if (tenNhanVien.toLowerCase().contains(keyword.toLowerCase())) {
                 ketQuaTimKiem.add(timkiem);
@@ -318,13 +319,20 @@ public class NhanVien extends javax.swing.JPanel implements ActionListener {
             int maNV = (int) tblNhanVien.getValueAt(selectedRow, 0);
             nhanVienBus = new NhanVienBUS();
             taiKhoanBUS = new TaiKhoanBUS();
-            int manhomquyen = taiKhoanBUS.selectByID(maNV).getManhomquyen();
-            //Không thể xóa Quản lý và chính mình
-            if ((taiKhoanDTO.getManhomquyen() == manhomquyen || manhomquyen == 5) || (taiKhoanDTO.getManv()== selectNhanVien().getManv())) {
-                JOptionPane.showMessageDialog(this, "Không thể xóa tài khoản này!");
-                return; // Ngừng xử lý nếu không được phép cập nhật
+            boolean thanhCong;
+            if (taiKhoanBUS.selectByID(maNV) == null) {
+                nhanVienBus.xoaNhanVien(maNV);
+                thanhCong = true;
+            } else {
+                int manhomquyen = taiKhoanBUS.selectByID(maNV).getManhomquyen();
+                //Không thể xóa Quản lý và chính mình
+                if ((taiKhoanDTO.getManhomquyen() == manhomquyen || manhomquyen == 5) || (taiKhoanDTO.getManv() == selectNhanVien().getManv())) {
+                    JOptionPane.showMessageDialog(this, "Không thể xóa tài khoản này!");
+                    return; // Ngừng xử lý nếu không được phép cập nhật
+                }
+                thanhCong = nhanVienBus.xoaNhanVien(maNV);
             }
-            boolean thanhCong = nhanVienBus.xoaNhanVien(maNV);
+
             if (thanhCong) {
                 JOptionPane.showMessageDialog(null, "Xóa nhân viên thành công");
                 listNhanVien = nhanVienBus.getAllNhanVien();
@@ -332,6 +340,7 @@ public class NhanVien extends javax.swing.JPanel implements ActionListener {
             } else {
                 JOptionPane.showMessageDialog(null, "Xóa nhân viên lỗi");
             }
+
         } else {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên để xóa");
         }

@@ -154,13 +154,13 @@ public class PhieuNhapDAO {
             // Lấy danh sách các sản phẩm trong phiếu nhập
             ArrayList<ChiTietPhieuNhapDTO> listPn = ChiTietPhieuNhapDAO.getInstance().selectAll(Integer.toString(mapn));
 
-            // Kiểm tra xem có sản phẩm nào đã bán hay không
-            for (ChiTietPhieuNhapDTO chiTiet : listPn) {
-                if (chiTiet.getSoluongconlai() < chiTiet.getSoluong()) {
-                    JOptionPane.showMessageDialog(null, "Phiếu này có sản phẩm đã bán, không thể hủy!");
-                    return false; // Dừng quá trình xóa ngay lập tức
-                }
-            }
+//            // Kiểm tra xem có sản phẩm nào đã bán hay không
+//            for (ChiTietPhieuNhapDTO chiTiet : listPn) {
+//                if (chiTiet.getSoluongconlai() < chiTiet.getSoluong()) {
+//                    JOptionPane.showMessageDialog(null, "Phiếu này có sản phẩm đã bán, bạn có muốn hủy không!");
+//                    return false; // Dừng quá trình xóa ngay lập tức
+//                }
+//            }
 
             // Xóa chi tiết phiếu nhập
             String sqlDeleteChiTietPhieuNhap = "DELETE FROM ctphieunhap WHERE maphieunhap = ?";
@@ -177,8 +177,14 @@ public class PhieuNhapDAO {
             if (rowsDeletedPhieuNhap > 0 && rowsDeletedChiTiet > 0) {
                 // Cập nhật số lượng tồn của các sản phẩm
                 for (ChiTietPhieuNhapDTO chiTiet : listPn) {
-                    ChiTietPhieuNhapDAO.getInstance().updateSoluongton(chiTiet.getMasp(), -chiTiet.getSoluong());
-                    ChiTietPhieuNhapDAO.getInstance().updateSoluongCTPN(chiTiet.getMasp(), mapn, mapn);
+                    if (chiTiet.getSoluongconlai() < chiTiet.getSoluong()) {
+                        JOptionPane.showMessageDialog(null, "Phiếu này có sản phẩm đã bán, hủy phiếu sẽ không cập nhật lại số lượng tồn!");
+                        return true; // thông báo sản phẩm đã bán, hủy phiếu sẽ không cập nhật lại số lượng tồn kho
+                    } else {
+                        ChiTietPhieuNhapDAO.getInstance().updateSoluongton(chiTiet.getMasp(), -chiTiet.getSoluong());
+                        ChiTietPhieuNhapDAO.getInstance().updateSoluongCTPN(chiTiet.getMasp(), mapn, mapn);
+                    }
+
                 }
                 thanhCong = true;
             }
