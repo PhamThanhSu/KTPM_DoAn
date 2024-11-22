@@ -30,7 +30,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JComboBox;
@@ -40,8 +39,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.text.DecimalFormat;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,86 +49,38 @@ import java.util.logging.Logger;
 public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
 
     Main main;
-    PhieuNhap phieuNhap;
-    ThuongHieuDAO thuongHieuDAO;
     LoaiDAO loaiDAO;
     XuatXuDAO xuatXuDAO;
-    NhaCungCapDAO nhaCungCapDAO;
-    SanPhamBUS sanPhamBUS;
-    SanPhamPhieuNhapBUS sanPhamPhieuNhapBUS;
-    SanPhamPhieuNhapDAO sanPhamPhieuNhapDAO;
-    ChiTietPhieuNhapDAO chiTiet;
-    ChiTietPhieuNhapDAO chiTietPhieuNhapDAO;
     PhieuNhapDAO phieuNhapDAO;
+    ThuongHieuDAO thuongHieuDAO;
+    NhaCungCapDAO nhaCungCapDAO;
+    SanPhamPhieuNhapDAO sanPhamPhieuNhapDAO;
+    ChiTietPhieuNhapDAO chiTietPhieuNhapDAO;
+    SanPhamBUS sanPhamBUS;
+    NhanVienBUS nhanVienBUS;
+    SanPhamPhieuNhapBUS sanPhamPhieuNhapBUS;
+    TaiKhoanDTO taiKhoanDTO;
     ChiTietPhieuNhapDTO chiTietPhieuNhapDTO;
     //ArrayList<SanPhamDTO> productList;
     private DefaultTableModel tblModel;
     private JComboBox<String> comboBox;
     private NhaCungCapBUS nhaCungCapBUS;
     // Khai báo cấu trúc dữ liệu để lưu thông tin sản phẩm đã được chọn
-    private ArrayList<SanPhamDTO> productList = new ArrayList<>();
-    private ArrayList<PhieuNhapDTO> selectedPNproducts = new ArrayList<>();
     long totalPrice = 0;
     int rowNum = 1; // Biến đếm số thứ tự hàng
 
+    // Constructor không tham số
     public TaoPhieuNhap() {
-        nhaCungCapBUS = new NhaCungCapBUS();
-        sanPhamPhieuNhapBUS = new SanPhamPhieuNhapBUS();
-        sanPhamPhieuNhapDAO = new SanPhamPhieuNhapDAO();
-        chiTiet = new ChiTietPhieuNhapDAO();
-        phieuNhapDAO = new PhieuNhapDAO();
-        BuildTable buildTable = new BuildTable();
-        initComponents();
-        btnsuasanpham.setVisible(false);
-        btnxoasanpham.setVisible(false);
-
-        // Tạo mã phiếu nhập mới
-        int soLuongPhieuNhapDaTao = phieuNhapDAO.getLatestMaPhieuNhap();
-        int maPhieuNhap = ++soLuongPhieuNhapDaTao;
-        txtmaphieunhap.setText("PN" + (maPhieuNhap));
-        txtmaphieunhap.setEditable(false);
-        txtmasanpham.setEditable(false);
-        txttensanpham.setEditable(false);
-        txtloinhuan.setEditable(false);
-        txtnhanviennhap.setEditable(false);
-        CBBNhaCungCap(cbbnhacc);
-
-        tblsoluongsanpham.setDefaultEditor(Object.class, null);
-        tblsoluongsanpham.setFocusable(false);
-        tblthongtinspdathem.setDefaultEditor(Object.class, null);
-        tblthongtinspdathem.setFocusable(false);
-
-        // Gọi phương thức getListSanPham từ SanPhamPhieuNhapBUS để lấy danh sách sản phẩm từ cơ sở dữ liệu
-        SanPhamPhieuNhapBUS sanPhamPhieuNhapBUS = new SanPhamPhieuNhapBUS();
-        ArrayList<SanPhamDTO> list = sanPhamPhieuNhapBUS.getListSanPham();
-        // Cập nhật dữ liệu vào bảng
-        buildTable.updateTableProductsPN(tblsoluongsanpham, list);
-
-        tblsoluongsanpham.addMouseListener(this);
-        tblthongtinspdathem.addMouseListener(this);
-        cbbnhacc.addMouseListener(this);
-
-        txtsearch.putClientProperty("JTextField.placeholderText", "Tên sản phẩm, mã sản phẩm...");
-        txtsearch.putClientProperty("JTextField.showClearButton", true);
-        txtsearch.putClientProperty("JTextField.leadingIcon", new FlatSVGIcon("./icon/search.svg"));
-        txtsearch.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                sanPhamBUS = new SanPhamBUS();
-                ArrayList<SanPhamDTO> rs = sanPhamBUS.searchPN(txtsearch.getText());
-                buildTable.updateTableProductsPN(tblsoluongsanpham, rs);
-            }
-        });
+        initializeComponents(null);  // Truyền null vì không cần thông tin tài khoản
     }
-    NhanVienBUS nhanVienBUS = new NhanVienBUS();
-    TaiKhoanDTO taiKhoanDTO;
 
+// Constructor có tham số
     public TaoPhieuNhap(TaiKhoanDTO taiKhoanDTO) {
-        nhaCungCapBUS = new NhaCungCapBUS();
         this.taiKhoanDTO = taiKhoanDTO;
-        sanPhamPhieuNhapBUS = new SanPhamPhieuNhapBUS();
-        sanPhamPhieuNhapDAO = new SanPhamPhieuNhapDAO();
-        chiTiet = new ChiTietPhieuNhapDAO();
+        initializeComponents(this.taiKhoanDTO);  // Truyền đối tượng taiKhoanDTO nếu cần
+    }
+
+    private void initializeComponents(TaiKhoanDTO taiKhoanDTO) {
         phieuNhapDAO = new PhieuNhapDAO();
         BuildTable buildTable = new BuildTable();
         initComponents();
@@ -155,7 +104,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
         tblthongtinspdathem.setFocusable(false);
 
         // Gọi phương thức getListSanPham từ SanPhamPhieuNhapBUS để lấy danh sách sản phẩm từ cơ sở dữ liệu
-        SanPhamPhieuNhapBUS sanPhamPhieuNhapBUS = new SanPhamPhieuNhapBUS();
+        sanPhamPhieuNhapBUS = new SanPhamPhieuNhapBUS();
         ArrayList<SanPhamDTO> list = sanPhamPhieuNhapBUS.getListSanPham();
         // Cập nhật dữ liệu vào bảng
         buildTable.updateTableProductsPN(tblsoluongsanpham, list);
@@ -174,29 +123,30 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
                 buildTable.updateTableProductsPN(tblsoluongsanpham, rs);
             }
         });
-        txtnhanviennhap.setText(nhanVienBUS.selectByID(taiKhoanDTO.getManv()).getHoten());
+        
+        if (taiKhoanDTO != null) {
+            nhanVienBUS = new NhanVienBUS();
+            txtnhanviennhap.setText(nhanVienBUS.selectByID(taiKhoanDTO.getManv()).getHoten());
+        }
+
         cbbnhacc.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     Object selectedNCC = cbbnhacc.getSelectedItem();
-
-                    // Kiểm tra xem selectedNCC có null không trước khi tiếp tục
                     if (selectedNCC != null) {
+                        nhaCungCapBUS = new NhaCungCapBUS();
                         NhaCungCapDTO nhaCungCapDTO = nhaCungCapBUS.selectByTenNCC((String) selectedNCC);
-
-                        // Kiểm tra nhaCungCapDTO có null không trước khi truy cập thuộc tính
                         if (nhaCungCapDTO != null) {
                             txtloinhuan.setText(String.valueOf(nhaCungCapDTO.getPhantramloinhuan()));
                         } else {
-                            txtloinhuan.setText("");  // Đặt giá trị mặc định nếu không tìm thấy nhà cung cấp
+                            txtloinhuan.setText("");
                             JOptionPane.showMessageDialog(null, "Không tìm thấy nhà cung cấp này!");
                         }
                     }
                 }
             }
         });
-
     }
 
     @Override
@@ -752,7 +702,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
 
             PhieuNhapDTO pn = new PhieuNhapDTO(maphieunhap, timestamp, mancc, manv, tongtien, 1);
 
-            phieuNhapDAO = new PhieuNhapDAO();
+            //phieuNhapDAO = new PhieuNhapDAO();
             phieuNhapDAO.insertPhieuNhap(pn, now);
             addChiTietPhieuNhapToDatabase();
             JOptionPane.showMessageDialog(null, "Tạo phiếu nhập thành công");
@@ -771,15 +721,24 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
         String maphieunhapstr = txtmaphieunhap.getText().replaceAll("[PN.,đ]", "").trim();
         int maphieunhap = Integer.parseInt(maphieunhapstr);
         int loinhuan = Integer.parseInt(txtloinhuan.getText());
+        int giaxuat = 0;
+        int masp = 0;
         for (int i = 0; i < model.getRowCount(); i++) {
-            int masp = (int) model.getValueAt(i, 1);
+            masp = (int) model.getValueAt(i, 1);
             int soluong = (int) model.getValueAt(i, 8);
             String gianhapsrt = model.getValueAt(i, 7).toString();
             int gianhap = Integer.parseInt(gianhapsrt.replaceAll("[.,đ]", "").trim());
-            int giaxuat = gianhap + (gianhap * loinhuan / 100);
+            giaxuat = gianhap + (gianhap * loinhuan / 100);
             try {
-                chiTiet.updateSoluongton(masp, soluong);
-                ChiTietPhieuNhapDTO chiTietPhieuNhapDTO = new ChiTietPhieuNhapDTO(maphieunhap, masp, soluong, gianhap, giaxuat);
+                if (chiTietPhieuNhapDAO.selectSPGiaXuatLonNhatByID(masp) != null) {
+                    int giaxuatmoi = chiTietPhieuNhapDAO.selectSPGiaXuatLonNhatByID(masp).getGiaxuat();
+                    if (giaxuat < giaxuatmoi) //Khi nhập sản phẩm nhiều lần, giá bán sẽ lấy theo giá lần nhập cao nhất, giá nhập vẫn giữ nguyên
+                    {
+                        giaxuat = giaxuatmoi;
+                    }
+                }
+                chiTietPhieuNhapDAO.updateSoluongton(masp, soluong);
+                chiTietPhieuNhapDTO = new ChiTietPhieuNhapDTO(maphieunhap, masp, soluong, gianhap, giaxuat);
                 chiTietPhieuNhapDAO.updateSoluongCTPN(masp, soluong, maphieunhap);
                 chiTietPhieuNhapList.add(chiTietPhieuNhapDTO);
                 hasProductsToImport = true;
@@ -791,8 +750,8 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
         }
 
         if (hasProductsToImport) {
-            chiTietPhieuNhapDAO = new ChiTietPhieuNhapDAO();
             chiTietPhieuNhapDAO.insert(chiTietPhieuNhapList);
+            chiTietPhieuNhapDAO.updateGiaXuat(masp, giaxuat);
         }
     }
 
@@ -809,6 +768,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
             JOptionPane.showMessageDialog(null, "Số lượng sản phẩm phải lớn hơn 0");
         } else {
             int masp = Integer.parseInt(txtmasanpham.getText());
+            sanPhamPhieuNhapDAO = new SanPhamPhieuNhapDAO();
             tblModel = (DefaultTableModel) tblthongtinspdathem.getModel(); // Lấy mô hình dữ liệu từ bảng
             ArrayList<SanPhamDTO> newProductList = sanPhamPhieuNhapDAO.getListSanPham(masp);
             // Cập nhật dữ liệu trong bảng
@@ -886,14 +846,14 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
                 table.setValueAt(decimalFormat.format(gianhap), selectedRow, 7);
                 updateTotalPrice();
             } else {
-                    // Hiển thị thông báo khi số lượng nhập vào là một số âm
-                    JOptionPane.showMessageDialog(this, "Số lượng sản phẩm phải lớn hơn 0.");
-                }
+                // Hiển thị thông báo khi số lượng nhập vào là một số âm
+                JOptionPane.showMessageDialog(this, "Số lượng sản phẩm phải lớn hơn 0.");
+            }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng là một số nguyên.");
         }
     }
-    
+
     private void handleUpdateByMaSP(String updatesoluong, String gianhapstr, int selectedRowSPDangChon) {
         try {
             int soluong = Integer.parseInt(updatesoluong);
@@ -911,7 +871,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
             JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng là một số nguyên.");
         }
     }
-    
+
     private boolean updateSoluongVaGiaNhapByMaSP(int masp, int soluong, int gianhap) {
         int rowCount = tblthongtinspdathem.getRowCount();
         DecimalFormat decimalFormat = new DecimalFormat("#,### đ");
@@ -988,6 +948,7 @@ public class TaoPhieuNhap extends javax.swing.JPanel implements MouseListener {
     // Thêm nhà cung cấp vào combobox
     public void CBBNhaCungCap(JComboBox<String> comboBox) {
         // Gọi phương thức getAllNhaCungCap từ nhaCungCapBUS để lấy danh sách nhà cung cấp từ cơ sở dữ liệu
+        nhaCungCapBUS = new NhaCungCapBUS();
         ArrayList<NhaCungCapDTO> nhaCungCapList = nhaCungCapBUS.getAllNhaCungCap();
         ArrayList<String> tenNhaCungCapList = new ArrayList<>();
 

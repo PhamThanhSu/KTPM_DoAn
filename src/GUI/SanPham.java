@@ -14,7 +14,7 @@ import DTO.KhuVucKhoDTO;
 import DTO.LoaiDTO;
 import DTO.SanPhamDTO;
 import DTO.TaiKhoanDTO;
-import DTO.ThuocTinhSanPham.XuatXuDTO;
+import DTO.XuatXuDTO;
 import DTO.ThuongHieuDTO;
 import GUI.Component.CheckAction;
 import GUI.SPham.ChiTietSanPham;
@@ -404,6 +404,11 @@ public class SanPham extends javax.swing.JPanel implements ActionListener {
 
         btnChiTietSP.setText("Chi tiết");
         btnChiTietSP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnChiTietSP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChiTietSPActionPerformed(evt);
+            }
+        });
         pnlTop.add(btnChiTietSP);
 
         btnXuatExcelSP.setText("Xuất excel");
@@ -511,10 +516,6 @@ public class SanPham extends javax.swing.JPanel implements ActionListener {
 
     private void txtTimKiemKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKiemKeyPressed
         // TODO add your handling code here:
-//        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-//            String keyword = txtTimKiem.getText().trim();
-//            timKiemSanPham(keyword);
-//        }
     }//GEN-LAST:event_txtTimKiemKeyPressed
 
     private void tblSanPhamMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSanPhamMouseClicked
@@ -575,6 +576,10 @@ public class SanPham extends javax.swing.JPanel implements ActionListener {
     private void btnSuaSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuaSPActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSuaSPActionPerformed
+
+    private void btnChiTietSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChiTietSPActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnChiTietSPActionPerformed
 
     private void xoaSanPham() {
         int selectedRow = tblSanPham.getSelectedRow();

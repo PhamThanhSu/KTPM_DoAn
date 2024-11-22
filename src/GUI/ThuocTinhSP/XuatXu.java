@@ -6,7 +6,7 @@ package GUI.ThuocTinhSP;
 
 import BUS.XuatXuBUS;
 import DTO.TaiKhoanDTO;
-import DTO.ThuocTinhSanPham.XuatXuDTO;
+import DTO.XuatXuDTO;
 import GUI.Component.CheckAction;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Color;

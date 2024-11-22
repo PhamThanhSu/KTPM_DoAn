@@ -13,7 +13,7 @@ import DTO.GiamGiaSanPhamDTO;
 import DTO.NhomQuyenDTO;
 import DTO.SanPhamDTO;
 import DTO.TaiKhoanDTO;
-import DTO.ThuocTinhSanPham.XuatXuDTO;
+import DTO.XuatXuDTO;
 import GUI.Component.CheckAction;
 import GUI.Panel.TaoPhieuNhap;
 import GUI.PhanQuyen;

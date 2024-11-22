@@ -15,8 +15,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class PhieuXuatBUS {
-
-    PhieuXuatDAO phieuXuatDAO = new PhieuXuatDAO();
+    
+    private PhieuXuatDAO phieuXuatDAO;
+    //PhieuXuatDAO phieuXuatDAO = new PhieuXuatDAO();
     KhachHangBUS khachHangBUS = new KhachHangBUS();
     NhanVienBUS nhanVienBUS = new NhanVienBUS();
     ChiTietPhieuXuatDAO chiTietPhieuXuatDAO = new ChiTietPhieuXuatDAO();
@@ -24,8 +25,9 @@ public class PhieuXuatBUS {
     ArrayList<PhieuXuatDTO> selectedPXproducts;
 
     public PhieuXuatBUS() {
+        phieuXuatDAO = PhieuXuatDAO.getInstance();
     }
-
+    
     public ArrayList<PhieuXuatDTO> getAllPhieuXuat() {
         return phieuXuatDAO.getAllPhieuXuat();
     }
@@ -34,8 +36,8 @@ public class PhieuXuatBUS {
         return phieuXuatDAO.selectById(mapn);
     }
 
-    public ArrayList<ChiTietPhieuXuatDTO> getAllChiTietPhieuXuat(int mapn) {
-        return chiTietPhieuXuatDAO.getAllChiTietPhieuXuat(mapn);
+    public ArrayList<ChiTietPhieuXuatDTO> getAllChiTietPhieuXuat(int mapx) {
+        return chiTietPhieuXuatDAO.getAllChiTietPhieuXuat(mapx);
     }
 
     public boolean DeletePhieuXuat(int mapx) {

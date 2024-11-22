@@ -6,11 +6,14 @@ package GUI.PXuat;
 
 import BUS.GiamGiaBUS;
 import BUS.KhachHangBUS;
+import DAO.ChiTietPhieuNhapDAO;
 import DTO.KhachHangDTO;
 import DAO.KhachHangDAO;
 import DTO.GiamGiaDTO;
 import GUI.Panel.TaoPhieuNhap;
 import GUI.Panel.TaoPhieuXuatt;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,10 +21,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -31,30 +38,34 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author this pc
  */
-public class ChonGiamGia extends javax.swing.JPanel implements MouseListener, ActionListener{
+public class ChonGiamGia extends javax.swing.JPanel implements MouseListener, ActionListener {
 
     DefaultTableModel model;
     ArrayList<GiamGiaDTO> listGiamGia;
     GiamGiaBUS giamGiaBUS;
     TaoPhieuNhap taoPhieuNhap;
+    ChiTietPhieuNhapDAO chiTietPhieuNhapDAO;
     private TaoPhieuXuatt taoPhieuXuat;
     private int maGiamGia = -1;
+    private long tongtiengoc;
 
     /**
      * Creates new form ChonKhachHang
      */
     public ChonGiamGia() throws SQLException {
+        this(0);
+    }
+
+    public ChonGiamGia(long tongtiengoc) throws SQLException {
         initComponents();
         giamGiaBUS = new GiamGiaBUS();
         taoPhieuNhap = new TaoPhieuNhap();
-        taoPhieuXuat = new TaoPhieuXuatt();
-        this.taoPhieuXuat = taoPhieuXuat;
-        // taoPhieuXuat = new TaoPhieuXuatt();
+        this.tongtiengoc = tongtiengoc;
         listGiamGia = giamGiaBUS.getGiamGiaTuNgayHienTai();
 
         tblgiamgia.setDefaultEditor(Object.class, null);
         tblgiamgia.setFocusable(false);
-        
+
         btnchongiamgia.addActionListener(this);
 
         LoadDataTable(listGiamGia);
@@ -166,22 +177,6 @@ public class ChonGiamGia extends javax.swing.JPanel implements MouseListener, Ac
 
     }//GEN-LAST:event_btnchongiamgiaActionPerformed
 
-//    public int themGiamGia() throws SQLException {
-//        GiamGiaDTO selectedGiamGia = SelectGiamGia();
-//        int maGiamGia = -1;
-//        if (selectedGiamGia == null) {
-//            JOptionPane.showMessageDialog(this, "Vui lòng chọn giảm giá!", "Chưa chọn khách hàng", JOptionPane.WARNING_MESSAGE);
-//        } else {
-//            // Đóng dialog chứa panel
-//            maGiamGia = selectedGiamGia.getMagiamgia();
-//            Window window = SwingUtilities.getWindowAncestor(this); // Lấy ra cửa sổ chứa panel
-//            if (window instanceof JDialog) {
-//                JDialog dialog = (JDialog) window;
-//                dialog.dispose(); // Đóng dialog
-//            }
-//        }
-//        return maGiamGia;
-//    }
     public int themGiamGia() throws SQLException {
         GiamGiaDTO selectedGiamGia = SelectGiamGia();
 
@@ -200,7 +195,7 @@ public class ChonGiamGia extends javax.swing.JPanel implements MouseListener, Ac
         }
         System.out.println("đã chọn " + maGiamGia);
         return maGiamGia;
-        
+
     }
 
 //HÀM LẤY RA GIẢM GIÁ KHI CLICK VÀO KHÁCH HÀNG TRONG BẢNG 
@@ -216,13 +211,19 @@ public class ChonGiamGia extends javax.swing.JPanel implements MouseListener, Ac
     }
 
     //HÀM HIỆN GIẢM GIÁ LÊN BẢNG
-    public void LoadDataTable(ArrayList<GiamGiaDTO> ListKhachHang) {
-        DefaultTableModel model = (DefaultTableModel) tblgiamgia.getModel();
+    private void LoadDataTable(ArrayList<GiamGiaDTO> listGiamGia) {
+        model = (DefaultTableModel) tblgiamgia.getModel();
         model.setRowCount(0);
-        int stt = 0;
-        for (GiamGiaDTO giamgia : listGiamGia) {
+
+        Set<Integer> invalidRows = new HashSet<>();
+
+        // Duyệt qua danh sách giảm giá và kiểm tra tính hợp lệ
+        for (int stt = 0; stt < listGiamGia.size(); stt++) {
+            GiamGiaDTO giamgia = listGiamGia.get(stt);
+            boolean isValid = isValidDiscount(giamgia);
+
             Object[] rowData = {
-                stt++,
+                stt + 1, // Thêm số thứ tự
                 giamgia.getMagiamgia(),
                 giamgia.getTengiamgia(),
                 giamgia.getPhantramgiam(),
@@ -232,13 +233,57 @@ public class ChonGiamGia extends javax.swing.JPanel implements MouseListener, Ac
                 giamgia.getTrangthai()
             };
             model.addRow(rowData);
+
+            // Lưu chỉ số dòng không hợp lệ
+            if (!isValid) {
+                invalidRows.add(stt);
+            }
         }
-        // Tạo renderer để hiển thị nội dung ở giữa ô
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Cập nhật renderer cho bảng
+        setTableRenderer(invalidRows);
+
+        // Cập nhật chế độ chọn dòng
+        setRowSelectionModel(invalidRows);
+    }
+
+    // Phương thức kiểm tra tính hợp lệ của giảm giá
+    private boolean isValidDiscount(GiamGiaDTO giamgia) {
+        return giamgia.getGiatrihoadon() <= tongtiengoc;
+    }
+
+    // Cập nhật renderer cho bảng
+    private void setTableRenderer(Set<Integer> invalidRows) {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (invalidRows.contains(row)) {
+                    c.setBackground(new Color(245, 245, 245)); // Làm mờ nền
+                } else {
+                    c.setBackground(isSelected ? Color.LIGHT_GRAY : Color.WHITE); // Hiệu ứng khi chọn
+                }
+                return c;
+            }
+        };
+
         for (int i = 0; i < tblgiamgia.getColumnCount(); i++) {
             tblgiamgia.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
+    }
+
+    // Cập nhật chế độ chọn dòng
+    private void setRowSelectionModel(Set<Integer> invalidRows) {
+        tblgiamgia.setSelectionModel(new DefaultListSelectionModel() {
+            @Override
+            public void setSelectionInterval(int index0, int index1) {
+                if (invalidRows.contains(index0)) {
+                    clearSelection(); // Bỏ qua dòng không hợp lệ
+                } else {
+                    super.setSelectionInterval(index0, index1); // Cho phép chọn dòng hợp lệ
+                }
+            }
+        });
     }
 
     public void actionPerformed(ActionEvent e) {

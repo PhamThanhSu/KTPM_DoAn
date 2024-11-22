@@ -469,7 +469,9 @@ public class FormGiamGiaDialog extends javax.swing.JDialog {
             int maGiamGiaMoi = Integer.parseInt(maGiamGiaMoistr);
             int phanTramGiam = Integer.parseInt(phanTramGiamstr);
             long hoaDonToiThieu = Long.parseLong(hoaDonToiThieustr);
-            giamGiaDTO = new GiamGiaDTO(maGiamGiaMoi, tenGiamGia, phanTramGiam, hoaDonToiThieu, ngayBatDau, ngayKetThuc, "Có hiệu lực");
+            String trangthai = (String) cbbtrangthai.getSelectedItem();
+
+            giamGiaDTO = new GiamGiaDTO(maGiamGiaMoi, tenGiamGia, phanTramGiam, hoaDonToiThieu, ngayBatDau, ngayKetThuc, trangthai);
 
             boolean thanhCong = giamGiaBUS.insertGiamGia(giamGiaDTO);
             if (thanhCong) {

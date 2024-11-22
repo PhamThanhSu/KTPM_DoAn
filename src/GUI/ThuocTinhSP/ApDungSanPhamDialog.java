@@ -63,10 +63,11 @@ public class ApDungSanPhamDialog extends JDialog implements ActionListener {
     public ArrayList<GiamGiaSanPhamDTO> getListSanPhamDaChon() {
         return selectedProducts;
     }
-    
-    public ApDungSanPhamDialog(GiamGia giamGia){
+
+    public ApDungSanPhamDialog(GiamGia giamGia) {
         this.giamGia = giamGia;
     }
+
     public ApDungSanPhamDialog(ArrayList<GiamGiaSanPhamDTO> selectedProducts) {
         //this.setModal(true);
         this.selectedProducts = selectedProducts != null ? selectedProducts : new ArrayList<>();
@@ -122,7 +123,21 @@ public class ApDungSanPhamDialog extends JDialog implements ActionListener {
         this.add(scrollPane, BorderLayout.CENTER);
         this.add(jpBottom, BorderLayout.SOUTH);
 
+        tbnchontatcasp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectAllRows();
+            }
+        });
+
         this.setVisible(true);
+    }
+
+    private void selectAllRows() {
+        DefaultTableModel model = (DefaultTableModel) tblchonsanphamapdung.getModel();
+        for (int row = 0; row < model.getRowCount(); row++) {
+            model.setValueAt(true, row, 0); // Set the first column (checkbox column) to true
+        }
     }
 
     private void loadProductData(ArrayList<GiamGiaSanPhamDTO> selectedProducts) {
@@ -181,6 +196,7 @@ public class ApDungSanPhamDialog extends JDialog implements ActionListener {
         this.dispose();
     }
 // Phương thức để lấy danh sách sản phẩm đã chọn
+
     public ArrayList<GiamGiaSanPhamDTO> danhSachSanPhamApDungGiamGia(int magiamgia) throws SQLException {
         ArrayList<GiamGiaSanPhamDTO> selectedProductsTemp = new ArrayList<>();
 

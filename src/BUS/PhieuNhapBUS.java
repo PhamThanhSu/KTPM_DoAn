@@ -37,7 +37,7 @@ public class PhieuNhapBUS {
     }
 
     public ArrayList<ChiTietPhieuNhapDTO> getListChiTietPhieuNhap(int mapn) {
-        return chiTietPhieuNhapDAO.getAllChiTietPhieuNhap(mapn);
+        return chiTietPhieuNhapDAO.getAllChiTietPhieuNhapByMaPN(mapn);
     }
 
     public boolean DeletePhieuNhap(int mapn) {

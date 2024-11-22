@@ -1,6 +1,8 @@
 package GUI;
 
+import BUS.GiamGiaBUS;
 import BUS.TaiKhoanBUS;
+import DTO.GiamGiaDTO;
 import DTO.TaiKhoanDTO;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.formdev.flatlaf.FlatLaf;
@@ -12,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
@@ -253,7 +256,7 @@ public class Login extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws SQLException {
         FlatRobotoFont.install();
         FlatLaf.setPreferredFontFamily(FlatRobotoFont.FAMILY);
         FlatLaf.setPreferredLightFontFamily(FlatRobotoFont.FAMILY_LIGHT);
@@ -263,6 +266,12 @@ public class Login extends javax.swing.JFrame {
         UIManager.put("PasswordField.showRevealButton", true);
         UIManager.put("Button.arc", 50);
         Login login = new Login();
+        GiamGiaBUS giamGiaBUS = new GiamGiaBUS();
+        ArrayList<GiamGiaDTO> giamGiaDTOs = giamGiaBUS.getAllGiamGia();
+        // Cập nhật trạng thái cho từng mã giảm giá
+        for (GiamGiaDTO giamGia : giamGiaDTOs) {
+            giamGiaBUS.updateGiamGiaTrangThai(giamGia);
+        }
         login.setVisible(true);
     }
 

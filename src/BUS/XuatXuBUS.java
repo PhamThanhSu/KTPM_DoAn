@@ -5,7 +5,7 @@
 package BUS;
 
 import DAO.XuatXuDAO;
-import DTO.ThuocTinhSanPham.XuatXuDTO;
+import DTO.XuatXuDTO;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 

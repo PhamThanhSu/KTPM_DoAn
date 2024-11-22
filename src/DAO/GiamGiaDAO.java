@@ -3,6 +3,8 @@ package DAO;
 import DTO.GiamGiaDTO;
 import config.MySQLConnection;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -21,7 +23,7 @@ public class GiamGiaDAO {
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             // Bổ sung magiamgia vào câu lệnh INSERT
-            pstmt.setInt(1, giamGia.getMagiamgia()); 
+            pstmt.setInt(1, giamGia.getMagiamgia());
             pstmt.setString(2, giamGia.getTengiamgia());
             pstmt.setInt(3, giamGia.getPhantramgiam());
             pstmt.setLong(4, giamGia.getGiatrihoadon());
@@ -56,26 +58,26 @@ public class GiamGiaDAO {
         }
         return list;
     }
+
     //Lấy ra giảm giá hợp lệ trong khoảng thời gian hiện tại
     public ArrayList<GiamGiaDTO> getGiamGiaTuNgayHienTai() throws SQLException {
-    ArrayList<GiamGiaDTO> list = new ArrayList<>();
-    String sql = "SELECT * FROM giamgia WHERE ngaybatdau <= CURDATE()"; // CURDATE() lấy ngày hiện tại (chỉ ngày, không giờ)
-    try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
-        while (rs.next()) {
-            GiamGiaDTO giamGia = new GiamGiaDTO();
-            giamGia.setMagiamgia(rs.getInt("magiamgia"));
-            giamGia.setTengiamgia(rs.getString("tengiamgia"));
-            giamGia.setPhantramgiam(rs.getInt("phantramgiam"));
-            giamGia.setGiatrihoadon(rs.getLong("giatrihoadon"));
-            giamGia.setNgaybatdau(rs.getDate("ngaybatdau"));
-            giamGia.setNgayketthuc(rs.getDate("ngayketthuc"));
-            giamGia.setTrangthai(rs.getString("trangthai"));
-            list.add(giamGia);
+        ArrayList<GiamGiaDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM giamgia WHERE ngaybatdau <= CURDATE()"; // CURDATE() lấy ngày hiện tại (chỉ ngày, không giờ)
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                GiamGiaDTO giamGia = new GiamGiaDTO();
+                giamGia.setMagiamgia(rs.getInt("magiamgia"));
+                giamGia.setTengiamgia(rs.getString("tengiamgia"));
+                giamGia.setPhantramgiam(rs.getInt("phantramgiam"));
+                giamGia.setGiatrihoadon(rs.getLong("giatrihoadon"));
+                giamGia.setNgaybatdau(rs.getDate("ngaybatdau"));
+                giamGia.setNgayketthuc(rs.getDate("ngayketthuc"));
+                giamGia.setTrangthai(rs.getString("trangthai"));
+                list.add(giamGia);
+            }
         }
+        return list;
     }
-    return list;
-}
-
 
     public GiamGiaDTO SelectGiamGiabyID(int magiamgia) throws SQLException {
         String sql = "SELECT * FROM giamgia WHERE magiamgia = ?";
@@ -115,6 +117,48 @@ public class GiamGiaDAO {
         }
     }
 
+    public boolean updateGiamGiaTrangThai(GiamGiaDTO giamGia) throws SQLException {
+        String sql = "UPDATE giamgia SET trangthai = ? WHERE magiamgia = ?";
+
+        // Lấy ngày hiện tại (java.sql.Date)
+        java.sql.Date currentDateSQL = new java.sql.Date(System.currentTimeMillis());
+
+        // Chuyển đổi ngày bắt đầu và kết thúc từ java.sql.Date sang LocalDate
+        java.sql.Date ngayBatDau = (java.sql.Date) giamGia.getNgaybatdau();
+        java.sql.Date ngayKetThuc = (java.sql.Date) giamGia.getNgayketthuc(); // Đảm bảo ngày kết thúc là kiểu java.sql.Date
+
+        // Kiểm tra nếu ngày kết thúc đã quá ngày hiện tại
+        boolean isExpired = isExpired(currentDateSQL, ngayKetThuc);
+        boolean isStartingSoon = isStartingSoon(currentDateSQL, ngayBatDau, giamGia.getTrangthai());
+
+        String newTrangThai = giamGia.getTrangthai();
+
+        // Nếu mã giảm giá đã hết hạn
+        if (isExpired) {
+            newTrangThai = "Hết hiệu lực";
+        } // Nếu ngày bắt đầu là ngày hiện tại hoặc sau và trạng thái trước đó là "Sắp bắt đầu"
+        else if (isStartingSoon) {
+            newTrangThai = "Có hiệu lực";
+        }
+
+        // Cập nhật trạng thái nếu có thay đổi
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, newTrangThai);  // Cập nhật trạng thái mới
+            pstmt.setInt(2, giamGia.getMagiamgia());
+            return pstmt.executeUpdate() > 0;
+        }
+    }
+
+// Kiểm tra ngày kết thúc đã quá ngày hiện tại chưa
+    private boolean isExpired(java.sql.Date currentDateSQL, java.sql.Date ngayKetThuc) {
+        return currentDateSQL.after(ngayKetThuc);
+    }
+
+// Kiểm tra nếu ngày bắt đầu là ngày hiện tại hoặc sau và trạng thái trước đó là "Sắp bắt đầu"
+    private boolean isStartingSoon(java.sql.Date currentDateSQL, java.sql.Date ngayBatDau, String trangThai) {
+        return !currentDateSQL.before(ngayBatDau) && trangThai.equals("Sắp bắt đầu");
+    }
+
     // Phương thức xóa mã giảm giá
     public boolean deleteGiamGia(int magiamgia) throws SQLException {
         String sql = "DELETE FROM giamgia WHERE magiamgia = ?";
@@ -134,17 +178,16 @@ public class GiamGiaDAO {
         }
         return 0;
     }
-    
-    public int getMaxGiamGiaId() throws SQLException {
-    String query = "SELECT MAX(magiamgia) FROM giamgia";
-    try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
-        if (rs.next()) {
-            return rs.getInt(1); // Lấy giá trị mã giảm giá lớn nhất
-        }
-    }
-    return 0; // Trả về 0 nếu bảng không có bản ghi
-}
 
+    public int getMaxGiamGiaId() throws SQLException {
+        String query = "SELECT MAX(magiamgia) FROM giamgia";
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) {
+                return rs.getInt(1); // Lấy giá trị mã giảm giá lớn nhất
+            }
+        }
+        return 0; // Trả về 0 nếu bảng không có bản ghi
+    }
 
     //Kiểm tra mã giảm giá có tồn tại không
     public boolean isValidMagiamgia(int magiamgia) {

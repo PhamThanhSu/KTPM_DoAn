@@ -43,8 +43,8 @@ public class BuildTable {
             int masp = ctpn.getMasp();
             String tensp = sanPhamDAO.selectById(masp).getTensp();
             int size = sanPhamDAO.selectById(masp).getSize();
-            int gianhap = chiTietPhieuNhapDAO.selectByMASP(masp).getGianhap();
-            int giaxuat = chiTietPhieuNhapDAO.selectByMASP(masp).getGiaxuat();
+            int gianhap = chiTietPhieuNhapDAO.getGiaXuatByMASP(masp);
+            int giaxuat = chiTietPhieuNhapDAO.getGiaXuatByMASP(masp);
             // Thêm từng dòng dữ liệu từ ArrayList vào bảng
             //Số lượng tồn là tồn của các sản phẩm của lô nhập cũ nhất chứ không phải của kho sản phẩm
             Object[] rowData = {ctpn.getMasp(), tensp, ctpn.getSoluongconlai(), size, ctpn.getGianhap(), ctpn.getGiaxuat()};

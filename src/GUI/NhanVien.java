@@ -316,34 +316,61 @@ public class NhanVien extends javax.swing.JPanel implements ActionListener {
     private void xoaNhanVien() {
         int selectedRow = tblNhanVien.getSelectedRow();
         if (selectedRow != -1) {
-            int maNV = (int) tblNhanVien.getValueAt(selectedRow, 0);
-            nhanVienBus = new NhanVienBUS();
-            taiKhoanBUS = new TaiKhoanBUS();
-            boolean thanhCong;
-            if (taiKhoanBUS.selectByID(maNV) == null) {
-                nhanVienBus.xoaNhanVien(maNV);
-                thanhCong = true;
-            } else {
-                int manhomquyen = taiKhoanBUS.selectByID(maNV).getManhomquyen();
-                //Không thể xóa Quản lý và chính mình
-                if ((taiKhoanDTO.getManhomquyen() == manhomquyen || manhomquyen == 5) || (taiKhoanDTO.getManv() == selectNhanVien().getManv())) {
-                    JOptionPane.showMessageDialog(this, "Không thể xóa tài khoản này!");
-                    return; // Ngừng xử lý nếu không được phép cập nhật
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Bạn có chắc chắn muốn xóa nhân viên này không?",
+                    "Xác nhận xóa",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                int maNV = (int) tblNhanVien.getValueAt(selectedRow, 0);
+                boolean thanhCong = kiemTraVaXoaNhanVien(maNV);
+
+                if (thanhCong) {
+                    JOptionPane.showMessageDialog(null, "Xóa nhân viên thành công");
+                    listNhanVien = nhanVienBus.getAllNhanVien();
+                    hienThiListNhanVien(listNhanVien);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Xóa nhân viên lỗi");
                 }
-                thanhCong = nhanVienBus.xoaNhanVien(maNV);
             }
-
-            if (thanhCong) {
-                JOptionPane.showMessageDialog(null, "Xóa nhân viên thành công");
-                listNhanVien = nhanVienBus.getAllNhanVien();
-                hienThiListNhanVien(listNhanVien);
-            } else {
-                JOptionPane.showMessageDialog(null, "Xóa nhân viên lỗi");
-            }
-
         } else {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên để xóa");
         }
+    }
+
+    private boolean kiemTraVaXoaNhanVien(int maNV) {
+        taiKhoanBUS = new TaiKhoanBUS();
+        nhanVienBus = new NhanVienBUS();
+
+        // Kiểm tra nếu nhân viên không có tài khoản
+        if (taiKhoanBUS.selectByID(maNV) == null) {
+            nhanVienBus.xoaNhanVien(maNV);
+            return true;
+        } else {
+            int manhomquyen = taiKhoanBUS.selectByID(maNV).getManhomquyen();
+
+            // Kiểm tra điều kiện không thể xóa
+            if (isQuanLyOrSelf(manhomquyen, maNV)) {
+                JOptionPane.showMessageDialog(this, "Không thể xóa tài khoản này!");
+                return false;
+            }
+            setTaiKhoanNgungHoatDong(maNV);
+            // Xóa nhân viên nếu không vi phạm điều kiện
+            return nhanVienBus.xoaNhanVien(maNV);
+        }
+    }
+
+    private boolean isQuanLyOrSelf(int manhomquyen, int maNV) {
+        // Không thể xóa nếu là quản lý hoặc chính tài khoản hiện tại
+        return manhomquyen == 5 || taiKhoanDTO.getManv() == maNV;
+    }
+    
+    private void setTaiKhoanNgungHoatDong(int manv){
+        taiKhoanBUS = new TaiKhoanBUS();
+        int trangthai = 0;
+        taiKhoanBUS.setTrangThai(manv, trangthai);
     }
 
     private NhanVienDTO selectNhanVien() {

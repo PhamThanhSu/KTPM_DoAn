@@ -36,6 +36,10 @@ public class TaiKhoanBUS {
     public boolean suaTaiKhoan(TaiKhoanDTO taiKhoanDTO) {
         return taiKhoanDAO.suaTaiKhoan(taiKhoanDTO);
     }
+    
+    public boolean setTrangThai(int manv, int trangthai) {
+        return taiKhoanDAO.setTrangThai(manv, trangthai);
+    }
 
     public TaiKhoanDTO selectByID(int manv) {
         return taiKhoanDAO.selectById(manv);

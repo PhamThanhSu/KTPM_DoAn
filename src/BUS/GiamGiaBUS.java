@@ -75,6 +75,10 @@ public class GiamGiaBUS {
         return giamGiaDAO.updateGiamGia(giamGia);
     }
 
+    public boolean updateGiamGiaTrangThai(GiamGiaDTO giamGia) throws SQLException {
+        return giamGiaDAO.updateGiamGiaTrangThai(giamGia);
+    }
+    
     // Phương thức xóa mã giảm giá
     public boolean deleteGiamGia(int magiamgia) throws SQLException {
         return giamGiaDAO.deleteGiamGia(magiamgia);

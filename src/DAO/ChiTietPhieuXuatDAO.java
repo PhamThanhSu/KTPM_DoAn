@@ -140,6 +140,27 @@ public class ChiTietPhieuXuatDAO {
         return result;
     }
 
+//    public ChiTietPhieuXuatDTO selectSPGiaXuatLonNhatByID(int masp) {
+//        ChiTietPhieuXuatDTO result = null;
+//        try {
+//            connection = MySQLConnection.getConnection();
+//            String sql = "SELECT * FROM ctphieuxuat WHERE masp=? ORDER BY giaxuat DESC LIMIT 1";
+//            ps = connection.prepareStatement(sql);
+//            ps.setInt(1, masp);
+//            ResultSet rs = (ResultSet) ps.executeQuery();
+//            while (rs.next()) {
+//                int maphieunhap = rs.getInt("maphieuxuat");
+//                int masanpham = rs.getInt("masp");
+//                int soluong = rs.getInt("soluong");
+//                int giaxuat = rs.getInt("giaxuat");
+//                int gianhap = rs.getInt("gianhap");  // Lấy giá trị gianhap
+//                result = new ChiTietPhieuXuatDTO(maphieunhap, masanpham, soluong, giaxuat, gianhap); // Thêm gianhap vào constructor
+//            }
+//        } catch (SQLException e) {
+//        }
+//        return result;
+//    }
+    
     public ArrayList<ChiTietPhieuXuatDTO> getAllChiTietPhieuXuat(int mapx) {
         ArrayList<ChiTietPhieuXuatDTO> result = new ArrayList<>();
         Connection conn = MySQLConnection.getConnection(); // Lấy kết nối từ lớp MySQLConnection

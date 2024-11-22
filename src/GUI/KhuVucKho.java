@@ -1,8 +1,11 @@
 package GUI;
 
+import BUS.ChiTietPhieuNhapBUS;
+import BUS.ChiTietPhieuXuatBUS;
 import BUS.KhuVucKhoBUS;
 import BUS.SanPhamBUS;
 import DAO.KhuVucKhoDAO;
+import DTO.ChiTietPhieuNhapDTO;
 import DTO.KhuVucKhoDTO;
 import DTO.SanPhamDTO;
 import DTO.TaiKhoanDTO;
@@ -10,10 +13,13 @@ import GUI.Component.CheckAction;
 import GUI.Component.ImageRenderer;
 import GUI.KhuVucKhoOpTions.SuaKhuVucKho;
 import GUI.KhuVucKhoOpTions.ThemKhuVucKho;
+import GUI.SPham.ChiTietSPTrongKho;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -41,7 +47,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author ADMIN
  */
-public class KhuVucKho extends javax.swing.JPanel {
+public class KhuVucKho extends javax.swing.JPanel implements ActionListener{
 
     /**
      * Creates new form KhuVucKho
@@ -51,6 +57,8 @@ public class KhuVucKho extends javax.swing.JPanel {
     KhuVucKhoBUS khuVucKhoBUS;
     SuaKhuVucKho suaKhuVucKho;
     SanPhamBUS sanPhamBUS;
+    ChiTietPhieuNhapBUS chiTietPhieuNhapBUS;
+    ChiTietSPTrongKho chiTietSPTrongKho;
     Color BackgroundColor = new Color(240, 247, 250);
 
     public KhuVucKho(TaiKhoanDTO taiKhoanDTO) throws SQLException {
@@ -355,6 +363,11 @@ public class KhuVucKho extends javax.swing.JPanel {
                 "Mã sản phẩm", "Tên sản phẩm", "Hình ảnh", "Size", "Số lượng"
             }
         ));
+        tblsanphamtrongkho.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblsanphamtrongkhoMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(tblsanphamtrongkho);
 
         javax.swing.GroupLayout pnlCenterLayout = new javax.swing.GroupLayout(pnlCenter);
@@ -440,6 +453,21 @@ public class KhuVucKho extends javax.swing.JPanel {
         txtTimKiem.setText("");
     }//GEN-LAST:event_btnLamMoiActionPerformed
 
+    private void tblsanphamtrongkhoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblsanphamtrongkhoMouseClicked
+        // TODO add your handling code here:
+        if (evt.getClickCount() == 2) { // Kiểm tra sự kiện double-click
+            int row = tblsanphamtrongkho.getSelectedRow();
+            chiTietPhieuNhapBUS = new ChiTietPhieuNhapBUS();
+            // Lấy dữ liệu của sản phẩm từ dòng được chọn
+            int maSanPham = (int) tblsanphamtrongkho.getValueAt(row, 0);
+            ArrayList<ChiTietPhieuNhapDTO> listChiTietSP = chiTietPhieuNhapBUS.selectByMASP(maSanPham);
+            // Hiển thị cửa sổ hoặc panel chi tiết sản phẩm với thông tin đã lấy được
+            chiTietSPTrongKho = new ChiTietSPTrongKho(listChiTietSP);
+            chiTietSPTrongKho.setLocationRelativeTo(null);
+            chiTietSPTrongKho.setVisible(true);
+        }
+    }//GEN-LAST:event_tblsanphamtrongkhoMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLamMoi;
@@ -459,4 +487,9 @@ public class KhuVucKho extends javax.swing.JPanel {
     private javax.swing.JTable tblsanphamtrongkho;
     private javax.swing.JTextField txtTimKiem;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

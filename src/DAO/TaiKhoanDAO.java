@@ -136,6 +136,25 @@ public class TaiKhoanDAO {
         }
         return thanhCong;
     }
+    
+    public boolean setTrangThai(int manv, int trangthai) {
+        boolean thanhCong = false;
+        String query = "UPDATE taikhoan SET trangthai=? WHERE manv = ?";
+        try {
+            connection = MySQLConnection.getConnection();
+            pst = connection.prepareStatement(query);
+            pst.setInt(1, trangthai);
+            pst.setInt(2, manv);
+            int rowAff = pst.executeUpdate();
+            if (rowAff > 0) {
+                thanhCong = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Lỗi sửa tài khoản" + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+        return thanhCong;
+    }
 
     public boolean xoaTaiKhoan(int t) {
         boolean thanhCong = false;

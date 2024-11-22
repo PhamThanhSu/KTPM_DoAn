@@ -67,6 +67,16 @@ public class ChiTietPhieuXuatBUS {
         }
         return result;
     }
+    
+//    public ChiTietPhieuXuatDTO getCTPXByMASPGiaXuatLonNhat(int masp) {
+//        ChiTietPhieuXuatDTO result = null;
+//        try {
+//            result = chiTietPhieuXuatDAO.selectSPGiaXuatLonNhatByID(masp);
+//        } catch (Exception e) {
+//            JOptionPane.showMessageDialog(null, "Lỗi khi lấy chi tiết phiếu xuất theo mã sản phẩm: " + e.getMessage());
+//        }
+//        return result;
+//    }
 
     // Lấy tất cả các chi tiết phiếu xuất theo mã phiếu xuất (bao gồm cả gianhap)
     public ArrayList<ChiTietPhieuXuatDTO> getAllChiTietPhieuXuatByMaphieu(int maphieuxuat) {

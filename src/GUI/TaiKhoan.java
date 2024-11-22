@@ -93,14 +93,14 @@ public class TaiKhoan extends javax.swing.JPanel implements ActionListener {
                 timKiemTaiKhoan(timkiem);
             }
         });
-        
+
         hienThiListTaiKhoan(listTaiKhoan);
     }
 
     private void timKiemTaiKhoan(String keyword) {
         ArrayList<TaiKhoanDTO> ketQuaTimKiem = new ArrayList<>();
         ArrayList<TaiKhoanDTO> allTaiKhoan = taiKhoanBus.getAllTaiKhoan();
-        for(TaiKhoanDTO tk : allTaiKhoan){
+        for (TaiKhoanDTO tk : allTaiKhoan) {
             String tenTK = tk.getUsername().trim();
             String maNV = String.valueOf(tk.getManv());
             if (tenTK.toLowerCase().contains(keyword.toLowerCase()) || maNV.contains(keyword)) {
@@ -335,27 +335,41 @@ public class TaiKhoan extends javax.swing.JPanel implements ActionListener {
     private void xoaTaiKhoan() {
         int selectedRow = tblTaiKhoan.getSelectedRow();
         if (selectedRow != -1) {
-            taiKhoanBus = new TaiKhoanBUS();
-            int manv = (int) tblTaiKhoan.getValueAt(selectedRow, 0);
-//          String tennhomquyen = (String) tblTaiKhoan.getValueAt(selectedRow, 2);
-            taiKhoanBus = new TaiKhoanBUS();
-            int manhomquyen = taiKhoanBus.selectByID(manv).getManhomquyen();
-            //Không thể xóa Quản lý và chính mình
-            if ((taiKhoanDTO.getManhomquyen() == manhomquyen || manhomquyen == 5) || (taiKhoanDTO.getManhomquyen() == selectTaiKhoan().getManhomquyen())) {
-                JOptionPane.showMessageDialog(this, "Không thể xóa tài khoản này!");
-                return; // Ngừng xử lý nếu không được phép cập nhật
-            }
-            boolean thanhCong = taiKhoanBus.xoaTaiKhoan(manv);
-            if (thanhCong) {
-                JOptionPane.showMessageDialog(null, "Xóa tài khoản thành công");
-                listTaiKhoan = taiKhoanBus.getAllTaiKhoan();
-                hienThiListTaiKhoan(listTaiKhoan);
-            } else {
-                JOptionPane.showMessageDialog(null, "Xóa tài khoản lỗi");
+            int confirm = JOptionPane.showConfirmDialog(
+                    this,
+                    "Bạn có chắc chắn muốn xóa tài khoản này không?",
+                    "Xác nhận xóa",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                taiKhoanBus = new TaiKhoanBUS();
+                int manv = (int) tblTaiKhoan.getValueAt(selectedRow, 0);
+                int manhomquyen = taiKhoanBus.selectByID(manv).getManhomquyen();
+
+                // Không thể xóa Quản lý và chính mình
+                if (isQuanLyOrSelf(manhomquyen, manv)) {
+                    JOptionPane.showMessageDialog(this, "Không thể xóa tài khoản này!");
+                    return;
+                }
+
+                boolean thanhCong = taiKhoanBus.xoaTaiKhoan(manv);
+                if (thanhCong) {
+                    JOptionPane.showMessageDialog(null, "Xóa tài khoản thành công");
+                    listTaiKhoan = taiKhoanBus.getAllTaiKhoan();
+                    hienThiListTaiKhoan(listTaiKhoan);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Xóa tài khoản lỗi");
+                }
             }
         } else {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn tài khoản để xóa");
         }
+    }
+
+    private boolean isQuanLyOrSelf(int manhomquyen, int manv) {
+        // Không thể xóa nếu là quản lý hoặc chính tài khoản hiện tại
+        return manhomquyen == 5 || taiKhoanDTO.getManv() == manv;
     }
 
     public TaiKhoanDTO selectTaiKhoan() {
@@ -382,7 +396,7 @@ public class TaiKhoan extends javax.swing.JPanel implements ActionListener {
                 try {
                     int manhomquyenselected = selectTaiKhoan().getManhomquyen();
                     int manhomquyentk = taiKhoanDTO.getManhomquyen();
-                    System.out.println("mã nhóm quyền tk trong file tk "+ manhomquyentk);
+                    System.out.println("mã nhóm quyền tk trong file tk " + manhomquyentk);
                     suaTaiKhoan = new SuaTaiKhoan(this, selectTaiKhoan(), manhomquyentk);
                     suaTaiKhoan.setLocationRelativeTo(null);
                     suaTaiKhoan.setVisible(true);
